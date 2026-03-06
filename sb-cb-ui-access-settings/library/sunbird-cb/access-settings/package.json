@@ -1,6 +1,6 @@
 {
   "name": "@sunbird-cb/access-settings",
-  "version": "0.0.6-cbrelease-4.8.33",
+  "version": "0.0.7-cbrelease-4.8.33",
   "dependencies": {
     "tslib": "^2.0.0"
   },

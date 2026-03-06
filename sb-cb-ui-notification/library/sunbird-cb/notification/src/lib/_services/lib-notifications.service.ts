@@ -9,8 +9,10 @@ const API_END_POINTS = {
   LIST: (pageNumber: number, pageSize: number) => `apis/proxies/v8/v1/notifications/list?page=${pageNumber}&size=${pageSize}`,
   LIST_WITH_CATEGORY: (pageNumber: number, pageSize: number, subType: string) => `apis/proxies/v8/v1/notifications/list?page=${pageNumber}&size=${pageSize}&sub_type=${subType}`,
   MARK_AS_READ: `apis/proxies/v8/v1/notifications/read`,
+  MARK_MANDATORY_AS_READ: `apis/proxies/v8/v1/notifications/mandatory/read`,
   NOTIFICATIONS: (pageNumber: number, pageSize: number) => `apis/proxies/v8/v1/notifications/list?page=${pageNumber}&size=${pageSize}`,
-  SEARCH: `apis/proxies/v8/sunbirdigot/search`
+  SEARCH: `apis/proxies/v8/sunbirdigot/search`,
+  MANDATORY: `apis/proxies/v8/v1/notifications/mandatory/list`
 }
 
 @Injectable({
@@ -83,6 +85,10 @@ export class LibNotificationsService {
     return this.http.patch(API_END_POINTS.MARK_AS_READ, request);
   }
 
+  markMandatoryAsRead(request: any): Observable<any> {
+    return this.http.patch(API_END_POINTS.MARK_MANDATORY_AS_READ, request);
+  }
+
   markAllAsRead(request: any): Observable<any> {
     return this.http.patch(API_END_POINTS.MARK_AS_READ, request);
   }
@@ -98,6 +104,9 @@ export class LibNotificationsService {
 
   emitClick(content: any): void {
     this._handleClick.next(content)
+  }
+  getMandatoryNotifications(pageNumber: number, pageSize: number): Observable<any> {
+    return this.http.get(`${API_END_POINTS.MANDATORY}?page=${pageNumber}&size=${pageSize}`)
   }
 
 }

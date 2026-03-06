@@ -114,6 +114,7 @@ export class ConfigurationsService {
   cstoken = ''
   netcoreConfig: any = {}
   completionSurvey: any = {}
+  globalConfig: any = {}
 
   changeNavBarFullView = new Subject()
   openExploreMenuForMWeb = new Subject()

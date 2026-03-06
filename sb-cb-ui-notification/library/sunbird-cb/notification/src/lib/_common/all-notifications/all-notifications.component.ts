@@ -40,8 +40,11 @@ export class AllNotificationsComponent implements OnInit {
     this.checkMobileView()
     this.scrollNotificationsSubject.pipe(debounceTime(500)).subscribe((event: any) => {
       this.pageNumber = this.pageNumber + 1
-      console.log("event ", event)
-      this.loadNotifications()
+      if ( this.currentTab === 'MANDATORY') {
+        this.getMandatoryNotifications()
+      } else {
+        this.loadNotifications()
+      }
     })
 
   }
@@ -66,24 +69,52 @@ export class AllNotificationsComponent implements OnInit {
   onDebouncedScroll() {
     this.pageNumber = this.pageNumber + 1
     console.log("pageNumber", this.pageNumber)
-    this.loadNotifications()
+    if ( this.currentTab === 'MANDATORY') {
+      this.getMandatoryNotifications()
+    } else {
+      this.loadNotifications()
+    }
   }
 
   ngOnInit() {
     this.route.queryParamMap.subscribe(params => {
       this.currentTab = params.get('tab')
     })
-    this.loadNotifications()
+    this.loadNotifications(true)
+    setTimeout(() => {
+      this.getMandatoryNotifications(true)
+    }, 1000)
   }
 
 
 
   redirectToNotification(notification: any) {
     if (!notification.read) {
-      this.markAsRead(notification)
+      if (this.currentTab === 'MANDATORY') {
+        this.markMandatoryAsRead(notification)
+      } else {
+        this.markAsRead(notification)
+      }
     } else {
       this.redirectTo.emit(notification)
     }
+  }
+
+  markMandatoryAsRead(notification: any) {
+    let request: any = {
+        request: {
+            id: notification.notification_id,
+            created_at: notification.created_at,
+            type : notification.type
+        }
+    }
+    this.libNotificationService.markMandatoryAsRead(request).subscribe((res: any) => {
+      if (res.responseCode === 'OK') {
+        notification.read = true
+        this.libNotificationService.updateUnreadCount()
+        this.redirectTo.emit(notification)
+      }
+    })
   }
 
   markAsRead(notification: any) {
@@ -154,10 +185,47 @@ export class AllNotificationsComponent implements OnInit {
     this.notifications = []
     this.pageNumber = 0
     this.hasNextPage = false
-    this.loadNotifications()
+    if ( this.currentTab === 'MANDATORY') {
+      this.getMandatoryNotifications()
+    } else {
+      this.loadNotifications()
+    }
   }
 
-  loadNotifications() {
+  getMandatoryNotifications(updateTabs: boolean = false) {
+    this.loading = true
+    this.libNotificationService.getMandatoryNotifications(this.pageNumber, this.pageSize).subscribe((res: any) => {
+      this.response = _.get(res, 'result.notifications', [])
+      this.response = this.response.map(notification => ({
+        ...notification,
+        isExpanded: this.fragment && this.fragment === notification.notification_id,
+        content: []
+      }))
+      if (updateTabs) {
+        const tabs = _.get(res, 'result.subtypeStats', [])
+        tabs.forEach((tab: any) => {
+          this.tabs.push(tab)
+          if (tab.unread) {
+            this.unreadCount += tab.unread
+          }
+        })
+      }
+      if (this.currentTab) {
+        const index = this.tabs.findIndex(tab => tab.name === this.currentTab)
+        if (index !== -1) {
+          this.dynamicTabIndex = index
+        }
+      }
+      this.notifications = [...this.notifications, ...this.response]
+      this.hasNextPage = res.result && res.result.hasNextPage ? res.result.hasNextPage : false
+      this.loading = false
+    }, error => {
+      console.error('Error loading notifications:', error)
+      this.loading = false
+    })
+  }
+
+  loadNotifications(updateTabs: boolean = false) {
     this.loading = true
     this.libNotificationService.getNotifications(this.pageNumber, this.pageSize, this.currentTab).subscribe((res: any) => {
       this.response = _.get(res, 'result.notifications', [])
@@ -166,14 +234,15 @@ export class AllNotificationsComponent implements OnInit {
         isExpanded: this.fragment && this.fragment === notification.notification_id,
         content: []
       }))
-      const tabs = _.get(res, 'result.subtypeStats', [])
-      this.tabs = [{ id: "all", name: 'all' }]
-      tabs.forEach((tab: any) => {
-        this.tabs.push(tab)
-        if (tab.unread) {
-          this.unreadCount += tab.unread
-        }
-      })
+      if (updateTabs) { 
+        const tabs = _.get(res, 'result.subtypeStats', [])
+        tabs.forEach((tab: any) => {
+          this.tabs.push(tab)
+          if (tab.unread) {
+            this.unreadCount += tab.unread
+          }
+        })
+      }
       if (this.currentTab) {
         const index = this.tabs.findIndex(tab => tab.name === this.currentTab)
         if (index !== -1) {

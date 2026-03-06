@@ -12,6 +12,10 @@
           (click)="loadNotifications('ALERT', $event)">Alert<span
             *ngIf="alerts?.unread + alerts?.read > 0">({{alerts?.unread + alerts?.read}})</span>
         </div>
+        <div class="tabLable cursor-pointer {{currentTab === 'MANDATORY' ? 'active-tab' : 'inActive'}}"
+          (click)="loadNotifications('MANDATORY', $event)">Mandatory<span
+            *ngIf="mandatoryNotificationsCount > 0"></span>
+        </div>
       </div>
     </div>
     <div class="notification-list" *ngIf="!isLoading">

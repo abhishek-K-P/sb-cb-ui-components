@@ -73,6 +73,7 @@ export namespace NsInstanceConfig {
     competency?: ICompetencyKeys,
     devnagiriMultiLangEnabled?: any,
     completionSurvey: any
+    globalConfig: any
   }
 
   export interface ICompetencyKeys {

@@ -84,7 +84,10 @@
       </div>
     </mat-tab>
   </mat-tab-group>
-  <div class="mark-all mt-3 cursor-pointer z-1000" (click)="markAllAsRead($event)"
+  <ng-container *ngIf="currentTab !== 'MANDATORY'">
+    <div class="mark-all mt-3 cursor-pointer z-1000" (click)="markAllAsRead($event)"
     *ngIf="showMarkAllAsRead && unreadCount > 0">Mark all as
     read</div>
+  </ng-container>
+  
 </div>
