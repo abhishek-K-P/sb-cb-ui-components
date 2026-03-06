@@ -4,8 +4,7 @@ import { NsNetworkStripNewMultiple } from './activity-strip-multiple.model'
 import { ActivityStripNewMultipleService } from './activity-strip-multiple.service'
 import { WidgetContentService } from '../_services/widget-content.service'
 import { NsContent } from '../_services/widget-content.model'
-// COMMENTED OUT: Missing dependency
-// import { saveAs } from 'file-saver'
+import { saveAs } from 'file-saver'
 import {
   TFetchStatus,
   LoggerService,
@@ -114,15 +113,7 @@ export class ActivityStripMultipleComponent extends WidgetBaseComponent
         type: 'application/pdf',
       })
       // Generate file download directly in the browser !
-      // COMMENTED OUT: Missing dependency file-saver
-      // saveAs(file, filename)
-      // Fallback: create download link
-      const url = window.URL.createObjectURL(file)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = filename
-      link.click()
-      window.URL.revokeObjectURL(url)
+      saveAs(file, filename)
     }
 
     oReq.send()

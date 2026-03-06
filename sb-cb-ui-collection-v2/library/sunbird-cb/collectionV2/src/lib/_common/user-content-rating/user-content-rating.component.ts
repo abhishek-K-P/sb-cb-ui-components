@@ -13,7 +13,6 @@ export class UserContentRatingComponent implements OnInit {
   isRequesting = true
   userRating = 0
   @Input() forPreview = false
-  @Input() contentType?: string
   averageRatings = 0
 
   constructor(

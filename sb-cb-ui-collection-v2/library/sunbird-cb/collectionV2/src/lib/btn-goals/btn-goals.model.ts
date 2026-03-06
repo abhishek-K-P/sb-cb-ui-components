@@ -114,7 +114,6 @@ export namespace NsGoal {
     contentId: string
     contentName: string
     contentType: NsContent.EContentTypes
-    primaryCategory?: string
     isDisabled?: false
   }
 }

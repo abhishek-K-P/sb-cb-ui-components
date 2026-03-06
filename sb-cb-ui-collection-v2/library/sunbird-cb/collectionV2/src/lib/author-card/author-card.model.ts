@@ -8,4 +8,6 @@ export interface IAuthorData {
   email?: string
   userId?: string
   designation?: string
+  userInfo?: any
+  wfInfo?: any
 }

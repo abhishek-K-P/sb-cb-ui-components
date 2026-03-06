@@ -12,7 +12,6 @@ import { MatIconModule } from '@angular/material/icon'
         RouterModule,
         MatCardModule,
         MatIconModule,
-    ],
-    exports: [ChannelHubComponent]
+    ]
 })
 export class ChannelHubModule { }

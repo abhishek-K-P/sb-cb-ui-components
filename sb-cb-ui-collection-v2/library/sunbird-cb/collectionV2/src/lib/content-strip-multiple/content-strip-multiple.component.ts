@@ -263,9 +263,8 @@ export class ContentStripMultipleComponent extends WidgetBaseComponent
       }
       this.contentSvc.searchV6(strip.request.searchV6).subscribe(
         results => {
-          const contentArray = Array.isArray(results.result) ? results.result : ((results.result as any).content || [])
           const showViewMore = Boolean(
-            contentArray.length > 5 && strip.stripConfig && strip.stripConfig.postCardForSearch,
+            results.result.content.length > 5 && strip.stripConfig && strip.stripConfig.postCardForSearch,
           )
           const viewMoreUrl = showViewMore
             ? {
@@ -285,7 +284,7 @@ export class ContentStripMultipleComponent extends WidgetBaseComponent
             : null
           this.processStrip(
             strip,
-            this.transformContentsToWidgets(contentArray, strip),
+            this.transformContentsToWidgets(results.result.content, strip),
             'done',
             calculateParentStatus,
             viewMoreUrl,

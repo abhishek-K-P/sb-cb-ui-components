@@ -39,16 +39,14 @@
                 </button> -->
                 <span class="spacer"></span>
                 <!-- viewAll -->
-                <!-- COMMENTED OUT: viewMoreUrl property doesn't exist on IContentStripUnit
                 <div
-                  *ngIf="widgetData.strips[0].viewMoreUrl && stripsResultDataMap[key] && stripsResultDataMap[key].widgets && stripsResultDataMap[key].widgets.length >=4"
+                  *ngIf="widgetData.strips[0].viewMoreUrl && stripsResultDataMap[key] && stripsResultDataMap[key].widgets && stripsResultDataMap[key]?.widgets?.length >=4"
                   class="ml-4 mr-6 mb-2 view-more ws-mat-accent-text view-all">
                   <a mat-button [routerLink]="widgetData.strips[0]?.viewMoreUrl?.path"
                     [queryParams]="widgetData.strips[0]?.viewMoreUrl?.queryParams">
                     <span i18n>View All</span>
                   </a>
                 </div>
-                -->
               </div>
               <button mat-icon-button (click)="setHiddenForStrip(key)" *ngIf="stripsResultDataMap[key]?.canHideStrip">
                 <mat-icon>close</mat-icon>

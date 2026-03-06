@@ -37,6 +37,7 @@ export namespace NsContentStripVertical {
     errorWidget?: NsWidgetResolver.IRenderConfigWithAnyData
     refreshEvent?: Record<'eventType' | 'from', string>
     fetchLikes?: boolean
+    viewMoreUrl?: string
   }
   export interface IStripRequestApi {
     path: string

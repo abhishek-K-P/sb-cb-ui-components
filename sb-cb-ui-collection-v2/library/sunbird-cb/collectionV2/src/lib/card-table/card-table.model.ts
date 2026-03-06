@@ -3,12 +3,23 @@ export interface IColums {
   key: String
   image?: string
   image2?: string
+  publishedOn?: string
+  lastUpdatedOn?: string
+  lastSubmittedOn?: string
   isList?: boolean
   prop?: string
   link?: {
     path: string
     dParams?: string
     sParams?: string
+    previousPath?: string
+    selectLeftTab?: string
+  }
+  draftLink?: {
+    path?: string
+    dParams?: string
+    sParams?: string
+    previousPath?: string
   }
   defaultValue: any
   pipe?: any
