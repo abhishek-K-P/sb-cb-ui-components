@@ -193,7 +193,7 @@
         <div class="info-item"
           *ngIf="tocConfig?.atAGlance?.curatedInKB?.enabled && item.contentType === 'Knowledge Board' && item.status === 'Live'">
           <h3 class="item-heading ws-mat-primary-text">{{tocConfig?.atAGlance?.curatedInKB?.displayName}}</h3>
-          <mat-chip-list>
+          <mat-chip-set>
             <mat-chip>
               <h3 class="ws-mat-accent-text width-expand">
                 <ng-container *ngIf="item.contentType === 'Knowledge Board' && item.status === 'Live'">
@@ -202,7 +202,7 @@
                 </ng-container>
               </h3>
             </mat-chip>
-          </mat-chip-list>
+          </mat-chip-set>
         </div>
       </ng-container>
       <mat-divider></mat-divider>
