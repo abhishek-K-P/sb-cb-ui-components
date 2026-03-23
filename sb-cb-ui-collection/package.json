@@ -1,6 +1,6 @@
 {
   "name": "sb-cb-ui-collection",
-  "version": "0.0.1-ang-17-20",
+  "version": "0.0.2-ang-17-20",
   "scripts": {
     "ng": "ng",
     "build": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build",
