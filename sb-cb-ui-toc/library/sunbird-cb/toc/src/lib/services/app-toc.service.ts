@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Data } from '@angular/router'
-import { Subject, Observable, EMPTY, Subscription, BehaviorSubject, of, throwError } from 'rxjs'
+import { Subject, Observable, EMPTY, Subscription, BehaviorSubject, ReplaySubject, of, throwError } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { NsContent } from '../_services/widget-content.model'
 import { NsContentConstants } from '../_constants/widget-content.constants'
@@ -105,7 +105,7 @@ export class AppTocService {
   public transriptionActiveLanguageDataObject = new BehaviorSubject<any>(null);
   public transriptionActiveLanguageDataObject$ = this.transriptionActiveLanguageDataObject.asObservable();
   public transriptionIdentifier = new Subject(); // Start with null
-  changeTranscriptionLanguageEvent = new Subject()
+  changeTranscriptionLanguageEvent = new ReplaySubject(1)
   playTranscriptionVideo = new Subject()
   constructor(private http: HttpClient, private contentLangSvc: ContentLanguageService, private configSvc: ConfigurationsService, private widgetSvc: WidgetContentService) {
     // this resume data subscription is for on load

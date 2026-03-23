@@ -262,7 +262,10 @@ export class ContentTocComponent implements OnInit, AfterViewInit, OnChanges {
 
     if (changes && changes['playResourceId']) {
       if (changes?.playResourceId?.previousValue !== changes?.playResourceId?.currentValue) {
-        if (this.viewerPage && this.viewerDataSvc?.resourceId && this.enableTranscriptionFlag) {
+        if (this.viewerPage && this.enableTranscriptionFlag) {
+          this.resourceIdentifier = this.playResourceId || this.viewerDataSvc?.resourceId
+          this.subTitles = []
+          this.vttLangArr = []
           this.parseVTT()
         }
       }
