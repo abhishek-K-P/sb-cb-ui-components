@@ -10,7 +10,7 @@ const API_ENDPOINT = {
   PUBLISH_FRAMEWORK: `/apis/proxies/v8/framework/v1/publish/`,
   RETIRE_TREM: `/apis/proxies/v8/framework/v1/term/retire`,
   UPDATE_CATEGORY: `/apis/proxies/v8/framework/v1/category/update/`,
-  USERS_SEARCH: `apis/proxies/v8/user/v1/search`,
+  USERS_SEARCH: `/apis/proxies/v8/user/v1/search`,
   ORG_CONTENT_UPDATE: `/apis/proxies/v8/org/ext/v2/update`
 }
 @Injectable({

@@ -18,7 +18,7 @@
         <div #cardEle id="{{column.code}}Card{{j+1}}" >
             <lib-term-card
                 [data]="{'children': child, 'selected' : false, 'category':column.code, cardSubType: 'minimal', isViewOnly:false,'index':column.index, columnInfo: column}"
-                [enableThreeDots]="(isChildOrg && childOrg.channel === child.name) ? true : (isChildOrg) ? false : true"
+                [enableThreeDots]="(isChildOrg && childOrg?.channel === child.name) ? true : (isChildOrg) ? false : true"
                 [checkIfChildOrg]="isChildOrg"
                 (isSelected)="updateSelection1($event)" (selectedCard)="selectedCard($event)" (cardAction)="cardActionEmit($event)">
             </lib-term-card>

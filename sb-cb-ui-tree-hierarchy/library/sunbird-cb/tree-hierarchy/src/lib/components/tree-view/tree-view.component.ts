@@ -18,14 +18,15 @@ import { TreeHierarchyService } from '../../tree-hierarchy.service'
 import { v4 as uuidv4 } from 'uuid'
 import { ConforamtionPopupComponent } from '../conforamtion-popup/conforamtion-popup.component'
 import { CategoryEditModuleComponent } from '../category-edit/category-edit-module/category-edit-module.component'
+import { ConfigurationsService } from '@sunbird-cb/utils-v2'
 import _ from 'lodash'
 
 declare var LeaderLine: any
 @Component({
-    selector: 'lib-tree-view',
-    templateUrl: './tree-view.component.html',
-    styleUrls: ['./tree-view.component.scss'],
-    standalone: false
+  selector: 'lib-tree-view',
+  templateUrl: './tree-view.component.html',
+  styleUrls: ['./tree-view.component.scss'],
+  standalone: false
 })
 export class TreeViewComponent implements OnInit, OnDestroy {
   @Input() approvalList: Array<Card> = [];
@@ -66,6 +67,7 @@ export class TreeViewComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private treeHierarchySvc: TreeHierarchyService,
     private changeDetector: ChangeDetectorRef,
+    private configSvc: ConfigurationsService
   ) { }
 
   ngOnInit() {
@@ -89,6 +91,10 @@ export class TreeViewComponent implements OnInit, OnDestroy {
   }
 
   init() {
+    if (!this.userRolesData) {
+      const userRoles = this.configSvc.userRoles ? this.configSvc.userRoles : null
+      this.userRolesData = userRoles ? new Set(userRoles) : new Set()
+    }
     this.initConfig()
     this.frameworkService.getFrameworkInfo((this.orgSelectedData) ? this.orgSelectedData : '', (this.childOrgData) ? this.childOrgData : '').subscribe(() => {
       this.connectorSvc.removeAllLines()
@@ -749,33 +755,33 @@ export class TreeViewComponent implements OnInit, OnDestroy {
       })
       if (retireRes && retireRes.params && retireRes.params.status?.toLowerCase() === 'successful') {
         // Find orgId from data structure by matching code with ele.ids
-        let orgId = null;
+        let orgId = null
         const findOrgId = (children: any[], targetCode: string): string | null => {
           for (const child of children) {
             if (child?.code === targetCode) {
-              return child?.additionalProperties?.orgId || null;
+              return child?.additionalProperties?.orgId || null
             }
             if (child?.children && child?.children?.length > 0) {
-              const found = findOrgId(child?.children, targetCode);
-              if (found) return found;
+              const found = findOrgId(child?.children, targetCode)
+              if (found) return found
             }
           }
-          return null;
-        };
-        
+          return null
+        }
+
         // Search for orgId using the first id from ele.ids
         if (ele.ids && ele.ids.length > 0) {
-          const completeData = _.cloneDeep(this.frameworkService?.completeResponse);
+          const completeData = _.cloneDeep(this.frameworkService?.completeResponse)
           if (completeData && completeData?.categories) {
             for (const category of completeData?.categories) {
               if (category?.terms) {
-                orgId = findOrgId(category?.terms, ele?.ids[0]);
-                if (orgId) break;
+                orgId = findOrgId(category?.terms, ele?.ids[0])
+                if (orgId) break
               }
             }
           }
         }
-        
+
         // Call orgContentUpdate API after each successful retire
         const orgUpdateBody = {
           orgId: orgId,
@@ -964,6 +970,9 @@ export class TreeViewComponent implements OnInit, OnDestroy {
   }
 
   checkChildOrg() {
+    if (this.userRolesData?.has('state_admin') && this.environment?.sitePath?.toLowerCase().includes('spv')) {
+      return false
+    }
     return (this.childOrgData?.rootOrgId !== this.orgSelectedData?.id || this.userRolesData?.has('mdo_admin')) ? true : false
   }
 }
