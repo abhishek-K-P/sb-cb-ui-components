@@ -87,7 +87,7 @@ import { PipeDurationTransformModule } from '@sunbird-cb/utils-v2'
     StripAddContentComponent,
     AddTabDialogComponent,
     ConfirmDialogComponent,
-    AiProgramComponent
+    AiProgramComponent,
   ],
   imports: [
     CommonModule,

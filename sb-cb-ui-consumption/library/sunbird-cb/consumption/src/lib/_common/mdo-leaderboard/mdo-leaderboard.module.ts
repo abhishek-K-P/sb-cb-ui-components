@@ -17,7 +17,7 @@ import { MatTooltipModule } from '@angular/material/tooltip'
     MatIconModule,
     SkeletonLoaderLibModule,
     FormsModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   exports: [
     MdoLeaderboardComponent,

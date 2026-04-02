@@ -25,7 +25,6 @@ import { ITodayEvents } from '../../../_models/event'
 import { TranslateService } from '@ngx-translate/core'
 import { Router } from '@angular/router'
 import { MatDialog } from '@angular/material/dialog'
-import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs'
 import { AddCompetencyPopupComponent } from '../../dialog-components/add-competency-popup/add-competency-popup.component'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { SnackbarComponent } from '../../dialog-components/snackbar/snackbar.component'
@@ -33,6 +32,7 @@ import { fadeAnimation } from '../../_animations/fade-animation'
 import { SakshamAI } from '../../../consumption.config'
 import { NsContentStripWithTabs } from '../../content-strip-with-tabs-lib/content-strip-with-tabs-lib.model'
 import { CommonMethodsService } from '../../../_services/common-methods.service'
+import { MatTabGroup } from '@angular/material/tabs'
 
 interface IStripUnitContentData {
   key: string
@@ -76,11 +76,11 @@ interface IStripUnitContentData {
 const SNACKBAR_DURATION = 3000
 
 @Component({
-    selector: 'sb-uic-content-strip-with-tabs-pills',
-    templateUrl: './content-strip-with-tabs-pills.component.html',
-    styleUrls: ['./content-strip-with-tabs-pills.component.scss'],
-    animations: [fadeAnimation],
-    standalone: false
+  selector: 'sb-uic-content-strip-with-tabs-pills',
+  templateUrl: './content-strip-with-tabs-pills.component.html',
+  styleUrls: ['./content-strip-with-tabs-pills.component.scss'],
+  animations: [fadeAnimation],
+  standalone: false
 })
 export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
   implements
@@ -1727,13 +1727,13 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
       .filter((e: any) => e.isApar)
       .sort((a: any, b: any) => {
         const getPriority = (item: any) => {
-          if (item?.identifier === targetId) return 3;
-          if (this.CaCourseUnitIds?.length && this.CaCourseUnitIds?.includes(item?.identifier)) return 2;
-          return 1;
-        };
+          if (item?.identifier === targetId) return 3
+          if (this.CaCourseUnitIds?.length && this.CaCourseUnitIds?.includes(item?.identifier)) return 2
+          return 1
+        }
 
-        return getPriority(b) - getPriority(a);
-      });
+        return getPriority(b) - getPriority(a)
+      })
 
     return [
       { value: 'all', widgets: this.transformContentsToWidgets(all, strip) },

@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Injector, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core'
 import { Router } from '@angular/router'
-import { ScrollableItemDirective } from '../../../_directives/scrollable-item/scrollable-item.directive';
+import { ScrollableItemDirective } from '../../../_directives/scrollable-item/scrollable-item.directive'
 
 @Component({
   selector: 'sb-uic-speakers-v2',
   templateUrl: './speakers-v2.component.html',
-  styleUrls: ['./speakers-v2.component.scss']
+  styleUrls: ['./speakers-v2.component.scss'],
+  standalone: false
 })
-export class SpeakersV2Component  implements OnInit {
+export class SpeakersV2Component implements OnInit {
   @Input() objectData: any
   @Input() isEdit: boolean = false;
   @Input() isEditable: boolean = false;

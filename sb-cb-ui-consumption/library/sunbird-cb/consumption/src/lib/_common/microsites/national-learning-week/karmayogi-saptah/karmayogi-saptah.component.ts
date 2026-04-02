@@ -6,8 +6,8 @@ import * as _ from 'lodash'
 
 @Component({
   selector: 'sb-uic-national-learning',
-  templateUrl: './national-learning.component.html',
-  styleUrls: ['./national-learning.component.scss'],
+  templateUrl: './karmayogi-saptah.component.html',
+  styleUrls: ['./karmayogi-saptah.component.scss'],
   standalone: false
 })
 export class KarmayogiSaptahComponent implements OnInit {

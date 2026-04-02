@@ -4,7 +4,8 @@ import { InsiteDataService } from '../../../_services/insite-data.service'
 @Component({
   selector: 'sb-uic-mdo-leaderboard-v2',
   templateUrl: './mdo-leaderboard-v2.component.html',
-  styleUrls: ['./mdo-leaderboard-v2.component.scss']
+  styleUrls: ['./mdo-leaderboard-v2.component.scss'],
+  standalone: false
 })
 export class MdoLeaderboardV2Component implements OnInit, OnChanges {
 
@@ -98,7 +99,7 @@ export class MdoLeaderboardV2Component implements OnInit, OnChanges {
         this.result = res.result
         this.filteredData = this.getFilteredData(this.result.mdoLeaderBoard || [])
       }
-    }, _error => {})
+    }, _error => { })
   }
 
   getData() {
@@ -107,7 +108,7 @@ export class MdoLeaderboardV2Component implements OnInit, OnChanges {
         this.result = res.result
         this.filteredData = this.getFilteredData(this.result.mdoLeaderBoard || [])
       }
-    }, _error => {})
+    }, _error => { })
   }
 
   getFilteredData(response: any) {

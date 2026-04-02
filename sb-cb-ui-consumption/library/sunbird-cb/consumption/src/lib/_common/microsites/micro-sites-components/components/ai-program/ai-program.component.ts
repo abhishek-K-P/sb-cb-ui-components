@@ -1,76 +1,77 @@
 
-import { Component, Input, Output, EventEmitter, OnChanges, OnInit, OnDestroy, SimpleChanges } from '@angular/core';
-import { Router } from '@angular/router';
-import { ConfigurationsService } from '@sunbird-cb/utils-v2';
-import { HttpClient } from '@angular/common/http';
-import { Subscription } from 'rxjs';
+import { Component, Input, Output, EventEmitter, OnChanges, OnInit, OnDestroy, SimpleChanges } from '@angular/core'
+import { Router } from '@angular/router'
+import { ConfigurationsService } from '@sunbird-cb/utils-v2'
+import { HttpClient } from '@angular/common/http'
+import { Subscription } from 'rxjs'
 
 export interface ContentData {
-  posterImage: string;
-  name: string;
-  identifier: string;
-  source: string;
-  creatorLogo: string;
-  duration: string;            // in minutes, e.g. "120"
-  courseCategory: string;      // e.g. "Program"
-  rating?: number;
-  ratingCount?: number;
-  completionPercentage?: number;
+  posterImage: string
+  name: string
+  identifier: string
+  source: string
+  creatorLogo: string
+  duration: string            // in minutes, e.g. "120"
+  courseCategory: string      // e.g. "Program"
+  rating?: number
+  ratingCount?: number
+  completionPercentage?: number
 }
 
 export interface StyleData {
-  [key: string]: string;       // e.g. { "border-radius": "32px", "background": "..." }
+  [key: string]: string       // e.g. { "border-radius": "32px", "background": "..." }
 }
 
 export interface AiProgramMessages {
-  notEnrolled?: string;
-  inProgress?: string;
-  badgeEarned?: string;
+  notEnrolled?: string
+  inProgress?: string
+  badgeEarned?: string
 }
 
 export interface AiProgramData {
-  enabled: boolean;
-  title: string;
-  description: string;
-  messages?: AiProgramMessages;
-  image: string;
-  noOfCoursesToComplete: string;  // e.g. "4"
-  badgeImage: string;
-  identifier: string;             // program identifier sent to enrollment API
-  courseIdentifiers: string[];     // course do_IDs to track completion
-  timeToCallApi?: number;         // cache TTL in minutes (default 5)
-  styleData: StyleData;
-  contentData: ContentData;
-  isEnrolled?: boolean;           // whether the user is enrolled in the program
-  completedCourses?: number;      // tracks how many courses the user finished
-  disableBadgeImage?: string;
+  enabled: boolean
+  title: string
+  description: string
+  messages?: AiProgramMessages
+  image: string
+  noOfCoursesToComplete: string  // e.g. "4"
+  badgeImage: string
+  identifier: string             // program identifier sent to enrollment API
+  courseIdentifiers: string[]     // course do_IDs to track completion
+  timeToCallApi?: number         // cache TTL in minutes (default 5)
+  styleData: StyleData
+  contentData: ContentData
+  isEnrolled?: boolean           // whether the user is enrolled in the program
+  completedCourses?: number      // tracks how many courses the user finished
+  disableBadgeImage?: string
 }
 
 /** Shape of the per-program localStorage cache */
 interface EnrollmentCache {
-  timestamp: number;              // epoch ms when API was last called
-  isEnrolled: boolean;
-  completedCourseIds: string[];   // which courseIdentifiers are completed
-  completedCount: number;
+  timestamp: number              // epoch ms when API was last called
+  isEnrolled: boolean
+  completedCourseIds: string[]   // which courseIdentifiers are completed
+  completedCount: number
 }
 
 /** Represents a single element in the progress track */
 export interface ProgressItem {
-  type: 'bar' | 'shield' | 'badge';
-  index: number;
-  id: string;  // stable identity for trackBy
+  type: 'bar' | 'shield' | 'badge'
+  index: number
+  id: string  // stable identity for trackBy
 }
 
-const PROXIES_V8 = '/apis/proxies/v8';
-const ENROLLMENT_API = `${PROXIES_V8}/learner/course/v4/user/enrollment/details`;
+const PROXIES_V8 = '/apis/proxies/v8'
+const ENROLLMENT_API = `${PROXIES_V8}/learner/course/v4/user/enrollment/details`
 
 @Component({
   selector: 'sb-uic-ai-program',
   templateUrl: './ai-program.component.html',
   styleUrls: ['./ai-program.component.scss'],
+  standalone: false
 })
 export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
-  @Input() programData: AiProgramData;
+  @Input() programData: AiProgramData
   @Output() contentClicked = new EventEmitter<ContentData>();
 
   /** Cached progress items — rebuilt only when programData changes */
@@ -90,29 +91,29 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
     private http: HttpClient,
     private configSvc: ConfigurationsService,
     private router: Router,
-  ) {}
+  ) { }
 
   // ────────────────────────────────────────────────────────────
   // Lifecycle
   // ────────────────────────────────────────────────────────────
 
   ngOnInit(): void {
-    this.checkEnrollmentAndRefresh();
+    this.checkEnrollmentAndRefresh()
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.programData) {
-      this.progressItemsCached = this.buildProgressItems();
+      this.progressItemsCached = this.buildProgressItems()
       // Re-check enrollment when programData changes (e.g. different program)
       if (!changes.programData.firstChange) {
-        this.checkEnrollmentAndRefresh();
+        this.checkEnrollmentAndRefresh()
       }
     }
   }
 
   ngOnDestroy(): void {
     if (this.enrollSub) {
-      this.enrollSub.unsubscribe();
+      this.enrollSub.unsubscribe()
     }
   }
 
@@ -122,13 +123,13 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
 
   /** localStorage key scoped to this program */
   private get cacheKey(): string {
-    return `ai_program_enrollment_${this.programData?.identifier}`;
+    return `ai_program_enrollment_${this.programData?.identifier}`
   }
 
   /** TTL in milliseconds (defaults to 5 minutes) */
   private get cacheTtlMs(): number {
-    const minutes = this.programData?.timeToCallApi || 5;
-    return minutes * 60 * 1000;
+    const minutes = this.programData?.timeToCallApi || 5
+    return minutes * 60 * 1000
   }
 
   /**
@@ -139,33 +140,33 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
    */
   private checkEnrollmentAndRefresh(): void {
     if (!this.programData?.identifier) {
-      return;
+      return
     }
 
-    const cached = this.readCache();
+    const cached = this.readCache()
     if (cached && this.isCacheFresh(cached)) {
       // Use cached values
-      this.applyEnrollmentState(cached.isEnrolled, cached.completedCount);
-      return;
+      this.applyEnrollmentState(cached.isEnrolled, cached.completedCount)
+      return
     }
 
     // Cache missing or stale → call the enrollment API
-    this.fetchEnrollmentData();
+    this.fetchEnrollmentData()
   }
 
   /** Read the cached enrollment data from localStorage */
   private readCache(): EnrollmentCache | null {
     try {
-      const raw = localStorage.getItem(this.cacheKey);
-      return raw ? JSON.parse(raw) as EnrollmentCache : null;
+      const raw = localStorage.getItem(this.cacheKey)
+      return raw ? JSON.parse(raw) as EnrollmentCache : null
     } catch {
-      return null;
+      return null
     }
   }
 
   /** Check whether the cache is within the TTL window */
   private isCacheFresh(cache: EnrollmentCache): boolean {
-    return (Date.now() - cache.timestamp) < this.cacheTtlMs;
+    return (Date.now() - cache.timestamp) < this.cacheTtlMs
   }
 
   /** Persist enrollment state to localStorage */
@@ -175,9 +176,9 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
       isEnrolled,
       completedCourseIds,
       completedCount,
-    };
+    }
     try {
-      localStorage.setItem(this.cacheKey, JSON.stringify(cache));
+      localStorage.setItem(this.cacheKey, JSON.stringify(cache))
     } catch {
       // Storage full or blocked — silently ignore
     }
@@ -185,12 +186,12 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Call the enrollment API and process the response */
   private fetchEnrollmentData(): void {
-    const userId = this.configSvc.userProfile && this.configSvc.userProfile.userId;
+    const userId = this.configSvc.userProfile && this.configSvc.userProfile.userId
     if (!userId) {
       // No logged-in user — treat as not enrolled
-      this.applyEnrollmentState(false, 0);
-      this.writeCache(false, [], 0);
-      return;
+      this.applyEnrollmentState(false, 0)
+      this.writeCache(false, [], 0)
+      return
     }
 
     const payload = {
@@ -198,10 +199,10 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
         retiredCoursesEnabled: true,
         courseId: [this.programData.identifier],
       },
-    };
+    }
 
     if (this.enrollSub) {
-      this.enrollSub.unsubscribe();
+      this.enrollSub.unsubscribe()
     }
 
     this.enrollSub = this.http
@@ -210,15 +211,15 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
         (res) => this.handleEnrollmentResponse(res),
         () => {
           // API error — fall back to cached or not enrolled
-          const cached = this.readCache();
+          const cached = this.readCache()
           if (cached) {
-            this.applyEnrollmentState(cached.isEnrolled, cached.completedCount);
+            this.applyEnrollmentState(cached.isEnrolled, cached.completedCount)
           } else {
-            this.applyEnrollmentState(false, 0);
-            this.writeCache(false, [], 0);
+            this.applyEnrollmentState(false, 0)
+            this.writeCache(false, [], 0)
           }
         },
-      );
+      )
   }
 
   /**
@@ -228,45 +229,45 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
    *    A course is "completed" when its status === 2
    */
   private handleEnrollmentResponse(res: any): void {
-    const courses: any[] = (res && res.result && res.result.courses) || [];
+    const courses: any[] = (res && res.result && res.result.courses) || []
 
     if (!courses.length) {
       // No enrollment record → not enrolled
-      this.applyEnrollmentState(false, 0);
-      this.writeCache(false, [], 0);
-      return;
+      this.applyEnrollmentState(false, 0)
+      this.writeCache(false, [], 0)
+      return
     }
 
     // User is enrolled (the program identifier was found in the enrollment list)
-    const trackIds = new Set(this.programData.courseIdentifiers || []);
+    const trackIds = new Set(this.programData.courseIdentifiers || [])
 
     // Build a map of contentId → status from API response
-    const statusMap = new Map<string, number>();
+    const statusMap = new Map<string, number>()
     courses.forEach((c: any) => {
       if (c.contentId) {
-        statusMap.set(c.contentId, c.status);
+        statusMap.set(c.contentId, c.status)
       }
-    });
+    })
 
     // Find which tracked courses are completed (status === 2)
-    const completedIds: string[] = [];
+    const completedIds: string[] = []
     trackIds.forEach((id) => {
       if (statusMap.get(id) === 2) {
-        completedIds.push(id);
+        completedIds.push(id)
       }
-    });
+    })
 
-    const count = completedIds.length;
-    this.applyEnrollmentState(true, count);
-    this.writeCache(true, completedIds, count);
+    const count = completedIds.length
+    this.applyEnrollmentState(true, count)
+    this.writeCache(true, completedIds, count)
   }
 
   /** Apply enrollment state and rebuild progress items */
   private applyEnrollmentState(isEnrolled: boolean, completedCount: number): void {
-    this.enrolled = isEnrolled;
-    this.completedCount = completedCount;
+    this.enrolled = isEnrolled
+    this.completedCount = completedCount
     // Rebuild progress items so bar/shield colours update
-    this.progressItemsCached = this.buildProgressItems();
+    this.progressItemsCached = this.buildProgressItems()
   }
 
   // ────────────────────────────────────────────────────────────
@@ -275,17 +276,17 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
 
   /** Total number of courses required for the badge */
   get totalCourses(): number {
-    return parseInt(this.programData?.noOfCoursesToComplete, 10) || 3;
+    return parseInt(this.programData?.noOfCoursesToComplete, 10) || 3
   }
 
   /** Number of courses the user has completed (from API / cache) */
   get completedCourses(): number {
-    return Math.min(this.completedCount, this.totalCourses);
+    return Math.min(this.completedCount, this.totalCourses)
   }
 
   /** Whether the user is enrolled */
   get isEnrolled(): boolean {
-    return this.enrolled || this.completedCourses > 0;
+    return this.enrolled || this.completedCourses > 0
   }
 
   /**
@@ -293,25 +294,25 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
    *   bar[0] → shield[0] → bar[1] → shield[1] → … → bar[N-1] → badge
    */
   private buildProgressItems(): ProgressItem[] {
-    const total = this.totalCourses;
+    const total = this.totalCourses
     if (!total || !this.programData) {
-      return [];
+      return []
     }
-    const items: ProgressItem[] = [];
+    const items: ProgressItem[] = []
     for (let i = 0; i < total; i++) {
-      items.push({ type: 'bar', index: i, id: `bar-${i}` });
+      items.push({ type: 'bar', index: i, id: `bar-${i}` })
       if (i < total - 1) {
-        items.push({ type: 'shield', index: i, id: `shield-${i}` });
+        items.push({ type: 'shield', index: i, id: `shield-${i}` })
       } else {
-        items.push({ type: 'badge', index: i, id: `badge-${i}` });
+        items.push({ type: 'badge', index: i, id: `badge-${i}` })
       }
     }
-    return items;
+    return items
   }
 
   /** trackBy for *ngFor — prevents DOM recreation */
   trackByItem(_: number, item: ProgressItem): string {
-    return item.id;
+    return item.id
   }
 
   /**
@@ -327,27 +328,27 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
   getBarState(index: number): 'full' | 'half' | 'none' {
     if (index === 0) {
       if (this.completedCourses >= 1) {
-        return 'full';
+        return 'full'
       }
-      return this.isEnrolled ? 'half' : 'none';
+      return this.isEnrolled ? 'half' : 'none'
     }
     if (this.completedCourses > index) {
-      return 'full';
+      return 'full'
     }
     if (this.completedCourses === index) {
-      return 'half';
+      return 'half'
     }
-    return 'none';
+    return 'none'
   }
 
   /** shield[i] active when course (i+1) is completed */
   isShieldActive(index: number): boolean {
-    return this.completedCourses >= index + 1;
+    return this.completedCourses >= index + 1
   }
 
   /** Badge at full opacity only when ALL courses completed */
   get isBadgeEarned(): boolean {
-    return this.completedCourses >= this.totalCourses;
+    return this.completedCourses >= this.totalCourses
   }
 
   /**
@@ -355,50 +356,50 @@ export class AiProgramComponent implements OnInit, OnChanges, OnDestroy {
    * Falls back to programData.description if messages object is not provided.
    */
   get currentMessage(): string {
-    const msgs = this.programData?.messages;
+    const msgs = this.programData?.messages
     if (msgs) {
       if (this.isBadgeEarned && msgs.badgeEarned) {
-        return msgs.badgeEarned;
+        return msgs.badgeEarned
       }
       if (this.completedCourses > 0 && msgs.inProgress) {
-        return msgs.inProgress;
+        return msgs.inProgress
       }
       if (msgs.notEnrolled) {
-        return msgs.notEnrolled;
+        return msgs.notEnrolled
       }
     }
-    return this.programData?.description || '';
+    return this.programData?.description || ''
   }
 
   /** Convert 1-based number to Roman numeral string */
   getRomanNumeral(num: number): string {
     if (num > 0 && num <= this.romanNumerals.length) {
-      return this.romanNumerals[num - 1];
+      return this.romanNumerals[num - 1]
     }
-    return String(num);
+    return String(num)
   }
 
   /** Convert duration in minutes to human-readable format */
   formatDuration(minutes: string | number): string {
-    const mins = typeof minutes === 'string' ? parseInt(minutes, 10) : minutes;
+    const mins = typeof minutes === 'string' ? parseInt(minutes, 10) : minutes
     if (!mins || isNaN(mins)) {
-      return '';
+      return ''
     }
     if (mins < 60) {
-      return `${mins} min`;
+      return `${mins} min`
     }
-    const hrs = Math.floor(mins / 60);
-    const remainingMins = mins % 60;
-    return remainingMins > 0 ? `${hrs} hrs ${remainingMins} min` : `${hrs} hrs`;
+    const hrs = Math.floor(mins / 60)
+    const remainingMins = mins % 60
+    return remainingMins > 0 ? `${hrs} hrs ${remainingMins} min` : `${hrs} hrs`
   }
 
   /** Navigate to the program TOC page and emit event */
   onContentClick(): void {
     if (this.programData?.contentData) {
-      this.contentClicked.emit(this.programData.contentData);
-      const identifier = this.programData.contentData.identifier || this.programData.identifier;
+      this.contentClicked.emit(this.programData.contentData)
+      const identifier = this.programData.contentData.identifier || this.programData.identifier
       if (identifier) {
-        this.router.navigate(['/app/toc', identifier, 'overview']);
+        this.router.navigate(['/app/toc', identifier, 'overview'])
       }
     }
   }
