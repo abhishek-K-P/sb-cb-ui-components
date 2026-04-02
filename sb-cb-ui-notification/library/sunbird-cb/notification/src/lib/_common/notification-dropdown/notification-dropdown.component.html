@@ -12,14 +12,14 @@
           (click)="loadNotifications('ALERT', $event)">Alert<span
             *ngIf="alerts?.unread + alerts?.read > 0">({{alerts?.unread + alerts?.read}})</span>
         </div>
-        <div class="tabLable cursor-pointer {{currentTab === 'MANDATORY' ? 'active-tab' : 'inActive'}}"
+        <!-- <div class="tabLable cursor-pointer {{currentTab === 'MANDATORY' ? 'active-tab' : 'inActive'}}"
           (click)="loadNotifications('MANDATORY', $event)">Mandatory<span
             *ngIf="mandatoryNotificationsCount > 0"></span>
-        </div>
-        <div class="tabLable validation cursor-pointer {{currentTab === 'PEER_VALIDATION' ? 'active-tab' : 'inActive'}}"
+        </div> -->
+        <!-- <div class="tabLable validation cursor-pointer {{currentTab === 'PEER_VALIDATION' ? 'active-tab' : 'inActive'}}"
           (click)="loadNotifications('PEER_VALIDATION', $event)">Peer validation
           <span *ngIf="peerValidationsCount > 0">({{peerValidationsCount}})</span>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="notification-list" *ngIf="!isLoading">

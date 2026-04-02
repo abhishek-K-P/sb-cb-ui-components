@@ -41,11 +41,11 @@ export class AllNotificationsComponent implements OnInit {
     this.checkMobileView()
     this.scrollNotificationsSubject.pipe(debounceTime(500)).subscribe((event: any) => {
       this.pageNumber = this.pageNumber + 1
-      if ( this.currentTab === 'MANDATORY') {
-        this.getMandatoryNotifications()
-      } else {
+      // if ( this.currentTab === 'MANDATORY') {
+      //   this.getMandatoryNotifications()
+      // } else {
         this.loadNotifications()
-      }
+      // }
     })
 
   }
@@ -70,11 +70,11 @@ export class AllNotificationsComponent implements OnInit {
   onDebouncedScroll() {
     this.pageNumber = this.pageNumber + 1
     console.log("pageNumber", this.pageNumber)
-    if ( this.currentTab === 'MANDATORY') {
-      this.getMandatoryNotifications()
-    } else {
+    // if ( this.currentTab === 'MANDATORY') {
+    //   this.getMandatoryNotifications()
+    // } else {
       this.loadNotifications()
-    }
+    // }
   }
 
   ngOnInit() {
@@ -82,9 +82,9 @@ export class AllNotificationsComponent implements OnInit {
       this.currentTab = params.get('tab')
     })
     this.loadNotifications(true)
-    setTimeout(() => {
-      this.getMandatoryNotifications(true)
-    }, 1000)
+    // setTimeout(() => {
+    //   this.getMandatoryNotifications(true)
+    // }, 1000)
   }
 
 
@@ -142,7 +142,7 @@ export class AllNotificationsComponent implements OnInit {
       request: {
         type: "individual",
         ids: [notification.notification_id],
-        created_at: notification.created_at
+        // created_at: notification.created_at
       }
     }
     if (['COURSE_PUBLISHED', 'PROGRAM_PUBLISHED', 'EVENT_PUBLISHED'].includes(notification.sub_category)) {
@@ -208,45 +208,48 @@ export class AllNotificationsComponent implements OnInit {
     this.notifications = []
     this.pageNumber = 0
     this.hasNextPage = false
-    if ( this.currentTab === 'MANDATORY') {
-      this.getMandatoryNotifications()
-    } else {
+    // if ( this.currentTab === 'MANDATORY') {
+    //   this.getMandatoryNotifications()
+    // } else {
       this.loadNotifications()
-    }
+    // }
   }
 
-  getMandatoryNotifications(updateTabs: boolean = false) {
-    this.loading = true
-    this.libNotificationService.getMandatoryNotifications(this.pageNumber, this.pageSize).subscribe((res: any) => {
-      this.response = _.get(res, 'result.notifications', [])
-      this.response = this.response.map(notification => ({
-        ...notification,
-        isExpanded: this.fragment && this.fragment === notification.notification_id,
-        content: []
-      }))
-      if (updateTabs) {
-        const tabs = _.get(res, 'result.subtypeStats', [])
-        tabs.forEach((tab: any) => {
-          this.tabs.push(tab)
-          if (tab.unread) {
-            this.unreadCount += tab.unread
-          }
-        })
-      }
-      if (this.currentTab) {
-        const index = this.tabs.findIndex(tab => tab.name === this.currentTab)
-        if (index !== -1) {
-          this.dynamicTabIndex = index
-        }
-      }
-      this.notifications = [...this.notifications, ...this.response]
-      this.hasNextPage = res.result && res.result.hasNextPage ? res.result.hasNextPage : false
-      this.loading = false
-    }, error => {
-      console.error('Error loading notifications:', error)
-      this.loading = false
-    })
-  }
+  // getMandatoryNotifications(updateTabs: boolean = false) {
+  //   this.loading = true
+  //   this.libNotificationService.getMandatoryNotifications(this.pageNumber, this.pageSize).subscribe((res: any) => {
+  //     this.response = _.get(res, 'result.notifications', [])
+  //     this.response = this.response.map(notification => ({
+  //       ...notification,
+  //       isExpanded: this.fragment && this.fragment === notification.notification_id,
+  //       content: []
+  //     }))
+  //     if (updateTabs) {
+  //       const tabs = _.get(res, 'result.subtypeStats', [])
+  //       tabs.forEach((tab: any) => {
+  //         if (tab.name && tab.name.toUpperCase() === 'PEER_VALIDATION') {
+  //           return
+  //         }
+  //         this.tabs.push(tab)
+  //         if (tab.unread) {
+  //           this.unreadCount += tab.unread
+  //         }
+  //       })
+  //     }
+  //     if (this.currentTab) {
+  //       const index = this.tabs.findIndex(tab => tab.name === this.currentTab)
+  //       if (index !== -1) {
+  //         this.dynamicTabIndex = index
+  //       }
+  //     }
+  //     this.notifications = [...this.notifications, ...this.response]
+  //     this.hasNextPage = res.result && res.result.hasNextPage ? res.result.hasNextPage : false
+  //     this.loading = false
+  //   }, error => {
+  //     console.error('Error loading notifications:', error)
+  //     this.loading = false
+  //   })
+  // }
 
   loadNotifications(updateTabs: boolean = false) {
     this.loading = true
@@ -261,6 +264,12 @@ export class AllNotificationsComponent implements OnInit {
       const tabs = _.get(res, 'result.subtypeStats', [])
       this.tabs = [{ id: "all", name: 'all' }]
       tabs.forEach((tab: any) => {
+        if (tab.name && tab.name.toUpperCase() === 'PEER_VALIDATION') {
+          return
+        }
+        if (tab.name && tab.name.toUpperCase() === 'MANDATORY') {
+          return
+        }
         this.tabs.push(tab)
         if (tab.unread) {
           this.unreadCount += tab.unread

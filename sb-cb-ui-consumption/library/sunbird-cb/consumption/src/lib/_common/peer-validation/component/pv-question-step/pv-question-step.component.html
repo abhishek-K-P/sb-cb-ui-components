@@ -3,7 +3,7 @@
 
   <div class="form-container">
     <div class="course-info">
-      <span class="course-label">Course : </span>
+      <span class="course-label">Content : </span>
       <span class="course-name">{{courseName}}</span>
     </div>
 
@@ -125,24 +125,24 @@
       <div class="question-type-cards" *ngIf="!showMcqEditor && additionalQuestionCount < 2">
         <div class="question-type-card" (click)="addQuestionType('multiple-mcq')">
           <div class="card-content">
-            <h4 class="card-title">Multiple selection-MCQs</h4>
-            <p class="card-description">Add new Files, Links or Videos to your course from library.</p>
+            <h4 class="card-title margin-remove">Multiple selection-MCQs</h4>
+            <!-- <p class="card-description">Add new Files, Links or Videos to your course from library.</p> -->
           </div>
           <mat-icon class="card-arrow">chevron_right</mat-icon>
         </div>
 
         <div class="question-type-card" (click)="addQuestionType('single-mcq')">
           <div class="card-content">
-            <h4 class="card-title">Single selection-MCQs</h4>
-            <p class="card-description">Add new Files, Links or Videos to your course from library.</p>
+            <h4 class="card-title margin-remove">Single selection-MCQs</h4>
+            <!-- <p class="card-description">Add new Files, Links or Videos to your course from library.</p> -->
           </div>
           <mat-icon class="card-arrow">chevron_right</mat-icon>
         </div>
 
         <div class="question-type-card" (click)="addQuestionType('text')">
           <div class="card-content">
-            <h4 class="card-title">Text</h4>
-            <p class="card-description">Add new Files, Links or Videos to your course from library.</p>
+            <h4 class="card-title margin-remove">Text</h4>
+            <!-- <p class="card-description">Add new Files, Links or Videos to your course from library.</p> -->
           </div>
           <mat-icon class="card-arrow">chevron_right</mat-icon>
         </div>

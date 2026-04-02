@@ -8,7 +8,8 @@ import * as _ from 'lodash';
 const API_END_POINTS = {
   LIST: (pageNumber: number, pageSize: number) => `apis/proxies/v8/v1/notifications/list?page=${pageNumber}&size=${pageSize}`,
   LIST_WITH_CATEGORY: (pageNumber: number, pageSize: number, subType: string) => `apis/proxies/v8/v1/notifications/list?page=${pageNumber}&size=${pageSize}&sub_type=${subType}`,
-  MARK_AS_READ: `apis/proxies/v8/v1/notifications/v2/read`,
+  MARK_AS_READ: `apis/proxies/v8/v1/notifications/read`,
+  //  MARK_AS_READ: `apis/proxies/v8/v1/notifications/v2/read`,
   MARK_MANDATORY_AS_READ: `apis/proxies/v8/v1/notifications/mandatory/read`,
   NOTIFICATIONS: (pageNumber: number, pageSize: number) => `apis/proxies/v8/v1/notifications/list?page=${pageNumber}&size=${pageSize}`,
   SEARCH: `apis/proxies/v8/sunbirdigot/search`,

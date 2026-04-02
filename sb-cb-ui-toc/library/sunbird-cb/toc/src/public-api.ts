@@ -21,6 +21,7 @@ export * from './lib/services/timer.service'
 export * from './lib/services/title-tag.service'
 export * from './lib/services/viewer-util.service'
 export * from './lib/services/viewer-data.service'
+export * from './lib/services/user-profile.service'
 // Models
 export * from './lib/models/app-toc.model'
 export * from './lib/models/app-toc-analytics.model'

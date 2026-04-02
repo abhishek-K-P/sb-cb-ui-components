@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NationalLearningComponent } from './national-learning.component';
+import { KarmayogiSaptahComponent } from './karmayogi-saptah.component';
 
-describe('NationalLearningComponent', () => {
-  let component: NationalLearningComponent;
-  let fixture: ComponentFixture<NationalLearningComponent>;
+describe('KarmayogiSaptahComponent', () => {
+  let component: KarmayogiSaptahComponent;
+  let fixture: ComponentFixture<KarmayogiSaptahComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NationalLearningComponent ]
+      declarations: [ KarmayogiSaptahComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NationalLearningComponent);
+    fixture = TestBed.createComponent(KarmayogiSaptahComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -26,7 +26,7 @@
                       ">
               <div class="flex flex-1 items-center">
                 <p class="mat-subheading-1 margin-remove inline-block " *ngIf="stripsResultDataMap[key]?.stripTitle">
-                  <span class="capitalize {{stripsResultDataMap[key]?.titleClass}}"
+                  <span class="{{stripsResultDataMap[key]?.titleClass}}"
                     *ngIf="stripsResultDataMap[key]?.disableTranslate">
                     {{stripsResultDataMap[key]?.stripTitle}}
                   </span>
@@ -35,11 +35,13 @@
                     {{ translateLabels(stripsResultDataMap[key]?.stripTitle, 'home') }}
                   </span>
                 </p>
-                <button *ngIf="stripsResultDataMap[key]?.stripInfo?.icon" type="button" mat-icon-button
-                  [matTooltip]="stripsResultDataMap[key]?.stripInfo?.description" [matTooltipPosition]="stripsResultDataMap[key]?.stripInfo?.icon?.direction || 'above'"
-                  class="margin-left-xs">
-                  <mat-icon>{{ stripsResultDataMap[key]?.stripInfo?.icon.icon }}</mat-icon>
-                </button>
+                <ng-container *ngIf="stripsResultDataMap[key]?.stripInfo?.icon">
+                  <button  type="button" mat-icon-button
+                    [matTooltip]="stripsResultDataMap[key]?.stripInfo?.description" [matTooltipPosition]="stripsResultDataMap[key]?.stripInfo?.icon?.direction || 'above'"
+                    class="margin-left-xs">
+                    <mat-icon>{{ stripsResultDataMap[key]?.stripInfo?.icon.icon }}</mat-icon>
+                  </button>
+                </ng-container>
 
                 <!-- Edit button -->
                 <button *ngIf="isEdit" type="button" mat-icon-button (click)="openEditContentDialog(key)"
@@ -87,6 +89,14 @@
               </mat-icon>
             </div>
 
+              <div>
+
+                <p class="pl-4 md:pl-0 margin-remove" *ngIf="stripsResultDataMap[key]?.stripSecondaryTitle">
+                  <span class="strip-secondary-title" >
+                    {{stripsResultDataMap[key]?.stripSecondaryTitle}}
+                  </span>
+                </p>
+              </div>
             <div class="mb-4" *ngIf="checkVisible(stripsResultDataMap[key])">
               <ng-container [sbUiResolverWidget]="getdata(stripsResultDataMap[key])">
               </ng-container>

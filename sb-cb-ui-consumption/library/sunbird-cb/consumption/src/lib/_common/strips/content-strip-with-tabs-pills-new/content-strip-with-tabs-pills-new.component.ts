@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, ChangeDetectorRef } from '@angular/core'
+import { Component, OnInit, OnDestroy, AfterViewInit, Input, Output, EventEmitter, ChangeDetectorRef, NgZone, ViewChildren, QueryList } from '@angular/core'
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs'
 import { Router } from '@angular/router'
 import { ConfigurationsService } from '@sunbird-cb/utils-v2'
 import { WidgetContentLibService } from '../../../_services/widget-content-lib.service'
@@ -87,7 +88,7 @@ interface IWidgetData {
     styleUrls: ['./content-strip-with-tabs-pills-new.component.scss'],
     standalone: false
 })
-export class ContentStripWithTabsPillsNewComponent implements OnInit, OnDestroy {
+export class ContentStripWithTabsPillsNewComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @Input() widgetData: IWidgetData | null = null
   @Output() tabChanged = new EventEmitter<any>()
@@ -98,8 +99,11 @@ export class ContentStripWithTabsPillsNewComponent implements OnInit, OnDestroy 
   activePillIndices: { [key: string]: number } = {}
 
   private skeletonCache: { [key: string]: any[] } = {}
+  @ViewChildren(MatTabGroup) tabGroups!: QueryList<MatTabGroup>
+
   private isUserInitiatedTabClick: boolean = false
   private loadingTabs: Set<string> = new Set()
+  private paginationTimers: any[] = []
 
   constructor(
     private router: Router,
@@ -107,14 +111,47 @@ export class ContentStripWithTabsPillsNewComponent implements OnInit, OnDestroy 
     private configSvc: ConfigurationsService,
     private contentSvc: WidgetContentLibService,
     private langtranslations: MultilingualTranslationsService,
+    private ngZone: NgZone
   ) { }
 
   ngOnInit(): void {
     this.initializeComponent()
   }
 
+  ngAfterViewInit(): void {
+    // Force mat-tab-header to recalculate pagination on SPA navigation
+    this.triggerTabPaginationUpdate()
+    // Re-trigger whenever new mat-tab-groups are added to the DOM
+    this.tabGroups.changes.subscribe(() => {
+      this.triggerTabPaginationUpdate()
+    })
+  }
+
   ngOnDestroy(): void {
     this.skeletonCache = {}
+    this.clearPaginationTimers()
+  }
+
+  /** Directly call MatTabGroup.updatePagination() so mat-tab-header recalculates pagination arrows */
+  private triggerTabPaginationUpdate(): void {
+    this.clearPaginationTimers()
+    const delays = [0, 100, 300, 500, 1000, 2000]
+    delays.forEach(delay => {
+      const timer = setTimeout(() => {
+        if (this.tabGroups) {
+          this.tabGroups.forEach(tg => {
+            tg.updatePagination()
+            tg.realignInkBar()
+          })
+        }
+      }, delay)
+      this.paginationTimers.push(timer)
+    })
+  }
+
+  private clearPaginationTimers(): void {
+    this.paginationTimers.forEach(t => clearTimeout(t))
+    this.paginationTimers = []
   }
 
   initializeComponent(): void {

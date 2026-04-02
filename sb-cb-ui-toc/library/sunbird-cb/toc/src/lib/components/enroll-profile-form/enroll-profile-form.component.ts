@@ -123,6 +123,8 @@ export class EnrollProfileFormComponent implements OnInit {
   verifyEmail = false
   approvedDomainList: any = []
   contextToken: any
+  verifiedEmailOtp: string = ''
+  verifiedPhoneOtp: string = ''
   currentDate = new Date()
   openDesignationDropdown = false
   openLanguageDropdown = false
@@ -482,6 +484,7 @@ export class EnrollProfileFormComponent implements OnInit {
         this.eVerified = true
         this.emailOtpSent = false
         this.contextToken = _res.result.contextToken
+        this.verifiedEmailOtp = this.emailOtpForm.controls['eOtp'].value
         this.emailOtpForm.reset()
       }, (error: HttpErrorResponse) => {
         if (!error.ok) {
@@ -498,6 +501,7 @@ export class EnrollProfileFormComponent implements OnInit {
         this.verifyMobile = true
         this.mVerified = true
         this.otpSent = false
+        this.verifiedPhoneOtp = this.otpForm.controls['otp'].value
         this.otpForm.reset()
       }, (error: HttpErrorResponse) => {
         if (!error.ok) {
@@ -615,8 +619,11 @@ export class EnrollProfileFormComponent implements OnInit {
     this.addLoader = this.addLoader + 1
     this.profileV2Svc.fetchCadre().subscribe((response: any) => {
       this.addLoader = this.addLoader - 1
-      this.civilServiceData = response.result.response.value.civilServiceType
-      this.civilServiceTypes = this.civilServiceData.civilServiceTypeList.map((service: any) => service.name)
+      const value = response && response.result && response.result.response && response.result.response.value
+      if (value && value.civilServiceType) {
+        this.civilServiceData = value.civilServiceType
+        this.civilServiceTypes = this.civilServiceData.civilServiceTypeList.map((service: any) => service.name)
+      }
     })
   }
 
@@ -788,6 +795,7 @@ export class EnrollProfileFormComponent implements OnInit {
   }
 
   getPendingDetails() {
+    
     this.addLoader = this.addLoader + 1
     this.profileV2Svc.fetchApprovalDetails().subscribe((resp: any) => {
       this.addLoader = this.addLoader - 1
@@ -826,7 +834,6 @@ export class EnrollProfileFormComponent implements OnInit {
     if (this.batchDetails.batchAttributes.userProfileFileds &&
       this.batchDetails.batchAttributes.bpEnrolMandatoryProfileFields) {
       let customAttr = this.batchDetails.batchAttributes.bpEnrolMandatoryProfileFields
-      console.log("customAttr ", customAttr)
       if (this.findAttr(customAttr, 'name')) {
         this.canShowName = true
         this.showname = true
@@ -1341,6 +1348,7 @@ export class EnrollProfileFormComponent implements OnInit {
   }
   onSubmitForm(form: any) {
     /* tslint:disable */
+
     console.log(form)
     let payload = this.generateProfilePayload()
     if ((this.canShowDesignation || this.canShowGroup) && !this.showDoptChanges) {
@@ -1389,6 +1397,12 @@ export class EnrollProfileFormComponent implements OnInit {
   }
 
   submitProfile(payload: any) {
+    if (this.eVerified && this.verifiedEmailOtp) {
+      payload['request']['emailOtp'] = this.verifiedEmailOtp
+    }
+    if (this.mVerified && this.verifiedPhoneOtp) {
+      payload['request']['phoneOtp'] = this.verifiedPhoneOtp
+    }
     if (payload && payload['request'] && payload['request']['profileDetails'] && payload['request']['profileDetails']['personalDetails'] && payload['request']['profileDetails']['personalDetails']['dob']) {
       let dobFormat = payload['request']['profileDetails']['personalDetails']['dob'];
       let dob = `${new Date(dobFormat).getDate()}-${new Date(dobFormat).getMonth() + 1}-${new Date(dobFormat).getFullYear()}`
@@ -1405,8 +1419,10 @@ export class EnrollProfileFormComponent implements OnInit {
         this.addLoader = this.addLoader - 1
         /* tslint:disable */
         console.log(error)
-        this.snackBar.open("something went wrong!")
+        this.snackBar.open(error?.error?.params?.errmsg || "Something went wrong!")
       })
+    } else {
+          this.submitSurevy(true)
     }
   }
 
@@ -1860,9 +1876,10 @@ export class EnrollProfileFormComponent implements OnInit {
     const searchDesignationControl = this.userDetailsForm.get('designation');
     const currentDesignation = searchDesignationControl ? searchDesignationControl.value : '';
     // Check if current designation exists in the list
+    const designationdata = currentDesignation?.designation ? currentDesignation.designation : currentDesignation
     if (currentDesignation) {
       const designationExists = this.designationsMeta.some(
-        (designation: any) => designation.name.toLowerCase() === currentDesignation.toLowerCase()
+        (designation: any) => designation.name.toLowerCase() === designationdata?.toLowerCase() 
       );
 
       // If designation doesn't exist in the list, add it

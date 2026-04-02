@@ -38,9 +38,9 @@
 </div>
 <div class="banner-container-solo {{type === 'atictitop' ? 'atictitopbanner' : ''}}"
   [style.height]="isMobile? styleData?.responsive?.customHeight : styleData?.customHeight"
-  *ngIf="widgetData?.length == 1">
+  *ngIf="widgetData?.length == 1" [ngStyle]="{'border-radius': styleData?.borderRadius || '12px'}">
   <img i18n-alt alt="Page Banner" width="100%" height="100%" [src]="widgetData[0].banners" wsUtilsImageResponsive
-    class="banner-image-solo" />
+    class="banner-image-solo" [ngStyle]="{'border-radius': styleData?.borderRadius || '12px'}" />
 </div>
 <!-- <div class="banner-container" (swipeleft)="slideTo(currentIndex + 1)" (swiperight)="slideTo(currentIndex - 1)"
   *ngIf="widgetData?.length">

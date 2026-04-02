@@ -3329,4 +3329,21 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
   goBack() {
     this.location.back()
   }
+
+  showBadgeIcon(): boolean {
+    const badgeDetails = this.baseContentReadData?.badgeDetails_v1
+    if (!badgeDetails || !badgeDetails.length) {
+      return false
+    }
+    const badge = badgeDetails[0]
+    // If badgeEarningDateEnabled is false, don't show badge
+    if (!badge?.badgeEarningDateEnabled) {
+      return true
+    }
+    // If badgeEarningDateEnabled is true, show badge only if badgeEarningDateTime has passed
+    if (badge?.badgeEarningDateEnabled && badge?.badgeEarningDateTime) {
+      return badge.badgeEarningDateTime > Date.now()
+    }
+    return false
+  }
 }

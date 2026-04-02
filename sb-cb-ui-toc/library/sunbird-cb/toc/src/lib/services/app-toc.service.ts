@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { Data } from '@angular/router'
-import { Subject, Observable, EMPTY, Subscription, BehaviorSubject, of, throwError } from 'rxjs'
+import { Subject, Observable, EMPTY, Subscription, BehaviorSubject, ReplaySubject, of, throwError } from 'rxjs'
 import { HttpClient } from '@angular/common/http'
 import { NsContent } from '../_services/widget-content.model'
 import { NsContentConstants } from '../_constants/widget-content.constants'
@@ -34,7 +34,7 @@ const API_END_POINTS = {
   POST_ASSESSMENT: (contentId: string) =>
     `${PROTECTED_SLAG_V8}/user/evaluate/post-assessment/${contentId}`,
   GET_CONTENT: (contentId: string) =>
-    `${PROXY_SLAG_V8}/action/content/v3/read/${contentId}`,
+    `${PROXY_SLAG_V8}/content/v2/read/${contentId}`,
   CERT_DOWNLOAD: (certId: any) => `${PROTECTED_SLAG_V8}/cohorts/course/batch/cert/download/${certId}`,
   SERVER_DATE: 'apis/public/v8/systemDate',
   SHARE_CONTENT: '/apis/proxies/v8/user/v1/content/recommend',
@@ -105,7 +105,7 @@ export class AppTocService {
   public transriptionActiveLanguageDataObject = new BehaviorSubject<any>(null);
   public transriptionActiveLanguageDataObject$ = this.transriptionActiveLanguageDataObject.asObservable();
   public transriptionIdentifier = new Subject(); // Start with null
-  changeTranscriptionLanguageEvent = new Subject()
+  changeTranscriptionLanguageEvent = new ReplaySubject(1)
   playTranscriptionVideo = new Subject()
   constructor(private http: HttpClient, private contentLangSvc: ContentLanguageService, private configSvc: ConfigurationsService, private widgetSvc: WidgetContentService) {
     // this resume data subscription is for on load
@@ -580,7 +580,7 @@ export class AppTocService {
       )
     }
     if (window.location.href.includes('editMode=true') && window.location.href.includes('_rc')) {
-      url = `/apis/proxies/v8/action/content/v3/read/${contentId}`
+      url = `/apis/proxies/v8/content/v2/read/${contentId}`
     } else {
       url = `/api/content/v1/read/${contentId}`
     }

@@ -57,8 +57,8 @@
   gap: 8px;
   border: 1px solid var(--borders-black-border-16-black, rgba(0, 0, 0, 0.16));
   background: #FFF;
-  width: 138px;
-  height: 138px;
+  width: 158px;
+  height: 158px;
   border-radius: 8px;
   border: 1px solid var(--borders-black-border-16-black, rgba(0, 0, 0, 0.16));
   background: #FFF;
@@ -85,6 +85,16 @@
   font-style: normal;
   font-weight: 600;
   line-height: normal;
+  width: 100%;
+  overflow: hidden;
+
+  span {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .badge-name {
@@ -185,4 +195,13 @@
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+}
+
+.badge-coursename{
+  font-style: italic;
+  color: gray;
+}
+::ng-deep .custom-menu-badge-modal {
+  z-index: 9999 !important;
+  background: white !important;
 }

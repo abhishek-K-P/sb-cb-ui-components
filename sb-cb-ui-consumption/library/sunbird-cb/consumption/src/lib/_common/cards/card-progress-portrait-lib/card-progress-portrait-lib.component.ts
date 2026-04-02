@@ -274,4 +274,12 @@ export class CardProgressPortraitLibComponent implements OnInit {
   navigateToNewVersion(contentData: any) {
     this.redirectToNewVersion.emit(contentData.contentVersionInfo.identifier)
   }
+
+  canEnableCertificateButton() {
+    if (this.widgetData?.content?.category === "Event") {
+      return this.widgetData?.content?.endDateTimeInEpoch > Date.now()
+    } else {
+      return false
+    }
+  }
 }

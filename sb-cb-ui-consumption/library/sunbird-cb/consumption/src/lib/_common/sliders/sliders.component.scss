@@ -113,10 +113,12 @@ $banner-min-height: 243px;
   &.left {
     left: 0;
     transform: translateX(0);
+    z-index: 998;
   }
   &.right{
     left: 100%;
     transform: translateX(-100%);
+    z-index: 998;
   }
 
   .banner-title {
@@ -215,11 +217,13 @@ $banner-min-height: 243px;
 .prev {
   left: 0;
   margin-left: -16px;
+  z-index: 998;
 }
 
 .next {
   right: 0;
   margin-right: -16px;
+  z-index: 998;
 }
 
 .navigation {

@@ -1,42 +1,86 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
-import { Observable, of } from 'rxjs'
+import { Observable } from 'rxjs'
+const API_ENDPOINTS = {
+    sendOtp: '/apis/proxies/v8/otp/v1/generate',
+    ReSendOtp: '/apis/proxies/v8/otp/v1/generate',
+    VerifyOtp: '/apis/proxies/v8/otp/v1/verify',
+    sendEmailOtp: '/apis/proxies/v8/otp/v3/generate',
+    VerifyEmailOtp: '/apis/proxies/v8/otp/v3/verify',
+}
 
-/**
- * OTP Service - Stub implementation
- * Provides OTP generation and verification functionality
- */
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class OtpService {
-  constructor(private http: HttpClient) {}
+    constructor(
+        private http: HttpClient,
+    ) {
+    }
 
-  generateOtp(mobileNumber: string): Observable<any> {
-    return of({ success: true })
-  }
+    sendOtp(mob: number): Observable<any> {
+        const reqObj = {
+            request: {
+                type: 'phone',
+                key: `${mob}`,
+            },
+        }
+        return this.http.post(API_ENDPOINTS.sendOtp, reqObj)
+    }
 
-  verifyOtp(mobileNumber: string, otp: string): Observable<any> {
-    return of({ verified: true })
-  }
+    resendOtp(mob: number) {
+        const reqObj = {
+            request: {
+                type: 'phone',
+                key: `${mob}`,
+            },
+        }
+        return this.http.post(API_ENDPOINTS.ReSendOtp, reqObj)
 
-  resendOtp(mobileNumber: string): Observable<any> {
-    return of({ success: true })
-  }
+    }
 
-  sendOtp(mobileNumber: string): Observable<any> {
-    return of({ success: true })
-  }
+    verifyOTP(otp: string, mob: number) {
+        const reqObj = {
+            request: {
+                otp,
+                type: 'phone',
+                key: `${mob}`,
+            },
+        }
+        return this.http.post(API_ENDPOINTS.VerifyOtp, reqObj)
 
-  sendEmailOtp(email: string): Observable<any> {
-    return of({ success: true })
-  }
+    }
 
-  verifyEmailOTP(email: string, otp: string): Observable<any> {
-    return of({ verified: true })
-  }
+    sendEmailOtp(email: string): Observable<any> {
+        const reqObj = {
+            request: {
+                type: 'email',
+                key: `${email}`,
+                contextType: 'extPatch',
+                context: ['profileDetails.personalDetails.primaryEmail'],
+            },
+        }
+        return this.http.post(API_ENDPOINTS.sendEmailOtp, reqObj)
+    }
 
-  verifyOTP(mobileNumber: string, otp: string): Observable<any> {
-    return of({ verified: true })
-  }
+    reSendEmailOtp(email: string): Observable<any> {
+        const reqObj = {
+            request: {
+                type: 'email',
+                key: `${email}`,
+                contextType: 'extPatch',
+                context: ['profileDetails.personalDetails.primaryEmail'],
+            },
+        }
+        return this.http.post(API_ENDPOINTS.sendEmailOtp, reqObj)
+    }
+
+    verifyEmailOTP(otp: any, email: number) {
+        const reqObj = {
+            request: {
+                otp: otp.toString(),
+                type: 'email',
+                key: `${email}`,
+            },
+        }
+        return this.http.post(API_ENDPOINTS.VerifyEmailOtp, reqObj)
+    }
 }

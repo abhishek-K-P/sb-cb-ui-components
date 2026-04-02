@@ -58,7 +58,7 @@ import { MatNativeDateModule } from '@angular/material/core' // or MatMomentDate
 import { SkeletonLoaderLibModule } from '../../skeleton-loader-lib/skeleton-loader-lib.module'
 import { OrderByPipeModule } from '../../../_pipes/order-by/order-by.pipe.module'
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core'
-import { HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
+import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { SafeUrlPipeModule } from '../../../_pipes/safe-url/safe-url.module'
 import { VideoConferenceModule } from '../../video-conference/video-conference.module'
 import { StripSectionCreateComponent } from './components/strip-section-create/strip-section-create.component'
@@ -66,93 +66,107 @@ import { StripAddContentComponent } from './components/strip-add-content/strip-a
 import { AddTabDialogComponent } from './components/add-tab-dialog/add-tab-dialog.component'
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component'
 import { EventsCalendarModule } from '../../events-calendar/events-calendar.module'
+import { AiProgramComponent } from './components/ai-program/ai-program.component'
+import { PipeDurationTransformModule } from '@sunbird-cb/utils-v2'
 
-@NgModule({ declarations: [
-        TopSectionComponent,
-        LookerSectionComponent,
-        TopLearnersComponent,
-        MainContentComponent,
-        SupportSectionComponent,
-        CompetencyComponent,
-        ContentStripComponent,
-        ColumnSectionDisplayComponent,
-        MobileSectionsComponent,
-        EditorDialogComponent,
-        SlwConfigDialogComponent,
-        ActionItemsComponent,
-        StripSectionCreateComponent,
-        StripAddContentComponent,
-        AddTabDialogComponent,
-        ConfirmDialogComponent
-    ],
-    exports: [
-        TopSectionComponent,
-        LookerSectionComponent,
-        TopLearnersComponent,
-        MainContentComponent,
-        SupportSectionComponent,
-        CompetencyComponent,
-        ContentStripComponent,
-        ColumnSectionDisplayComponent,
-        MobileSectionsComponent,
-        EditorDialogComponent,
-        SlwConfigDialogComponent,
-        ActionItemsComponent,
-        StripAddContentComponent
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA], imports: [CommonModule,
-        MatIconModule,
-        MatChipsModule,
-        MatTooltipModule,
-        SkeletonLoaderLibModule,
-        AnnouncementsModule,
-        TopLearnersModule,
-        CbpPlanModule,
-        CardsModule,
-        CommonStripModule,
-        CompetencyPassbookModule,
-        CompetencyPassbookMdoModule,
-        ContentStripWithTabsLibModule,
-        DataPointsModule,
-        SlidersLibModule,
-        HighlightsOfWeekModule,
-        UserProgressModule,
-        EventsModule,
-        SpeakersModule,
-        MdoLeaderboardModule,
-        KeyHighlightsModule,
-        MatTabsModule,
-        OrderByPipeModule,
-        SafeUrlPipeModule,
-        VideoConferenceModule,
-        SbUiResolverModule,
-        FormsModule,
-        ReactiveFormsModule,
-        TranslateModule.forRoot({
-            loader: {
-                provide: TranslateLoader,
-                useFactory: HttpLoaderFactory,
-                deps: [HttpClient],
-            },
-        }),
-        MatDialogModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatSlideToggleModule,
-        MatSelectModule,
-        MatPaginatorModule,
-        MatCardModule,
-        MatCheckboxModule,
-        MatRadioModule,
-        DragDropModule,
-        MatIconModule,
-        MatDatepickerModule,
-        MatNativeDateModule,
-        EventsCalendarModule], providers: [
-        CommonMethodsService,
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+@NgModule({
+  declarations: [
+    TopSectionComponent,
+    LookerSectionComponent,
+    TopLearnersComponent,
+    MainContentComponent,
+    SupportSectionComponent,
+    CompetencyComponent,
+    ContentStripComponent,
+    ColumnSectionDisplayComponent,
+    MobileSectionsComponent,
+    EditorDialogComponent,
+    SlwConfigDialogComponent,
+    ActionItemsComponent,
+    StripSectionCreateComponent,
+    StripAddContentComponent,
+    AddTabDialogComponent,
+    ConfirmDialogComponent,
+    AiProgramComponent
+  ],
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatTooltipModule,
+    SkeletonLoaderLibModule,
+    AnnouncementsModule,
+    TopLearnersModule,
+    CbpPlanModule,
+    CardsModule,
+
+
+    CommonStripModule,
+    CompetencyPassbookModule,
+    CompetencyPassbookMdoModule,
+    ContentStripWithTabsLibModule,
+    DataPointsModule,
+    SlidersLibModule,
+    HighlightsOfWeekModule,
+    UserProgressModule,
+    EventsModule,
+    SpeakersModule,
+    MdoLeaderboardModule,
+    KeyHighlightsModule,
+    MatTabsModule,
+    OrderByPipeModule,
+    SafeUrlPipeModule,
+    VideoConferenceModule,
+    SbUiResolverModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatRadioModule,
+    DragDropModule,
+    HttpClientModule,
+    MatIconModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    EventsCalendarModule,
+
+    PipeDurationTransformModule,
+  ],
+  exports: [
+    TopSectionComponent,
+    LookerSectionComponent,
+    TopLearnersComponent,
+    MainContentComponent,
+    SupportSectionComponent,
+    CompetencyComponent,
+    ContentStripComponent,
+    ColumnSectionDisplayComponent,
+    MobileSectionsComponent,
+    EditorDialogComponent,
+    SlwConfigDialogComponent,
+    ActionItemsComponent,
+    StripAddContentComponent,
+    AiProgramComponent
+  ],
+  providers: [
+    CommonMethodsService
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+})
 export class MicrositesComponentsModule { }
 
 

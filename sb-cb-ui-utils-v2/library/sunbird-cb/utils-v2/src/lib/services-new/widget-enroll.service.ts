@@ -33,24 +33,26 @@ export class WidgetEnrollService {
     return this.http.post(`apis/proxies/v8/learner/course/v4/user/enrollment/list/${userId}`, payload)
   }
 
-  fetchExternalEnrollmentData( payload: any) {
-    return this.http.post(`apis/proxies/v8/cios-enroll/v1/courselist/byuserid`, payload).pipe(map((extRes: any)=> {
-      if(extRes && extRes.result && extRes.result.courses) {
-        extRes.result.courses.forEach((ele: any) => {
-          ele['completionPercentage'] = ele['completionpercentage']
+fetchExternalEnrollmentData(payload: any) {
+  return this.http.post(`apis/proxies/v8/cios-enroll/v1/courselist/byuserid`, payload).pipe(map((extRes: any) => {
+    if (extRes && extRes?.result && extRes?.result?.courses) {
+      extRes?.result?.courses?.forEach((ele: any) => {
+        ele['completionPercentage'] = ele['completionpercentage']
+        if (ele?.content) {
           ele['content']['issuedCertificates'] = ele['issued_certificates'] || []
-          ele['lastContentAccessTime'] =  ele.content && ele.content.lastUpdatedOn ? new Date(ele.content.lastUpdatedOn).getTime(): ''
-          if(ele.content){
-            ele['content']['organisation'] = ele.content && ele.content.contentPartner && ele.content.contentPartner.contentPartnerName ? [ele.content.contentPartner.contentPartnerName]: []
+        }
+        ele['lastContentAccessTime'] = ele?.content?.lastUpdatedOn ? new Date(ele.content.lastUpdatedOn).getTime() : ''
+     if(ele?.content){
+            ele['content']['organisation'] = ele?.content && ele?.content?.contentPartner && ele?.content?.contentPartner?.contentPartnerName ? [ele?.content?.contentPartner?.contentPartnerName]: []
             ele['content']['completionStatus'] = ele['completionpercentage']< 100 ? 1: 2
             ele['content']['creatorLogo'] = ele['content']['contentPartner']['link']
 
           }
-        })
-      }
-      return extRes
-    }))
-  }
+      })
+    }
+    return extRes
+  }))
+}
 
   fetchEventsEnrollmentData(userId: string , payload: any) {
     return this.http.post(`apis/proxies/v8/user/events/list/${userId}`, payload)

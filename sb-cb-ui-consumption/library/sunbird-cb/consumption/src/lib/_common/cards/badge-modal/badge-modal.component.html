@@ -8,21 +8,49 @@
       <h2 class="modal-title">Congratulations...!!</h2>
 
       <div class="badge-wrapper">
-        <img [src]="badgeData?.image" class="badge-image" />
+        <img [src]="badgeData?.image | pipePublicURL" class="badge-image" />
 
         <div class="badge-label">
-          <span class="badge-name">{{ badgeData?.title }}</span>
-          <span class="badge-level">{{ badgeData?.level }}</span>
+          <span class="badge-name pb-2" [title]="badgeData?.title">{{ badgeData?.title }}</span>
+          <span class="badge-level pb-2" [title]="badgeData?.level">{{ badgeData?.level }}</span>
+          <span class="badge-coursename pb-2" [title]="badgeData?.courseName">({{ badgeData?.courseName }})</span>
         </div>
       </div>
 
       <p class="modal-description">
-Great job! You’ve successfully earned the {{badgeData?.title}} badge by completing [Content Name].
+        Great job! You’ve successfully earned the {{badgeData?.title}} badge by completing {{badgeData?.courseName}}.
       </p>
 
+
       <div class="modal-actions">
-        <button class="btn btn-outline">Download</button>
-        <button class="btn btn-primary">View Badge</button>
+
+        <button mat-button [matMenuTriggerFor]="downloadMenu" class="btn btn-outline">
+          <!-- <mat-icon class="margin-right-xs">cloud_download</mat-icon> -->
+          Download
+        </button>
+
+        <mat-menu #downloadMenu="matMenu" class="custom-menu-badge-modal" panelClass="custom-menu-badge-modal">
+
+          <!-- PDF -->
+          <button class="!bg-white" mat-menu-item (click)="downloadBadgePdf(badgeData)">
+            <mat-icon>picture_as_pdf</mat-icon>
+            <span>PDF</span>
+          </button>
+
+          <!-- PNG -->
+          <button class="!bg-white" mat-menu-item (click)="downloadBadgePng(badgeData)">
+            <mat-icon>photo</mat-icon>
+            <span>PNG</span>
+          </button>
+
+          <!-- SVG -->
+          <button class="!bg-white" mat-menu-item (click)="downloadBadgeSvg(badgeData)">
+            <mat-icon>photo_size_select_actual</mat-icon>
+            <span>SVG</span>
+          </button>
+
+        </mat-menu>
+
       </div>
 
     </div>

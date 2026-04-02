@@ -28,30 +28,30 @@ export class NotificationDropdownComponent implements OnInit {
 
   ngOnInit() {
     this.getUserNotifications()
-    this.getMandatoryNotifications()
-    this.getPeerValidationNotifications()
+    // this.getMandatoryNotifications()
+    // this.getPeerValidationNotifications()
   }
 
-  getMandatoryNotifications() {
-    this.libNotificationService.getMandatoryNotifications(0, 5).subscribe((res: any) => {
-      let notifications = _.get(res, 'result.notifications', [])
-      this.mandatoryNotifications = notifications
-      this.mandatoryNotificationsCount = notifications.length
-    }, error => {
-      console.error("Error fetching mandatory notifications", error)
-    })
-  }
+  // getMandatoryNotifications() {
+  //   this.libNotificationService.getMandatoryNotifications(0, 5).subscribe((res: any) => {
+  //     let notifications = _.get(res, 'result.notifications', [])
+  //     this.mandatoryNotifications = notifications
+  //     this.mandatoryNotificationsCount = notifications.length
+  //   }, error => {
+  //     console.error("Error fetching mandatory notifications", error)
+  //   })
+  // }
 
-  getPeerValidationNotifications() {
-    this.libNotificationService.getNotifications(0, 5, 'PEER_VALIDATION').subscribe((res: any) => {
-      console.log("Peer validation notifications response ", res)
-      const notifications = _.get(res, 'result.notifications', [])
-      this.peerValidations = notifications
-      this.peerValidationsCount = notifications.length
-    }, error => {
-      console.error('Error fetching peer validation notifications', error)
-    })
-  }
+  // getPeerValidationNotifications() {
+  //   this.libNotificationService.getNotifications(0, 5, 'PEER_VALIDATION').subscribe((res: any) => {
+  //     console.log("Peer validation notifications response ", res)
+  //     const notifications = _.get(res, 'result.notifications', [])
+  //     this.peerValidations = notifications
+  //     this.peerValidationsCount = notifications.length
+  //   }, error => {
+  //     console.error('Error fetching peer validation notifications', error)
+  //   })
+  // }
 
   getUserNotifications() {
     this.isLoading = true
@@ -59,10 +59,10 @@ export class NotificationDropdownComponent implements OnInit {
       this.notifications = _.get(res, 'result.notifications', [])
       const _alerts = _.get(res, 'result.subtypeStats', [])
       this.alerts = _alerts.find((notification: any) => notification.name === 'ALERT')
-      const peerValidationEntries = _alerts.filter((item: any) =>
-        item.name && item.name.toUpperCase() === 'PEER_VALIDATION')
-      this.peerValidationsCount = peerValidationEntries.reduce((sum: number, item: any) =>
-        sum + (+item.unread || 0) + (+item.read || 0), 0)
+      // const peerValidationEntries = _alerts.filter((item: any) =>
+      //   item.name && item.name.toUpperCase() === 'PEER_VALIDATION')
+      // this.peerValidationsCount = peerValidationEntries.reduce((sum: number, item: any) =>
+      //   sum + (+item.unread || 0) + (+item.read || 0), 0)
       this.isLoading = false
     }, error => {
       console.error("Error fetching notifications", error)
@@ -72,13 +72,15 @@ export class NotificationDropdownComponent implements OnInit {
 
   loadNotifications(type: string, event: MouseEvent) {
     this.currentTab = type
-    if (type === 'MANDATORY') {
-      this.notifications = this.mandatoryNotifications
-    } else if (type === 'PEER_VALIDATION') {
-      this.notifications = this.peerValidations
-    } else {
+    // if (type === 'MANDATORY') {
+    //   this.notifications = this.mandatoryNotifications
+    // } 
+    // else if (type === 'PEER_VALIDATION') {
+    //   this.notifications = this.peerValidations
+    // } 
+    // else {
       this.getUserNotifications()
-    }
+    // }
     event.stopPropagation()
   }
 
@@ -127,11 +129,6 @@ export class NotificationDropdownComponent implements OnInit {
       if (res.responseCode === 'OK') {
         notification.read = true
         this.libNotificationService.updateUnreadCount()
-        const index = this.peerValidations.findIndex((n: any) => n.notification_id === notification.notification_id)
-        if (index !== -1) {
-          this.peerValidations[index].read = true
-        }
-        this.peerValidationsCount = this.peerValidations.filter((n: any) => !n.read).length
       }
     })
   }
@@ -141,7 +138,7 @@ export class NotificationDropdownComponent implements OnInit {
       request: {
         type: 'individual',
         ids: [notification.notification_id],
-        created_at: notification.created_at
+        // created_at: notification.created_at
       }
     }
     if (['COURSE_PUBLISHED', 'PROGRAM_PUBLISHED', 'EVENT_PUBLISHED'].includes(notification.sub_category)) {

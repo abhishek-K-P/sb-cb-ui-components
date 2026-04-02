@@ -12,25 +12,20 @@
       (keyup)="navigateToNewVersion(widgetData?.content)">
       {{'cardcontentv2.newVersion' | translate }}
     </div>
-    <div class="course_widget portrait_widget flex  margin-bottom-xs"
-      [style.gap]="widgetData?.content.difficultyLevel ? '5px' : '0px'"
+    <div class="course_widget portrait_widget flex  margin-bottom-xs" [style.gap]="widgetData?.content.difficultyLevel ? '5px' : '0px'"
       [ngClass]="{'retiredCards': widgetData?.content?.status === 'Retired' && widgetData?.content?.completionPercentage === 100,'margin-bottom-xl':!widgetData?.content?.primaryCategory}">
       <!-- Apply difficulty-main class conditionally if widgetData?.content?.difficultyLevel is true-->
       <div class="flex flex-end flex-middle course_port" *ngIf="widgetData?.content?.primaryCategory">
         <mat-icon class="mat-icon main_icon  ws-mat-default-text margin-right-xs">video_library</mat-icon>
         <ng-container *ngIf="widgetData?.content?.courseCategory === 'Case Study'">
-          <sb-uic-display-content-type i18n-title
-            [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
-            class="ws-mat-black60-text font-normal mat-caption"
-            [displayContentType]="widgetData?.content?.courseCategory">
+          <sb-uic-display-content-type i18n-title [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
+            class="ws-mat-black60-text font-normal mat-caption" [displayContentType]="widgetData?.content?.courseCategory">
           </sb-uic-display-content-type>
         </ng-container>
         <ng-container *ngIf="widgetData?.content?.courseCategory !== 'Case Study'">
-          <sb-uic-display-content-type i18n-title
-            [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
+          <sb-uic-display-content-type i18n-title [title]="widgetData.content?.courseCategory || widgetData.content?.primaryCategory"
             [style.max-width]="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate' ? '90px' : (widgetData?.content?.difficultyLevel ? '85px' : 'auto')"
-            class="ws-mat-black60-text font-normal mat-caption"
-            [displayContentType]="widgetData?.content?.primaryCategory==='Course Unit'
+            class="ws-mat-black60-text font-normal mat-caption" [displayContentType]="widgetData?.content?.primaryCategory==='Course Unit'
             ?'Module'
             :widgetData?.content?.courseCategory ? widgetData?.content?.courseCategory :widgetData?.content?.primaryCategory">
           </sb-uic-display-content-type>
@@ -49,8 +44,7 @@
           </svg>
           <span class="level-text">{{widgetData?.content?.difficultyLevel}}</span>
         </span>
-        <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate'"
-          class="level-badge intermediate">
+        <span *ngIf="widgetData?.content?.difficultyLevel?.toLowerCase() === 'intermediate'" class="level-badge intermediate">
           <!-- <span *ngIf="true" class="level-badge intermediate" title="Intermediate"> -->
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none">
             <rect width="16" height="16" fill="#D1DBEC" />
@@ -88,14 +82,13 @@
         </span>
       </div>
     </div>
-    <div class="flex"
-      [ngClass]="{'retiredCards': widgetData?.content?.status === 'Retired' && widgetData?.content?.completionPercentage === 100}">
+    <div class="flex" [ngClass]="{'retiredCards': widgetData?.content?.status === 'Retired' && widgetData?.content?.completionPercentage === 100}">
       <div class="margin-right-s relative">
         <ng-container *ngIf="widgetData?.content?.posterImage">
           <div class=" img-block-portrait position-relative">
             <img mat-card-image [src]="widgetData?.content?.posterImage | pipePublicURL" loading="lazy"
-              class="card-image ws-mat-primary-lite-background margin-remove"
-              [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="widgetData?.content?.name" />
+              class="card-image ws-mat-primary-lite-background margin-remove" [wsUtilsDefaultThumbnail]="defaultThumbnail"
+              [alt]="widgetData?.content?.name" />
             <!-- to show certificate lock overlay on top of image -->
             <ng-container *ngIf="checkSurveyCompletion()">
               <div class="certificate-lock-overlay">
@@ -129,12 +122,12 @@
         <ng-container *ngIf="!widgetData?.content?.posterImage">
           <ng-container *ngIf="widgetData?.content?.appIcon; else defaultImg">
             <img mat-card-image [src]="widgetData?.content?.appIcon | pipePublicURL" loading="lazy"
-              class="card-image ws-mat-primary-lite-background margin-remove"
-              [wsUtilsDefaultThumbnail]="defaultThumbnail" [alt]="widgetData?.content?.name" />
+              class="card-image ws-mat-primary-lite-background margin-remove" [wsUtilsDefaultThumbnail]="defaultThumbnail"
+              [alt]="widgetData?.content?.name" />
           </ng-container>
           <ng-template #defaultImg>
-            <img mat-card-image [src]="defaultThumbnail" loading="lazy"
-              class="card-image ws-mat-primary-lite-background margin-remove" [alt]="widgetData?.content?.name" />
+            <img mat-card-image [src]="defaultThumbnail" loading="lazy" class="card-image ws-mat-primary-lite-background margin-remove"
+              [alt]="widgetData?.content?.name" />
           </ng-template>
         </ng-container>
       </div>
@@ -144,13 +137,12 @@
         </div>
         <div class="flex w-full  flex-middle">
           <div class="portrait_course_logo_box margin-right-xs">
-            <img [src]="widgetData?.content?.creatorLogo | pipePublicURL " class="source-icon" loading="lazy"
-              [wsUtilsDefaultThumbnail]="defaultSLogo"
+            <img [src]="widgetData?.content?.creatorLogo | pipePublicURL " class="source-icon" loading="lazy" [wsUtilsDefaultThumbnail]="defaultSLogo"
               [alt]="(widgetData?.content?.sourceName + '_' + widgetData?.content?.identifier)" />
           </div>
           <span class="portrait-org-name font-normal mat-caption">{{'cardcontentv2.by' | translate}} {{
             (widgetData?.content?.organisation && widgetData?.content?.organisation[0]) ?
-            widgetData?.content?.organisation[0] : 'Karmayogi Bharat' }}</span>
+            widgetData?.content?.organisation[0] : (widgetData?.content?.sourceName ? widgetData?.content?.sourceName : 'Karmayogi Bharat') }}</span>
         </div>
         <div class="mt-2 mb-2">
           <sb-uic-available-languages [content]="widgetData?.content"></sb-uic-available-languages>
@@ -158,8 +150,7 @@
       </div>
     </div>
     <ng-container *ngIf="widgetData?.content?.completionPercentage < 100">
-      <div class="flex flex-align-end progress-wrapper flex-between"
-        [ngClass]="{'flex-end':!widgetData?.content?.primaryCategory}">
+      <div class="flex flex-align-end progress-wrapper flex-between" [ngClass]="{'flex-end':!widgetData?.content?.primaryCategory}">
         <div class="progress-block" *ngIf="!widgetData?.content?.externalId">
           <div class="completed-time" *ngIf="widgetData?.content?.cType !== 'event'">
             <mat-icon class="mat-icon  schedule margin-right-xs">schedule</mat-icon>
@@ -167,18 +158,15 @@
           </div>
           <div>
             <ng-container *ngIf="widgetData?.content?.completionStatus < 2 && widgetData?.content?.cType !== 'event'">
-              <sb-uic-content-progress class="progress-bar-new" [customClassName]="'course-progress-bar'"
-                *ngIf="widgetData?.content?.identifier" [contentId]="widgetData?.content?.identifier"
-                [progress]="widgetData?.content?.completionPercentage" [progressType]="'percentage'">
+              <sb-uic-content-progress class="progress-bar-new" [customClassName]="'course-progress-bar'" *ngIf="widgetData?.content?.identifier"
+                [contentId]="widgetData?.content?.identifier" [progress]="widgetData?.content?.completionPercentage" [progressType]="'percentage'">
               </sb-uic-content-progress>
             </ng-container>
           </div>
         </div>
         <div class="progress-btn">
-          <button class="resume-btn flex flex-middle flex-between"
-            [routerLink]="['/app/toc/',widgetData?.content?.identifier,'overview']"
-            [queryParams]="{primaryCategory: widgetData?.content?.primaryCategory}" [state]="widgetData?.stateData"
-            [matTooltipPosition]="'below'"
+          <button class="resume-btn flex flex-middle flex-between" [routerLink]="['/app/toc/',widgetData?.content?.identifier,'overview']"
+            [queryParams]="{primaryCategory: widgetData?.content?.primaryCategory}" [state]="widgetData?.stateData" [matTooltipPosition]="'below'"
             [matTooltipDisabled]="(!widgetData?.content?.completionPercentage ? translateLabels('start', 'cardcontentv2') : translateLabels('resume', 'cardcontentv2')).length < 11"
             matTooltip="{{!widgetData?.content?.completionPercentage ? translateLabels('start', 'cardcontentv2') : translateLabels('resume', 'cardcontentv2')}}">
             <span class="textwrap margin-right-xs">
@@ -189,26 +177,22 @@
         </div>
       </div>
     </ng-container>
-    <ng-container
-      *ngIf="widgetData?.content?.completionPercentage === 100 && widgetData?.content?.courseCategory !== 'Case Study'">
+    <ng-container *ngIf="widgetData?.content?.completionPercentage === 100 && widgetData?.content?.courseCategory !== 'Case Study'">
       <div class="flex flex-align-end progress-wrapper flex-end mt-1 position-relative">
         <div class="progress-btn">
           <ng-container *ngIf="checkSurveyCompletion(); else viewCertificateBtn">
-            <button class="resume-btn flex flex-middle flex-between view-btn takeSurveyBtn"
-              (click)="getRedirectUrlData(widgetData?.content)">
+            <button class="resume-btn flex flex-middle flex-between view-btn takeSurveyBtn" (click)="getRedirectUrlData(widgetData?.content)">
               {{'cardcontentv2.takeSurveyToUnlock' | translate }}
             </button>
           </ng-container>
           <ng-template #viewCertificateBtn>
             <button class="resume-btn flex flex-middle flex-between cert-btn"
-              [ngClass]="{'disable-btn': downloadCertificateLoading || widgetData?.content?.issuedCertificates?.length === 0}"
+              [ngClass]="{'disable-btn': downloadCertificateLoading || widgetData?.content?.issuedCertificates?.length === 0 || canEnableCertificateButton()}"
               (click)="!downloadCertificateLoading && downloadCertificate(widgetData?.content, $event);$event.stopPropagation()"
-              [matTooltipPosition]="'below'"
-              [matTooltipDisabled]="(translateLabels('viewCertificate', 'cardcontentv2')).length < 11"
+              [matTooltipPosition]="'below'" [matTooltipDisabled]="(translateLabels('viewCertificate', 'cardcontentv2')).length < 11"
               matTooltip="{{'cardcontentv2.viewCertificate' | translate }}">
               <span class="margin-right-xs textwrap">{{'cardcontentv2.viewCertificate' | translate }}</span>
-              <img class="stats-icon" *ngIf="!downloadCertificateLoading" height="20" width="20"
-                src="/assets/icons/home/eye-white.svg">
+              <img class="stats-icon" *ngIf="!downloadCertificateLoading" height="20" width="20" src="/assets/icons/home/eye-white.svg">
               <div class="center flex flex-middle" *ngIf="downloadCertificateLoading">
                 <mat-spinner strokeWidth="2" stroke="'red'" class="white-spinner" [diameter]="16"></mat-spinner>
               </div>
@@ -235,15 +219,13 @@
   <mat-card class="card-portrait" [ngClass]="widgetData.cardCustomeClass ? widgetData.cardCustomeClass : ''">
     <div class="margin-bottom-xs">
       <ng-container>
-        <sb-uic-skeleton-loader [width]="'147px'" [height]="'26px'"
-          [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+        <sb-uic-skeleton-loader [width]="'147px'" [height]="'26px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
       </ng-container>
     </div>
     <div class="flex">
       <div class="margin-right-s">
         <ng-container>
-          <sb-uic-skeleton-loader [width]="'147px'" [height]="'98px'"
-            [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+          <sb-uic-skeleton-loader [width]="'147px'" [height]="'98px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
         </ng-container>
       </div>
       <div class="width-1-1">
@@ -252,16 +234,13 @@
         </div>
         <div class="flex w-full flex-wrap flex-middle">
           <div class=" margin-right-xs">
-            <sb-uic-skeleton-loader [width]="'24px'" [height]="'24px'"
-              [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+            <sb-uic-skeleton-loader [width]="'24px'" [height]="'24px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
           </div>
-          <span class=""><sb-uic-skeleton-loader [width]="'133px'" [height]="'12px'"
-              [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></span>
+          <span class=""><sb-uic-skeleton-loader [width]="'133px'" [height]="'12px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader></span>
         </div>
         <div class="portrait_widget flex margin-top-xs">
           <div class="flex flex-end flex-middle">
-            <sb-uic-skeleton-loader [width]="'65px'" [height]="'12px'"
-              [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
+            <sb-uic-skeleton-loader [width]="'65px'" [height]="'12px'" [bindingClass]="'flex rounded'"></sb-uic-skeleton-loader>
           </div>
         </div>
       </div>
@@ -269,13 +248,11 @@
     <div class="flex flex-align-end progress-wrapper flex-between">
       <div class="progress-block">
         <div class="completed-time">
-          <sb-uic-skeleton-loader [width]="'211px'" [height]="'16px'"
-            [bindingClass]="'flex rounded margin-top-xs md:w-211'"></sb-uic-skeleton-loader>
+          <sb-uic-skeleton-loader [width]="'211px'" [height]="'16px'" [bindingClass]="'flex rounded margin-top-xs md:w-211'"></sb-uic-skeleton-loader>
         </div>
       </div>
       <div class="progress-btn">
-        <sb-uic-skeleton-loader [width]="'117px'" [height]="'32px'"
-          [bindingClass]="'flex rounded margin-top-xs'"></sb-uic-skeleton-loader>
+        <sb-uic-skeleton-loader [width]="'117px'" [height]="'32px'" [bindingClass]="'flex rounded margin-top-xs'"></sb-uic-skeleton-loader>
       </div>
     </div>
   </mat-card>

@@ -1,7 +1,7 @@
 .type-icon {
   font-size: 50px;
-  width: 56px;
-  height: 56px;
+  width: 48px;
+  height: 48px;
 }
 
 .warning-icon {
@@ -63,7 +63,7 @@
   font-size: 14px;
   font-weight: 600;
 }
- 
+
 .dialog-description {
   color: var(--accessbility-shades-with-opacity-kb-greys-black-60, rgba(0, 0, 0, 0.60));
   text-align: center;
@@ -74,11 +74,16 @@
   font-weight: 400;
   line-height: 21px;
 }
- 
+
 .width-full {
   width: 100%;
 }
 
 .primary-icon {
   color: #1B4CA1 !important;
+}
+
+.message {
+  color: rgba(0, 0, 0, 0.60);
+  text-align: center;
 }

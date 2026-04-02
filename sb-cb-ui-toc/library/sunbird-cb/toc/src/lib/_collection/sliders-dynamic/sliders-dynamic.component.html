@@ -50,7 +50,7 @@
         <span *ngIf="slide?.textAfterIcon">{{ translateLabels(slide?.textAfterIcon, 'appKarmapointsPanel') }}</span>
       </div>
       <mat-icon class="cursor-pointer ws-mat-black60-text info-icon" [matTooltip]="translateLabels(slide?.toolTipText, 'appKarmapointsPanel')"
-        *ngIf="slide?.toolTipText">info_outline</mat-icon>
+        *ngIf="slide?.toolTipText && slide?.displayButton !== 'Quick Learner Badge'">info_outline</mat-icon>
     </div>
   </ng-container>
 

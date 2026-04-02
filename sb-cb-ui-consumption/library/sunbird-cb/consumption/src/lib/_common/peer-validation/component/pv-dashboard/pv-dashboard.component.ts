@@ -496,13 +496,14 @@ export class PvDashboardComponent implements OnInit {
       width: '450px',
       data: {
         title: 'End Survey',
-        description: `Are you sure you want to end the survey "${survey.courseName}"? This action cannot be undone.`,
-        iconName: 'error_outline',
+        description: `Are you sure you want to end the survey?`,
+        messages: [{ message: `If you end this survey now, learner will not be able to complete the survey.` }],
+        iconName: 'warning',
         type: 'warning',
         buttonsPositionClass: 'justify-center',
         buttons: [
-          { text: 'Cancel', classes: 'btn-out-line', response: false },
-          { text: 'End Survey', classes: 'succes-button', response: true }
+          { text: 'No', classes: 'btn-out-line', response: false },
+          { text: 'Yes', classes: 'succes-button', response: true }
         ]
       },
       autoFocus: false
@@ -535,13 +536,13 @@ export class PvDashboardComponent implements OnInit {
       width: '450px',
       data: {
         title: 'Archive Survey',
-        description: `Are you sure you want to archive the survey "${survey.courseName}"? This action cannot be undone.`,
-        iconName: 'archive',
+        description: `Are you sure you want to archive this survey?`,
+        iconName: 'warning',
         type: 'warning',
         buttonsPositionClass: 'justify-center',
         buttons: [
-          { text: 'Cancel', classes: 'btn-out-line', response: false },
-          { text: 'Archive', classes: 'succes-button', response: true }
+          { text: 'No', classes: 'btn-out-line', response: false },
+          { text: 'Yes', classes: 'succes-button', response: true }
         ]
       },
       autoFocus: false

@@ -22,7 +22,6 @@ export class LeftMenuV2Component extends WidgetBaseComponent
   }
 
   changeToDefaultImg($event: any) {
-    debugger
     $event.target.src = this.configSvc?.instanceConfig?.logos?.defaultSourceLogo || ''
   }
 

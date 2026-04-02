@@ -16,6 +16,7 @@ export namespace NsContentStripWithTabs {
     disableTranslate?: any
     key: string
     title: string
+    secondaryTitle?: string
     titleClass?: string
     customeClass?: string
     nodataMsg?: string
@@ -67,6 +68,7 @@ export namespace NsContentStripWithTabs {
       enrollmentList?: any
       cbpList?: any,
       apiUrl: string
+      condition: string
       searchRegionRecommendation?: NSSearch.ISearchOrgRegionRecommendationRequest
       api?: IStripRequestApi
       networkApi?: INetworkRequestApi

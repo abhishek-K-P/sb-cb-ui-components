@@ -100,3 +100,47 @@
   font-size: 22px;
   margin-right: 10px;
 }
+
+.tooltip-box {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 260px;
+  background: #ffffff;
+  color: #4b5563; /* gray-600 */
+
+  font-size: 13px;
+  line-height: 1.4;
+
+  padding: 12px 14px;
+  border-radius: 8px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+/* show on hover */
+.group:hover .tooltip-box {
+  opacity: 1;
+}
+
+/* Arrow (speech bubble style) */
+.tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 24px; /* slight left shift like screenshot */
+
+  width: 12px;
+  height: 12px;
+  background: white;
+
+  transform: rotate(45deg);
+
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.08);
+}

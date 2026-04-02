@@ -2,65 +2,62 @@
   <ng-container *ngIf="showCompetencyAdd">
     <div class="margin-bottom-m mt-2">
       <p class="mat-subheading-2">{{ labels.areaLabel || 'Competency Area' }}</p>
-      <mat-radio-group name="competencyArea" class="flex flex-row tgl-group margin-top-s flex-wrap">
-        <mat-radio-button *ngFor="let option of filteredallCompetencies" [value]="option.name"
-          (change)="compAreaSelected(option)" class="flex flex-row itm-center ws-mat-accent-border margin-right-s"
-          [disabled]="viewMode.toLowerCase() === 'view'">
+      <mat-radio-group name="competencyArea" [value]="selectedAreaValue" class="flex flex-row tgl-group margin-top-s flex-wrap">
+        <mat-radio-button *ngFor="let option of filteredallCompetencies" [value]="option.name" (change)="compAreaSelected(option)"
+          class="flex flex-row itm-center ws-mat-accent-border margin-right-s" [disabled]="viewMode.toLowerCase() === 'view'">
           <span class="mat-body-2">{{ option.name }}</span>
         </mat-radio-button>
       </mat-radio-group>
     </div>
+    <ng-container *ngIf="expand">
+      <div class="margin-bottom-m" *ngIf="allCompetencyTheme && allCompetencyTheme.length > 0">
+        <p class="mat-subheading-2">{{ labels.themeLabel || 'Competency Theme' }}</p>
+        <div class="flex flex-1 flex-row margin-fix search relative">
+          <mat-form-field appearance="outline" class="autocomplete-form w-full stakeholders" color="primary">
+            <input type="search" class="ml-2 flex-1" [placeholder]="'Search'" matInput [formControl]="queryThemeControl" maxlength="50"
+              (keyup)="updateQuery(queryThemeControl.value, 'theme')" />
+          </mat-form-field>
+          <button class="margin-top-s" mat-icon-button type="button" (click)="resetSearch('theme')">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+        <div class="mt-4">
+          <span class="display-inline-block complabels mat-caption cursor-pointer"
+            [ngClass]="{active: (seletedCompetencyTheme && option.name === seletedCompetencyTheme.name)}" (click)="compThemeSelected(option)"
+            (keyup)="compThemeSelected(option)" *ngFor="let option of filteredallCompetencyTheme | orderBy: 'name'">
+            {{ option.name }}
+          </span>
+        </div>
+      </div>
 
-    <div class="margin-bottom-m" *ngIf="allCompetencyTheme && allCompetencyTheme.length > 0">
-      <p class="mat-subheading-2">{{ labels.themeLabel || 'Competency Theme' }}</p>
-      <div class="flex flex-1 flex-row margin-fix search relative">
-        <mat-form-field appearance="outline" class="autocomplete-form w-full stakeholders" color="primary">
-          <input type="search" class="ml-2 flex-1" [placeholder]="'Search'" matInput [formControl]="queryThemeControl"
-            maxlength="50" (keyup)="updateQuery(queryThemeControl.value, 'theme')" />
-        </mat-form-field>
-        <button class="margin-top-s" mat-icon-button type="button" (click)="resetSearch('theme')">
-          <mat-icon>refresh</mat-icon>
+      <div class="margin-bottom-m" *ngIf="allCompetencySubtheme && allCompetencySubtheme.length > 0">
+        <p class="mat-subheading-2">{{ labels.subThemeLabel || 'Competency Sub theme' }}</p>
+        <div class="flex flex-1 flex-row margin-fix search">
+          <mat-form-field appearance="outline" class="autocomplete-form w-full stakeholders" color="primary">
+            <input type="search" class="ml-2 flex-1" [placeholder]="'Search'" matInput [formControl]="querySubThemeControl" maxlength="50"
+              (keyup)="updateQuery(querySubThemeControl.value, 'subtheme')" />
+          </mat-form-field>
+          <button class="margin-top-s" mat-icon-button type="button" (click)="resetSearch('subtheme')">
+            <mat-icon>refresh</mat-icon>
+          </button>
+        </div>
+        <div class="mt-4">
+          <span class="display-inline-block complabels mat-caption cursor-pointer"
+            [ngClass]="{active: (seletedCompetencySubTheme && option.name === seletedCompetencySubTheme.name)}" (click)="compSubThemeSelected(option)"
+            (keyup)="compSubThemeSelected(option)" *ngFor="let option of filteredallCompetencySubtheme | orderBy: 'name'">
+            {{ option.name }}
+          </span>
+        </div>
+      </div>
+
+      <div class="margin-bottom-l">
+        <button mat-raised-button type="button" class="ws-mat-default-text compbutton"
+          [ngClass]="!enableCompetencyAdd ? '' : 'ws-mat-accent-border-active'" [disabled]="!enableCompetencyAdd" (click)="addCompetency()">
+          <span class="mat-subheading-2 padding-xs">{{ labels.addButtonLabel || 'Add' }}</span>
         </button>
       </div>
-      <div class="mt-4">
-        <span class="display-inline-block complabels mat-caption cursor-pointer"
-          [ngClass]="{active: (seletedCompetencyTheme && option.name === seletedCompetencyTheme.name)}"
-          (click)="compThemeSelected(option)" (keyup)="compThemeSelected(option)"
-          *ngFor="let option of filteredallCompetencyTheme | orderBy: 'name'">
-          {{ option.name }}
-        </span>
-      </div>
-    </div>
+    </ng-container>
 
-    <div class="margin-bottom-m" *ngIf="allCompetencySubtheme && allCompetencySubtheme.length > 0">
-      <p class="mat-subheading-2">{{ labels.subThemeLabel || 'Competency Sub theme' }}</p>
-      <div class="flex flex-1 flex-row margin-fix search">
-        <mat-form-field appearance="outline" class="autocomplete-form w-full stakeholders" color="primary">
-          <input type="search" class="ml-2 flex-1" [placeholder]="'Search'" matInput
-            [formControl]="querySubThemeControl" maxlength="50"
-            (keyup)="updateQuery(querySubThemeControl.value, 'subtheme')" />
-        </mat-form-field>
-        <button class="margin-top-s" mat-icon-button type="button" (click)="resetSearch('subtheme')">
-          <mat-icon>refresh</mat-icon>
-        </button>
-      </div>
-      <div class="mt-4">
-        <span class="display-inline-block complabels mat-caption cursor-pointer"
-          [ngClass]="{active: (seletedCompetencySubTheme && option.name === seletedCompetencySubTheme.name)}"
-          (click)="compSubThemeSelected(option)" (keyup)="compSubThemeSelected(option)"
-          *ngFor="let option of filteredallCompetencySubtheme | orderBy: 'name'">
-          {{ option.name }}
-        </span>
-      </div>
-    </div>
-
-    <div class="margin-bottom-l">
-      <button mat-raised-button type="button" class="ws-mat-default-text compbutton"
-        [ngClass]="!enableCompetencyAdd ? '' : 'ws-mat-accent-border-active'" [disabled]="!enableCompetencyAdd"
-        (click)="addCompetency()">
-        <span class="mat-subheading-2 padding-xs">{{ labels.addButtonLabel || 'Add' }}</span>
-      </button>
-    </div>
   </ng-container>
 
   <div class="flex new-mobile" *ngIf="showTable && internalCompetencies && internalCompetencies.length > 0">
@@ -73,9 +70,8 @@
             <th class="padding-xs mat-body-1 bold-text font-bold">Theme</th>
             <th class="padding-xs mat-body-1 flex justify-between bold-text font-bold">
               Sub theme
-              <img *ngIf="internalCompetencies.length > 10" class="arrow-down cursor-pointer"
-                src="assets/icons/collections/arrow-down.svg" alt="icon" [ngClass]="{'rotate-icon': !listView}"
-                (click)="listView = !listView" (keyup)="listView = !listView" />
+              <img *ngIf="internalCompetencies.length > 10" class="arrow-down cursor-pointer" src="assets/icons/collections/arrow-down.svg" alt="icon"
+                [ngClass]="{'rotate-icon': !listView}" (click)="listView = !listView" (keyup)="listView = !listView" />
             </th>
             <th class="mat-body-1 bold-text actions-header" *ngIf="viewMode.toLowerCase() !== 'view'"></th>
           </tr>
@@ -84,20 +80,17 @@
               <ng-container *ngFor="let theme of getUniqueThemesForArea(area); let i = index">
                 <ng-container *ngFor="let subtheme of getSubthemesForAreaAndTheme(area, theme); let j = index">
                   <tr>
-                    <td class="padding-xs mat-body-1 cursor-pointer" *ngIf="i === 0 && j === 0"
-                      [attr.rowspan]="getTotalRowsForArea(area)">
+                    <td class="padding-xs mat-body-1 cursor-pointer" *ngIf="i === 0 && j === 0" [attr.rowspan]="getTotalRowsForArea(area)">
                       {{ area }}
                     </td>
-                    <td class="padding-xs mat-body-1 cursor-pointer" *ngIf="j === 0"
-                      [attr.rowspan]="getSubthemesForAreaAndTheme(area, theme).length">
+                    <td class="padding-xs mat-body-1 cursor-pointer" *ngIf="j === 0" [attr.rowspan]="getSubthemesForAreaAndTheme(area, theme).length">
                       {{ theme }}
                     </td>
                     <td class="padding-xs mat-body-1 cursor-pointer">
                       {{ subtheme }}
                     </td>
                     <td class="actions-column" *ngIf="viewMode.toLowerCase() !== 'view'">
-                      <button mat-icon-button type="button" (click)="removeCompetencyV2(area, theme, subtheme)"
-                        aria-label="Remove competency">
+                      <button mat-icon-button type="button" (click)="removeCompetencyV2(area, theme, subtheme)" aria-label="Remove competency">
                         <mat-icon>close</mat-icon>
                       </button>
                     </td>

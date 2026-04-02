@@ -1,6 +1,6 @@
 {
   "name": "sb-cb-ui-notification",
-  "version": "0.0.3-ang-17-20",
+  "version": "0.0.4-ang-17-20",
   "scripts": {
     "ng": "ng",
     "build-watch": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build --watch",

@@ -1,0 +1,282 @@
+
+<div class="container-fluid white-background nlm-micro-sites micro-white" id="nlm-micro-sites">
+    <div class="flex flex-col flex-1">
+        <ng-container *ngIf="sectionList?.length">
+            <ng-container *ngFor="let section of sectionList">
+                <ng-container *ngIf="section?.enabled">
+                    <section id="{{section?.key}}" class="w-full grid grid-cols-12 gap-4 white-bg" [ngClass]="{'container': section.wrapperClass}">
+                        <ng-container *ngFor="let column of section.column">
+                            <div id="{{column?.key}}" class="col-span-{{column.colspan || 12}} ">
+                                <ng-container *ngIf="column?.enabled" [ngSwitch]="column?.key">
+                                    <ng-container *ngSwitchCase="'topSection'" [ngTemplateOutlet]="topSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                    <ng-container *ngSwitchCase="'metricsSection'" [ngTemplateOutlet]="metricsSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                    <ng-container *ngSwitchCase="'keyHighlightsSection'" [ngTemplateOutlet]="keyHighlightsSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                    <ng-container *ngSwitchCase="'mainContentSection'" [ngTemplateOutlet]="mainContentSection"
+                                        [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                        <ng-container *ngSwitchCase="'lookerSection'" [ngTemplateOutlet]="lookerTemplate"
+                                            [ngTemplateOutletContext]="{data: column?.data}"></ng-container>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                    </section>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #topSection let-data="data">
+    <!-- top section desktop layout -->
+    <div class="w-full topSection">
+        <div *ngIf="data.sliderData && data.sliderData.sliders">
+            <sb-uic-sliders [widgetData]="data.sliderData.sliders" [styleData]="data.sliderData.styleData" ></sb-uic-sliders>
+        </div>
+        
+    </div>
+</ng-template>
+
+
+
+<ng-template #metricsSection let-data="data">
+    <!-- top section desktop layout -->
+    <div class="w-full topSection">
+        <div *ngIf="data && data.metrics">
+            <div class="block md:hidden">
+                <sb-uic-data-points
+                    [providerId]="providerId"
+                    [fetchDataFromApi]="true"
+                    [objectData]="data?.metrics?.data"
+                    [layoutType]="'nlwCol'"
+                    [title]="data?.metrics?.title"
+                    [pageLayout]="'nlw'">
+                </sb-uic-data-points>
+            </div>
+            <div class="hidden md:block">
+                <sb-uic-data-points
+                    [providerId]="providerId"
+                    [fetchDataFromApi]="true"
+                    [objectData]="data?.metrics?.data"
+                    [layoutType]="'nlwRow'"
+                    [title]="data?.metrics?.title"
+                    [pageLayout]="'nlw'">
+                </sb-uic-data-points>
+            </div>
+        </div>
+
+        <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class="container">
+                    <div class="block md:hidden">
+                        <sb-uic-key-highlights (emptyResponse)="hideKeyHightlight($event, data.keyHighlights)"  [formData]="data.keyHighlights" [providerId]="providerId" [mode]="'mobile'"></sb-uic-key-highlights>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class="container">
+                    <div class="hidden md:block">
+                        <div class="flex flex items-center justify-center gap-10">
+                            <div class="mr-4 logo-box-container">
+                                <div class="flex logo-box-rounded top mr-4">
+                                    <img alt="Application Logo" class="logo-img" [src]="data?.imageUrl">
+                                </div>
+                            </div>
+                            <div class="w-full md:w-9/12 flex-1 flex flex-col pr-3">
+                                <div class=" txt-ellipsis-2 break-words description-title">{{data?.title}}</div>
+                                <div class="description">{{data?.description | slice:0:descriptionMaxLength}}
+                                    <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="block md:hidden">
+                        <div class="flex flex-col items-center justify-center margin-bottom-xl px-5">
+                            <div class="mlogo-box-rounded">
+                                <img alt="Application Logo" class="logo-img" [src]="data?.imageUrl">
+                            </div>
+                        </div>
+                        <div class="flex flex-col px-5">
+                            <div class=" txt-ellipsis-2 break-words description-title">{{data?.title}}</div>
+                            <div class="mdescription">{{data?.description | slice:0:descriptionMaxLength}}
+                                <span *ngIf="data?.description?.length > descriptionMaxLength">...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class="container margin-top-xl">
+                    <div class="hidden md:block">
+                        <sb-uic-key-highlights (emptyResponse)="hideKeyHightlight($event, data.keyHighlights)"  [formData]="data.keyHighlights" [providerId]="providerId" [mode]="'desktop'"></sb-uic-key-highlights>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #keyHighlightsSection let-data="data">
+       <div class="col-span-12">
+            <div class="flex items-center justify-center">
+                <div class=" {{data?.containerClass || 'container'}}">
+                    <div class="hidden md:block">
+                        <sb-uic-key-highlights (emptyResponse)="hideKeyHightlight($event, data)"  [formData]="data" [providerId]="providerId" [mode]="'desktop'"></sb-uic-key-highlights>
+                    </div>
+                </div>
+            </div>
+        </div>
+</ng-template>
+
+<ng-template #mainContentSection let-data="data">
+    <div class="flex items-center justify-center">
+        <div class="{{data?.containerClass || 'container'}}">
+            <ng-container *ngIf="!isMobile; else mobileView">
+                 <div class="grid grid-cols-12 gap-8 mb-6">
+                    <!-- Desktop Layout -->
+                    <ng-container *ngIf="data?.deskTopKeys">
+                        <!-- Left Content -->
+                        <div *ngIf="data?.deskTopKeys?.leftContent?.data?.length"
+                            class="col-span-12 md:col-span-{{data?.deskTopKeys?.leftContent?.colspan || 12}}">
+
+                            <ng-container *ngFor="let widgetKey of data?.deskTopKeys?.leftContent?.data">
+                                <ng-container [ngTemplateOutlet]="contentsDisplay"
+                                    [ngTemplateOutletContext]="{widgetKey: widgetKey}">
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                        <!-- Right Content -->
+                        <div *ngIf="data?.deskTopKeys?.rightContent?.data?.length"
+                            class="col-span-12 md:col-span-{{data?.deskTopKeys?.rightContent?.colspan || 12}}">
+                            <ng-container *ngFor="let widgetKey of data?.deskTopKeys?.rightContent?.data">
+                                <ng-container [ngTemplateOutlet]="contentsDisplay"
+                                    [ngTemplateOutletContext]="{widgetKey: widgetKey}">
+                                </ng-container>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                 </div>
+            </ng-container>
+            <ng-template #mobileView>
+                <ng-container *ngFor="let widgetKey of data?.mobileKeys">
+                    <ng-container [ngTemplateOutlet]="contentsDisplay"
+                        [ngTemplateOutletContext]="{widgetKey: widgetKey}">
+                    </ng-container>
+                </ng-container>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+<ng-template #contentsDisplay let-widgetKey="widgetKey">
+    <ng-container *ngIf="individualSection && individualSection[widgetKey]" [ngSwitch]="widgetKey">
+        <ng-container *ngSwitchCase="'contentStrips'" [ngTemplateOutlet]="contentStrips"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+        
+        <ng-container *ngSwitchCase="'myprogress'" [ngTemplateOutlet]="myprogress"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+
+            <ng-container *ngSwitchCase="'speakerOftheDay'" [ngTemplateOutlet]="speakerOftheDay"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+
+            <ng-container *ngSwitchCase="'webinarOftheDay'" [ngTemplateOutlet]="webinarOftheDay"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+
+            <ng-container *ngSwitchCase="'events'" [ngTemplateOutlet]="events"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+
+
+            <ng-container *ngSwitchCase="'programContent'" [ngTemplateOutlet]="programContent"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+
+            <ng-container *ngSwitchCase="'mdoLeaderboard'" [ngTemplateOutlet]="mdoLeaderboard"
+            [ngTemplateOutletContext]="{data: individualSection[widgetKey]}"></ng-container>
+            
+    </ng-container>
+</ng-template>
+
+
+
+<ng-template #contentStrips let-data="data">
+    <ng-container *ngFor="let stripData of data">
+        <ng-container *ngIf="stripData?.active">
+            <sb-uic-content-strip-with-tabs
+                [emitViewAll]="false"
+                (viewAllResponse)="''"
+                (telemtryResponse)="raiseTelemetryInteratEvent($event)"
+                (emptyResponse)="''"
+                [providerId]="'123456789'"
+                [widgetData]="{strips: [stripData]}"
+                [channnelName]="'channnelName'">
+            </sb-uic-content-strip-with-tabs>
+        </ng-container>
+    </ng-container>
+
+</ng-template>
+<ng-template #myprogress let-data="data">
+    <div class="{{data?.containerClass}}">
+        <sb-uic-user-progress
+            [objectData]="data?.data" [rootOrgId]="configDetails?.unMappedUser?.rootOrgId">
+        </sb-uic-user-progress>
+    </div>
+</ng-template>
+
+<ng-template #speakerOftheDay let-data="data">
+    <div class="{{data?.containerClass}}">
+        <sb-uic-speakers
+            [objectData]="data?.data">
+        </sb-uic-speakers>
+    </div>
+</ng-template>
+
+<ng-template #webinarOftheDay let-data="data">
+    <div class="{{data?.containerClass}}">
+        <sb-uic-speakers-v2
+            [objectData]="data?.data">
+        </sb-uic-speakers-v2>
+    </div>
+</ng-template>
+
+<ng-template #programContent let-data="data">
+      <ng-container *ngFor="let stripData of data">
+        <ng-container *ngIf="stripData?.enabled">
+            <div class="{{data?.containerClass}}">
+                <sb-uic-ai-program [programData]="stripData"></sb-uic-ai-program>
+            </div>
+        </ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #events let-data="data">
+    <div class="{{data?.containerClass}}">
+        <sb-uic-events [object]="data.column[0]" [nwlEventsConfig]="nlwConfiguration" [mode]="'mobile'"></sb-uic-events>
+    </div>
+</ng-template>
+
+<ng-template #lookerTemplate let-data="data">
+    <div class="flex items-center justify-center" >
+        <!-- container mt-8 -->
+        <div class="{{data?.containerClass || 'container'}}">
+            <div class="key-speakers flex-wrap flex items-center justify-center">
+                <h1 class="featured  text-center">{{data?.header?.headerText}}</h1>
+                <p class="featured-description  p-4 md:p-0 text-center">{{data?.header?.description}}</p>
+            </div>
+            <div class="lookpro" *ngIf="data?.sanitizedUrl">
+                <iframe title="{{data?.header?.headerText}}" width="{{isMobile ? data?.iframe?.mWidth : data?.iframe?.width || '100%'}}" height="{{isMobile ? data?.iframe?.mHeight :data?.iframe?.height || 520}}" [src]="data?.sanitizedUrl" frameborder="0" style="border:0" sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"></iframe>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #mdoLeaderboard let-data="data">
+    <div class="{{data?.containerClass}}">
+         <sb-uic-mdo-leaderboard-v2
+            [object]="data?.data"
+            (tabClicked)="raiseTabClick($event)"></sb-uic-mdo-leaderboard-v2>
+    </div>
+</ng-template>
