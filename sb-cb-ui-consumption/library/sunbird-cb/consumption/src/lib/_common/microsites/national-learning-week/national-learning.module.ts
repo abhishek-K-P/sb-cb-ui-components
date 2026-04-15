@@ -1,7 +1,7 @@
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SkeletonLoaderLibModule } from '../../skeleton-loader-lib/skeleton-loader-lib.module';
-import { NationalLearningComponent } from './national-learning/national-learning.component';
+import { KarmayogiSaptahComponent } from './karmayogi-saptah/karmayogi-saptah.component';
 import { CommonMethodsService } from '../../../_services/common-methods.service';
 import { SlidersLibModule } from '../../sliders/sliders.module';
 import { KeyHighlightsModule } from '../../key-highlights/key-highlights.module';
@@ -17,11 +17,13 @@ import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyTabsModule as MatTabsModule } from '@angular/material/legacy-tabs';
 import { PipeSafeSanitizerModule } from '@sunbird-cb/utils-v2';
+import { SadhanaSaptahComponent } from './sadhana-saptah/sadhana-saptah.component';
+import { MicrositesComponentsModule } from '../micro-sites-components/microsites-components.module';
 
 
 
 @NgModule({
-  declarations: [NationalLearningComponent],
+  declarations: [KarmayogiSaptahComponent, SadhanaSaptahComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -38,10 +40,13 @@ import { PipeSafeSanitizerModule } from '@sunbird-cb/utils-v2';
     SpeakersModule,
     UserProgressModule,
     ContentStripFacetFilterModule,
-    PipeSafeSanitizerModule
+    PipeSafeSanitizerModule,
+    MicrositesComponentsModule
+    
   ],
   exports: [
-    NationalLearningComponent,
+    KarmayogiSaptahComponent,
+    SadhanaSaptahComponent
   ],
   providers:[
     CommonMethodsService

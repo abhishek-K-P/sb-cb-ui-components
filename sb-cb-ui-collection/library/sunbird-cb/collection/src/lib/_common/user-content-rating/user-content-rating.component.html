@@ -1,15 +1,38 @@
-<ng-container *ngIf="enableFeature && contentId">
-  <!-- <mat-card> -->
-  <div>
-    <h2 class="rate-heading" id="rate-heading" i18n>Rate content</h2>
+<!-- <ng-container *ngIf="enableFeature && contentId">
+  <div class="flex">
     <div class="flex">
       <button i18n-aria-label aria-label="Rating" aria-labelledby="rate-heading" name="user-content-rating-star-{{i+1}}"
         [disabled]="isRequesting || isDisabled" class="rating-button" mat-icon-button
-        *ngFor="let _ of [1, 2, 3, 4, 5]; let i = index" (click)="addRating(i)" color="primary">
+        *ngFor="let _ of [5,4,3,2,1]; let i = index" color="primary">
         <mat-icon class="rating-icon orange">
-          {{ (userRating || -1) > i ? 'star' : 'star_border' }}</mat-icon>
+          {{ (userRating?.sum_of_total_ratings || -1) > i ? 'star' : 'star_border' }}</mat-icon>
       </button>
     </div>
+    <span class="mat-body-1" tabindex="0" i18n-aria-label aria-label="Rating">
+      {{userRating?.sum_of_total_ratings || '0'}} out of 5</span>
   </div>
-  <!-- </mat-card> -->
+</ng-container> -->
+<ng-container *ngIf="userRating">
+  <div class="flex-col items-center rating margin-bottom-l">
+    <div class="flex items-center ">
+      <mat-icon class="mr-2 mat-icon material-icons rating-icon ws-mat-black16-text"
+        [ngClass]="{'ws-mat-orange-text': getRatingIconClass(rating, userRating?.avgRating)}"
+        *ngFor="let rating of [1, 2, 3, 4, 5]">
+        {{ getRatingIcon(rating, userRating?.avgRating) }}</mat-icon>
+      <!--  <span i18n>from</span> -->
+      <span class="margin-left-s rating-number mat-body-1"> {{userRating?.avgRating}} out of 5 </span>
+    </div>
+    <div class="margin-top-s mat-body-1 ws-mat-black60-text">
+      {{ userRating?.total_number_of_ratings | pipeCountTransform }} ratings</div>
+  </div>
+  <div class="flex items-center margin-bottom-xs" *ngFor="let rating of userRating?.breakDown.slice().reverse()">
+    <div class="mat-body-2 bold-imp margin-right-m">{{rating.key}} star</div>
+    <div class="flex items-center rating-progress">
+      <mat-progress-bar [mode]="'determinate'" [matTooltip]="rating?.percent + ' %'" [value]="rating?.percent"
+        class="rating-bar" [attr.aria-labelledby]="'m-c-'+ contentId"
+        [ngClass]="{ 'visibility-0': rating === undefined, 'thick': className}" i18n-aria-label>
+        {{rating?.percent}} %
+      </mat-progress-bar>
+    </div>
+  </div>
 </ng-container>

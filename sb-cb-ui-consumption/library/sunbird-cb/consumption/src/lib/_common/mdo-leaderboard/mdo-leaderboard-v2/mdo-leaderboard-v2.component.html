@@ -1,0 +1,99 @@
+<div class="mdo-leaderboard-container">
+
+    <div class="flex l-title gap-2 items-center justify-between px-4 md:px-0 py-4 md:py-0">
+        <div class="flex gap-2">
+            {{object?.title}} <div><img [src]="object?.infoIcon" alt="" i18n-matTooltip [matTooltip]="object?.infoText">
+            </div>
+        </div>
+        <div class="block md:hidden">
+            <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
+        </div>
+        <!-- Edit button -->
+        <button *ngIf="isEdit && isEditable" mat-icon-button class="edit-icon ml-auto" aria-label="Edit MDO Leaderboard"
+            (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+    <div class="flex item-center justify-center" *ngIf="expand">
+        <div class="flex fl-div">
+            <div class="pointer">
+                <span class="dot-dot"></span>
+            </div>
+        </div>
+    </div>
+    <div class="l-content" *ngIf="expand">
+        <!-- ── Top-level Tabs (Center / State) ── -->
+        <div class="top-tabs" *ngIf="hasTabs">
+            <span *ngFor="let tab of object.tabs; let i = index"
+                  class="top-tab"
+                  [ngClass]="{'top-tab-active': activeTopTabIndex === i}"
+                  (click)="selectTopTab(i)">
+                {{ tab.title }}
+            </span>
+        </div>
+
+        <!-- ── Size Filter Pills ── -->
+        <div class="pill-container">
+            <ng-container *ngIf="activeOptions?.length; else defultOptions">
+                <ng-container *ngFor="let option of activeOptions">
+                    <span class="pill" [ngClass]="{'pill-active' : currentPill === option?.value }"
+                        (click)="getPillData(option?.value)">{{option?.label}}</span>
+                </ng-container>
+            </ng-container>
+            <ng-template #defultOptions>
+                <span class="pill" [ngClass]="{'pill-active' : currentPill === 'XL' }"
+                    (click)="getPillData('XL')">Greater than &lt;1L</span>
+                <span class="pill" [ngClass]="{'pill-active' : currentPill === 'L' }"
+                    (click)="getPillData('L')">10K-50K</span>
+                <span class="pill" [ngClass]="{'pill-active' : currentPill === 'M' }"
+                    (click)="getPillData('M')">1K-10K</span>
+                <span class="pill" [ngClass]="{'pill-active' : currentPill === 'S' }"
+                    (click)="getPillData('S')">500-1K</span>
+            </ng-template>
+        </div>
+        <div class="relative search-wrapper margin-top-m mb-5">
+            <mat-icon matPrefix class="flex absolute items-center justify-center mr-2 icon-search">search
+            </mat-icon>
+            <input type="search" name="searchKey" class="search-field" i18-aria-label aria-label="Search"
+                i18n-placeholder="search" [(ngModel)]="searchTerm" placeholder="{{ object?.searchHint }}"
+                (keyup)="handleSearchQuery($event)" />
+        </div>
+        <div class="l-tab-data {{object?.customClass}}" [style.height]="object?.cardHeight"
+            [style.minHeight]="object?.cardMinHeight">
+            <div *ngFor="let user of filteredData; let i = index">
+                <div
+                    class="flex flex-row item mb-{{filteredData.length - 1 === i ? 0 : 5}} gap-3 {{user?.row_num === 1 ? 'relative' : ''}}">
+                    <div><img class="crown absolute" src="assets/images/national-learning/rank-crown.svg"
+                            *ngIf="user?.row_num === 1" /></div>
+                    <div class="{{getRank(user?.row_num)}}">{{user?.row_num}}</div>
+                    <div class="w-full">
+                        <div class="flex flex-between gap-2">
+                            <div>
+                                <div class="rank-name">{{user?.orgName || user?.org_name}}</div>
+                                <div class="rank-points flex mt-1 gap-1"
+                                    *ngIf="!object?.hideEle?.includes('karma-points-only')">
+                                    <img class="nlw-kb" src="assets/icons/home/karma-badge.svg" />
+                                    <div class="points">{{user?.total_points || 0 }} points
+                                    </div>
+                                </div>
+                                <div class="rank-points flex mt-1 gap-1"
+                                    *ngIf="!object?.hideEle?.includes('karma-points-per-capita')">
+                                    <img class="nlw-kb" src="assets/icons/home/karma-badge.svg" />
+                                    <div class="points">Karma Points per capita : {{user?.per_capita_kp || 0 }} 
+                                        <span> (Total Karma Points: {{user?.total_points || 0 }})</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rank-crown" *ngIf="[1,2,3].includes(user?.row_num)">
+                                <img class="nlw-animation" [src]="getMedal(user?.row_num)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="no-data px-1 flex justify-center" *ngIf="filteredData?.length === 0">
+                No data found!
+            </div>
+        </div>
+    </div>
+</div>

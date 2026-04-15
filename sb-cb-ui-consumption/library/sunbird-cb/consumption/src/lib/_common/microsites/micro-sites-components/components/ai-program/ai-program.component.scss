@@ -1,0 +1,564 @@
+// ─── Variables ───────────────────────────────────────────────
+$orange: #F37400;
+$orange-light: #FEE56E;
+$white: #ffffff;
+$text-dark: #212121;
+$text-secondary: #616161;
+$text-light: #9e9e9e;
+$gold-star: #f9a825;
+$shadow-card: 0 2px 12px rgba(0, 0, 0, 0.08);
+
+// ─── Wrapper ─────────────────────────────────────────────────
+.ai-program-wrapper {
+  width: 100%;
+  padding: 0.5rem;
+}
+
+// ─── Main Card ───────────────────────────────────────────────
+// background & border-radius come from [ngStyle]="programData.styleData"
+// fallback values below only apply when styleData is missing
+.ai-program-card {
+  background: linear-gradient(180deg, #266eeb 0%, #133f8b 100%);
+  border-radius: 32px;
+  padding: 1.75rem 1.5rem 1.5rem;
+  color: $white;
+  overflow: hidden;
+}
+
+// ─── Header ──────────────────────────────────────────────────
+.header-section {
+  text-align: center;
+  margin-bottom: 1.25rem;
+}
+
+.header-icon-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.header-logo {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+}
+
+.sparkle-icon {
+  font-size: 1.25rem;
+  color: $white;
+  opacity: 0.9;
+}
+
+.header-title {
+  letter-spacing: 0.3px;
+  color: #FFF;
+
+/* Heading 2 */
+font-family: Montserrat;
+font-size: 24px;
+font-style: normal;
+font-weight: 700;
+line-height: normal;
+margin: 0;
+}
+
+.header-description {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 auto;
+  max-width: 540px;
+  opacity: 0.92;
+}
+
+// ─── Progress Bar (Flexbox: bar–shield–bar–shield–…–bar–badge) ──
+.progress-section {
+  margin-bottom: 1.5rem;
+  padding: 0 1rem;
+}
+
+.progress-bar-track {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+// ─── Bar Segment ─────────────────────────────────────────────
+.bar-segment {
+  flex: 1;
+  height: 8px;
+  background: rgba($white, 0.35);
+  border-radius: 4px;
+  transition: background 0.4s ease;
+
+  &.bar-full {
+    background: linear-gradient(90deg, $orange 0%, $orange-light 100%);
+  }
+
+  &.bar-half {
+    background: linear-gradient(90deg, $orange 0%, $orange-light 50%, rgba($white, 0.35) 50%);
+  }
+}
+
+// ─── Shield Node ─────────────────────────────────────────────
+.shield-node {
+  position: relative;
+  width: 40px;
+  height: 48px;               // keeps 46:60 ratio scaled down
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transform: translateY(8px); // shift down so shield visual-center aligns with bar
+}
+
+.shield-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.shield-path {
+  transition: fill 0.4s ease;
+}
+
+.shield-fill {
+  transition: fill 0.4s ease;
+}
+
+// Completed shield → gradient applied via [attr.fill] in template
+// CSS fill removed to avoid overriding the SVG linearGradient url()
+
+.shield-label {
+  position: relative;
+  z-index: 1;
+  color: #000;
+  font-family: "Times New Roman";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  line-height: 1;
+  margin-top: -12px;            // vertically centre inside shield shape
+}
+
+// ─── Badge Node ──────────────────────────────────────────────
+.badge-node {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  // opacity: 0.35;
+  transition: opacity 0.4s ease;
+
+  &.earned {
+    opacity: 1;
+  }
+}
+
+.badge-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.badge-placeholder {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+// ─── Course Card (Horizontal) ────────────────────────────────
+.course-card {
+  display: flex;
+  flex-direction: row;
+  background: $white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  padding: 16px;
+  cursor: pointer;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $orange;
+    outline-offset: 2px;
+  }
+}
+
+// ─── Image Section ───────────────────────────────────────────
+.course-image-wrapper {
+    display: flex;
+    width: 270px;
+    min-width: 200px;
+    height: 156px;
+    /* padding: 8px; */
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    border-radius: 12px;
+    position: relative;
+}
+
+
+.course-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+    border-radius: 12px;
+}
+
+.course-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #dce6f5 0%, #c7d6eb 100%);
+}
+
+.duration-badge {
+  position: absolute;
+  bottom: 0.6rem;
+  right: 0.6rem;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  color: $white;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.duration-icon {
+  font-size: 0.75rem;
+  mat-icon {
+    vertical-align: middle;
+    color: #fff !important;
+    height: 14px !important;
+    width: 14px !important;
+    font-size: 14px;
+  }
+}
+
+// ─── Content Section ─────────────────────────────────────────
+.course-content {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  color: $text-dark;
+  min-width: 0;
+  padding-top: 0px;
+}
+
+.type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: white;
+  color: $white;
+  padding: 0.2rem 0.65rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  width: fit-content;
+  margin-bottom: 0.5rem;
+  border: 1px solid $orange;
+}
+
+.type-dot {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  mat-icon {
+    color: orange;
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+  }
+}
+
+.type-text {
+  color: var(--accessbility-shades-with-opacity-kb-greys-black-100, #000);
+text-align: center;
+
+/* Dark/Center/Active/Caption */
+font-family: Lato;
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+.course-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-dark;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 40px;
+}
+
+.course-author {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.author-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #00000029;
+  padding: 2px;
+}
+
+.author-img {
+  width: 100%;
+  height: 100%;
+}
+
+.author-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #bdbdbd 0%, #9e9e9e 100%);
+  border-radius: 50%;
+}
+
+.author-text {
+  font-size: 0.78rem;
+  color: $text-secondary;
+  font-weight: 500;
+}
+
+.by-label {
+  color: $text-light;
+}
+
+.course-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.15rem;
+}
+
+.star-icon {
+  color: $gold-star;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.rating-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: $text-dark;
+}
+
+.rating-count {
+  font-size: 0.72rem;
+  color: $text-light;
+}
+
+// ─── Responsive ──────────────────────────────────────────────
+
+// Tablet
+@media (max-width: 768px) {
+  .ai-program-card {
+    padding: 1.5rem 1.25rem 1.25rem;
+  }
+
+  .course-image-wrapper {
+   width: 80px;
+height: 68.889px;
+min-height: 68.889px;
+min-width: 80px;
+
+  }
+}
+
+// Mobile
+@media (max-width: 600px) {
+  .ai-program-wrapper {
+    padding: 0rem;
+  }
+
+  .ai-program-card {
+    padding: 1.25rem 1rem 1rem;
+    border-radius: 20px !important;
+  }
+
+  .header-title {
+    font-size: 1.2rem;
+  }
+
+  .header-description {
+    font-size: 0.72rem;
+    padding: 0 0.25rem;
+  }
+
+  // Progress
+  .progress-section {
+    padding: 0 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .shield-node {
+    width: 32px;
+    height: 38px;
+    transform: translateY(6px);
+  }
+
+  .shield-label {
+    font-size: 0.6rem;
+    margin-top: -6px;
+  }
+
+  .badge-node {
+    width: 32px;
+    height: 32px;
+  }
+
+  // Card stays horizontal — image shrinks, never stacks
+  .course-card {
+    flex-direction: row;
+  }
+
+  .course-image-wrapper {
+  
+   width: 80px;
+height: 68.889px;
+min-height: 68.889px;
+min-width: 80px;
+  }
+
+  .course-content {
+    padding: 0.65rem 0.75rem;
+    padding-top: 0;
+  }
+
+  .type-badge {
+    font-size: 0.62rem;
+    padding: 0.15rem 0.5rem;
+  }
+
+  .course-title {
+    font-size: 0.78rem;
+    margin: 0 0 0.35rem;
+    -webkit-line-clamp: 3;
+  }
+
+  .course-author {
+    gap: 0.3rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .author-avatar {
+    width: 16px;
+    height: 16px;
+  }
+
+  .author-text {
+    font-size: 0.7rem;
+  }
+
+  .course-rating {
+    margin-top: 0.1rem;
+  }
+
+  .star-icon {
+    font-size: 0.78rem;
+  }
+
+  .rating-value {
+    font-size: 0.7rem;
+  }
+
+  .rating-count {
+    font-size: 0.65rem;
+  }
+
+  .duration-badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    bottom: 0.4rem;
+    left: 0.4rem;
+  }
+}
+
+// Small mobile
+@media (max-width: 380px) {
+  .ai-program-card {
+    padding: 1rem 0.75rem 0.75rem;
+    border-radius: 16px !important;
+  }
+
+  .header-title {
+    font-size: 1.05rem;
+  }
+
+  .header-description {
+    font-size: 0.65rem;
+  }
+
+  .progress-section {
+    padding: 0 1rem;
+  }
+
+  .shield-node {
+    width: 26px;
+    height: 32px;
+    transform: translateY(5px);
+  }
+
+  .shield-label {
+    font-size: 0.5rem;
+    margin-top: -5px;
+  }
+
+  .badge-node {
+    width: 26px;
+    height: 26px;
+  }
+
+  .course-image-wrapper {
+    width: 110px;
+    min-width: 110px;
+    min-height: 120px;
+  }
+
+  .course-content {
+    padding: 0.5rem 0.6rem;
+    padding-top: 0;
+  }
+
+  .course-title {
+    font-size: 0.72rem;
+    -webkit-line-clamp: 2;
+  }
+}

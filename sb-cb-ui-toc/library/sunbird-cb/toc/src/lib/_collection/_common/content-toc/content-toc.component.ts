@@ -54,6 +54,7 @@ export class ContentTocComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() sideNavBarOpened = false
   @Input() languageList = []
   @Input() lockCertificate = false
+  @Input() fromMDO = false
   @Output() playResumeForAI = new EventEmitter()
   @Output() enrollUserToAI = new EventEmitter()
   @Output() trigerCompletionSurveyForm = new EventEmitter<boolean>()
@@ -261,7 +262,10 @@ export class ContentTocComponent implements OnInit, AfterViewInit, OnChanges {
 
     if (changes && changes['playResourceId']) {
       if (changes?.playResourceId?.previousValue !== changes?.playResourceId?.currentValue) {
-        if (this.viewerPage && this.viewerDataSvc?.resourceId && this.enableTranscriptionFlag) {
+        if (this.viewerPage && this.enableTranscriptionFlag) {
+          this.resourceIdentifier = this.playResourceId || this.viewerDataSvc?.resourceId
+          this.subTitles = []
+          this.vttLangArr = []
           this.parseVTT()
         }
       }
@@ -424,7 +428,6 @@ export class ContentTocComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   showAiTutorConfirmPopup() {
-    debugger
     this.raiseAIPopupStartTelemetry()
     if (this.isEnrolled) {
       this.fromAITutor = true

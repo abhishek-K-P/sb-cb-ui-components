@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, HostBinding, Inject, EventEmitter, Output } from '@angular/core'
+import { Component, OnInit, Input, OnDestroy, AfterViewInit, HostBinding, Inject, EventEmitter, Output, NgZone, ViewChildren, QueryList } from '@angular/core'
 import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
 import { NsContentStripWithTabs } from './content-strip-with-tabs-lib.model'
 // import { HttpClient } from '@angular/common/http'
@@ -20,11 +20,15 @@ import { WidgetUserServiceLib } from '../../_services/widget-user-lib.service'
 // import { environment } from 'src/environments/environment'
 // tslint:disable-next-line
 import * as _ from 'lodash'
-import { MatLegacyTabChangeEvent as MatTabChangeEvent } from '@angular/material/legacy-tabs'
+import { MatLegacyTabChangeEvent as MatTabChangeEvent, MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs'
 import { NsCardContent } from '../../_models/card-content-v2.model'
 import { ITodayEvents } from '../../_models/event'
 import { TranslateService } from '@ngx-translate/core'
 import { Router } from '@angular/router'
+
+const IDB_NAME = 'zoho-form'
+const IDB_STORE = 'enrollment'
+const IDB_HIERARCHY_STORE = 'hierarchy'
 
 interface IStripUnitContentData {
   key: string
@@ -35,6 +39,7 @@ interface IStripUnitContentData {
   enabled?: boolean
   widgets?: NsWidgetResolver.IRenderConfigWithAnyData[]
   stripTitle: string
+  stripSecondaryTitle?: string
   titleClass?: string
   stripTitleLink?: {
     link: {
@@ -78,6 +83,7 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
   implements
   OnInit,
   OnDestroy,
+  AfterViewInit,
   NsWidgetResolver.IWidgetData<NsContentStripWithTabs.IContentStripMultiple> {
   @Input() widgetData!: NsContentStripWithTabs.IContentStripMultiple
   @Output() emptyResponse = new EventEmitter<any>()
@@ -112,6 +118,8 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
   currentTab: any
   moveToNextTab = false
   currentTabIndex = 0
+  @ViewChildren(MatTabGroup) tabGroups!: QueryList<MatTabGroup>
+  private paginationTimers: any[] = []
 
   constructor(
     // private contentStripSvc: ContentStripNewMultipleService,
@@ -127,7 +135,8 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
     private userSvc: WidgetUserServiceLib,
     private translate: TranslateService,
     private langtranslations: MultilingualTranslationsService,
-    private enrollSvc: WidgetEnrollService
+    private enrollSvc: WidgetEnrollService,
+    private ngZone: NgZone
   ) {
     super()
     if (localStorage.getItem('websiteLanguage')) {
@@ -162,10 +171,46 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
 
   }
 
+  ngAfterViewInit() {
+    // Force mat-tab-header to recalculate pagination on SPA navigation
+    this.triggerTabPaginationUpdate()
+    // Also re-trigger whenever ViewChildren list changes (new tabs rendered)
+    this.tabGroups.changes.subscribe(() => {
+      this.triggerTabPaginationUpdate()
+    })
+  }
+
   ngOnDestroy() {
     if (this.changeEventSubscription) {
       this.changeEventSubscription.unsubscribe()
     }
+    this.clearPaginationTimers()
+  }
+
+  /**
+   * Directly call updatePagination() on each MatTabGroup to recalculate
+   * whether pagination arrows should be shown. Uses staggered delays
+   * to handle async rendering during SPA navigation.
+   */
+  private triggerTabPaginationUpdate(): void {
+    this.clearPaginationTimers()
+    const delays = [0, 100, 300, 500, 1000, 2000]
+    delays.forEach(delay => {
+      const timer = setTimeout(() => {
+        if (this.tabGroups) {
+          this.tabGroups.forEach(tg => {
+            try { tg.updatePagination() } catch (_e) { /* noop */ }
+            try { tg.realignInkBar() } catch (_e) { /* noop */ }
+          })
+        }
+      }, delay)
+      this.paginationTimers.push(timer)
+    })
+  }
+
+  private clearPaginationTimers(): void {
+    this.paginationTimers.forEach(t => clearTimeout(t))
+    this.paginationTimers = []
   }
 
   showAccordion(key: string) {
@@ -656,6 +701,10 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
                 let result: any = []
                 if (comprehensiveResponse?.results?.result?.content && comprehensiveResponse?.results?.result?.content?.length) {
                   comprehensiveContent = comprehensiveResponse.results.result.content
+
+                  const comprehensiveAssessmentIdentifiers = comprehensiveContent.map((a: any) => a?.identifier)
+                  this.setCaIdentifiers(comprehensiveAssessmentIdentifiers)                  
+
                   let courseUnits =  []
                   comprehensiveResult = comprehensiveResponse.results.result.content.map((ele: any) => {
                       if(ele?.courseUnits && ele.courseUnits.length) {
@@ -1069,6 +1118,7 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
       errorWidget: strip.errorWidget,
       stripInfo: strip.stripInfo || {},
       stripTitle: strip.title,
+      stripSecondaryTitle: strip?.secondaryTitle || '',
       titleClass: strip.titleClass || '',
       stripTitleLink: strip.stripTitleLink,
       disableTranslate: strip.disableTranslate,
@@ -1123,6 +1173,10 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
       }
     } else {
       this.contentAvailable = true
+    }
+    // After tabs data updates, recalculate mat-tab pagination
+    if (fetchStatus === 'done' && stripData.tabs && stripData.tabs.length) {
+      this.triggerTabPaginationUpdate()
     }
   }
   private checkParentStatus(fetchStatus: TFetchStatus, stripWidgetsCount: number): void {
@@ -2092,6 +2146,24 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
               } else {
                 this.emptyResponse.emit(true)
               }
+            } else if(response && response.results && response.results.result && response.results.result.data && response.results.result.data.length) {
+              let data = response.results.result.data.map((item: any) => {
+              return {
+                  ...item,
+                  "name": item?.contentPartnerName || '',
+                  "logoUrl": item?.link || '',
+                  "description": item?.description || '',
+                  "contentDisplayType":  strip?.request?.condition || 'extCourse',
+                  "isExternalProvider": true
+                }
+              })
+              this.processStrip(
+                strip,
+                this.transformContentsToWidgets(data, strip),
+                'done',
+                calculateParentStatus,
+                response.viewMoreUrl,
+              )
             } else {
               this.processStrip(strip, [], 'error', calculateParentStatus, null)
               this.emptyResponse.emit(true)
@@ -2563,5 +2635,41 @@ export class ContentStripWithTabsLibComponent extends WidgetBaseComponent
       stripData: this.widgetData
     })
   }
+
+private openEnrollmentCache(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 2);
+
+    req.onupgradeneeded = (e: any) => {
+      const db: IDBDatabase = e.target.result;
+
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE);
+      }
+
+      if (!db.objectStoreNames.contains(IDB_HIERARCHY_STORE)) {
+        db.createObjectStore(IDB_HIERARCHY_STORE);
+      }
+    };
+
+    req.onsuccess = (e: any) => resolve(e.target.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+private setCaIdentifiers(data: any): void {
+  this.openEnrollmentCache()
+    .then(db => {
+      db.transaction(IDB_STORE, 'readwrite')
+        .objectStore(IDB_STORE)
+        .put(
+          { data, timestamp: Date.now() },
+          'comprehensiveAssessmentIdentifiers'
+        );
+    })
+    .catch(() => {
+      /* silently ignore cache write failures */
+    });
+}
 
 }

@@ -1174,9 +1174,6 @@ mat-divider {
   }
 }
 
-.knowledge-level-container {
-  margin-left: auto;
-}
 
 .level-badge {
   display: inline-flex;
@@ -1215,4 +1212,12 @@ mat-divider {
 
 .level-badge svg {
   flex-shrink: 0;
+}
+.badgediv {
+  width: 25px;
+  height: 25px;
+}
+.badge-img {
+  width: 100%;
+  height: 100%;
 }

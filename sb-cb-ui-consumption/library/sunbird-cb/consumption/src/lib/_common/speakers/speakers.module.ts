@@ -5,11 +5,12 @@ import { ScrollableItemModule } from '../../_directives/scrollable-item/scrollab
 import { SlidersNgContentLibModule } from '../sliders-ng-content/sliders-ng-content.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
+import { SpeakersV2Component } from './speakers-v2/speakers-v2.component';
 
 
 
 @NgModule({
-  declarations: [SpeakersComponent],
+  declarations: [SpeakersComponent, SpeakersV2Component],
   imports: [
     CommonModule,
     ScrollableItemModule,
@@ -18,7 +19,8 @@ import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/le
     MatIconModule,
   ],
   exports: [
-    SpeakersComponent
+    SpeakersComponent,
+    SpeakersV2Component
   ]
 })
 export class SpeakersModule { }

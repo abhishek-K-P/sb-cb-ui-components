@@ -11,6 +11,7 @@ import { MultilingualTranslationsService, EventService, WsEvents } from '@sunbir
 })
 export class SlidersDynamicComponent implements OnInit {
   @Input() widgetData!: ICarousel
+  @Input() baseContentReadData : any;
   @HostBinding('id')
   public id = `banner_${Math.random()}`
   currentIndex = 0
@@ -28,6 +29,7 @@ export class SlidersDynamicComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log('widgetData', this.widgetData,this?.baseContentReadData)
     this.reInitiateSlideInterval()
   }
 

@@ -1,0 +1,169 @@
+@use '@sunbird-cb/design-system/src/styles/ws-common';
+@use '@sunbird-cb/design-system/src/styles/ws-vars';
+@use '@sunbird-cb/design-system/src/styles/ws-mixins' as  *;
+
+.white-bg {
+    background: white !important;
+}
+
+.nlw-mandatoryCourse {
+    ::ng-deep.capitalize {
+        font-size: 20px;
+        line-height: 24.38px;
+    }
+}
+
+.nlm-micro-sites {
+    ::ng-deep.container {
+        max-width: 1200px!important;
+    }
+    ::ng-deep.banner-container {
+        padding-bottom: 0!important;
+    }
+}
+.topSection {    
+    ::ng-deep.prev {
+        margin-left: 15px!important;
+    }
+    ::ng-deep.next {
+        margin-right: 15px!important;
+    }
+    .stats-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        left: 43.5%;
+        top: -20px;
+        text-transform: capitalize;
+    }
+    .stats-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #F3962F;
+        padding: 12px 16px;
+        color: white;
+        /* stylelint-disable */
+        font-family: Lato;
+        /* stylelint-enable */
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 16.8px;
+        border-radius: 35px;
+
+    }
+    .my-arrow {
+        font-size: 12px;
+    }
+    .less-opacity1 {
+        opacity: 0.75;
+    }
+    .less-opacity2 {
+        opacity: 0.5;
+    }
+    .details-wrapper {
+        padding: 16px;
+        display: flex;
+        gap: 50px;
+    }
+
+    .logo-box-container {
+        width: 180px;
+        position: relative;
+        @include breakpoint-xs {
+            width: 112px;
+            height: 72px;
+        }
+    }
+    .logo-box-rounded {
+        height: 180px;
+        width: 180px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.06);
+        @include breakpoint-xs {
+            width: 112px;
+            height:112px;
+        }
+        .logo-img{
+            max-width: 122px;
+            @include breakpoint-xs {
+                max-width: 84px;
+            }
+        }
+    }
+    .mlogo-box-rounded {
+        height: 180px;
+        width: 180px;
+        background: #fff;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 1px 1px 8px 3px rgba(0, 0, 0, 0.06);
+        @include breakpoint-xs {
+            width: 112px;
+            height:112px;
+        }
+        .logo-img{
+            max-width: 122px;
+            @include breakpoint-xs {
+                max-width: 84px;
+            }
+        }
+    }
+
+    .txt-ellipsis-2 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+    .description-title {
+        /* stylelint-disable */
+        font-family: Montserrat;
+        /* stylelint-enable */
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 19.5px;
+        text-align: left;
+        padding-bottom: 16px;
+    }
+    .description {
+        /* stylelint-disable */
+        font-family: Lato;
+        /* stylelint-enable */
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        text-align: left;
+    }
+    .mdescription {
+        /* stylelint-disable */
+        font-family: Lato;
+        /* stylelint-enable */
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 16.8px;
+        text-align: left;
+    }
+
+
+    @media screen and (min-width: 320px) and (max-width: 769px) {
+        ::ng-deep.prev {
+            margin-left: 15px!important;
+        }
+        ::ng-deep.next {
+            margin-right: 15px!important;
+        }
+        ::ng-deep.banner-container {
+            min-height: 212px !important;
+        }
+    }
+}
+

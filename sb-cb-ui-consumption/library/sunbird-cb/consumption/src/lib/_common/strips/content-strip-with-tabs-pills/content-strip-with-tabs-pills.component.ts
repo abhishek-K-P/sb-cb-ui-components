@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, HostBinding, Inject, EventEmitter, Output } from '@angular/core'
+import { Component, OnInit, Input, OnDestroy, AfterViewInit, HostBinding, Inject, EventEmitter, Output, NgZone, ViewChildren, QueryList } from '@angular/core'
 import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
 import { NsContentStripWithTabsAndPills } from './content-strip-with-tabs-pills.model'
 // import { HttpClient } from '@angular/common/http'
@@ -25,12 +25,14 @@ import { ITodayEvents } from '../../../_models/event'
 import { TranslateService } from '@ngx-translate/core'
 import { Router } from '@angular/router'
 import { MatDialog } from '@angular/material/dialog'
+import { MatLegacyTabGroup as MatTabGroup } from '@angular/material/legacy-tabs'
 import { AddCompetencyPopupComponent } from '../../dialog-components/add-competency-popup/add-competency-popup.component'
 import { MatSnackBar } from '@angular/material/snack-bar'
 import { SnackbarComponent } from '../../dialog-components/snackbar/snackbar.component'
 import { fadeAnimation } from '../../_animations/fade-animation'
 import { SakshamAI } from '../../../consumption.config'
 import { NsContentStripWithTabs } from '../../content-strip-with-tabs-lib/content-strip-with-tabs-lib.model'
+import { CommonMethodsService } from '../../../_services/common-methods.service'
 
 interface IStripUnitContentData {
   key: string
@@ -83,6 +85,7 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
   implements
   OnInit,
   OnDestroy,
+  AfterViewInit,
   NsWidgetResolver.IWidgetData<NsContentStripWithTabsAndPills.IContentStripMultiple> {
   @Input() widgetData!: NsContentStripWithTabsAndPills.IContentStripMultiple
   @Output() emptyResponse = new EventEmitter<any>()
@@ -126,6 +129,10 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
   firstTimeLoaded = false
   localRecommended: any
   sakshamAIEnum = SakshamAI
+  CaCourseUnitIds: any = `[]`
+  @ViewChildren(MatTabGroup) tabGroups!: QueryList<MatTabGroup>
+  private paginationTimers: any[] = []
+
   constructor(
     // private contentStripSvc: ContentStripNewMultipleService,
     @Inject('environment') environment: any,
@@ -143,6 +150,8 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
     private enrollSvc: WidgetEnrollService,
     private matDialog: MatDialog,
     public snackBar: MatSnackBar,
+    private commonSvc: CommonMethodsService,
+    private ngZone: NgZone
   ) {
     super()
     if (localStorage.getItem('websiteLanguage')) {
@@ -196,6 +205,15 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
     return str.toLocaleLowerCase().replace(" ", "-")
   }
 
+  ngAfterViewInit() {
+    // Force mat-tab-header to recalculate pagination on SPA navigation
+    this.triggerTabPaginationUpdate()
+    // Also re-trigger whenever ViewChildren list changes (new tabs rendered)
+    this.tabGroups.changes.subscribe(() => {
+      this.triggerTabPaginationUpdate()
+    })
+  }
+
   ngOnDestroy() {
     if (this.changeEventSubscription) {
       this.changeEventSubscription.unsubscribe()
@@ -209,6 +227,33 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
       this.telementrySubscription.unsubscribe()
       this.contentSvc.setTelementrySubscription(false)
     }
+    this.clearPaginationTimers()
+  }
+
+  /**
+   * Directly call updatePagination() on each MatTabGroup to recalculate
+   * whether pagination arrows should be shown. Uses staggered delays
+   * to handle async rendering during SPA navigation.
+   */
+  private triggerTabPaginationUpdate(): void {
+    this.clearPaginationTimers()
+    const delays = [0, 100, 300, 500, 1000, 2000]
+    delays.forEach(delay => {
+      const timer = setTimeout(() => {
+        if (this.tabGroups) {
+          this.tabGroups.forEach(tg => {
+            try { tg.updatePagination() } catch (_e) { /* noop */ }
+            try { tg.realignInkBar() } catch (_e) { /* noop */ }
+          })
+        }
+      }, delay)
+      this.paginationTimers.push(timer)
+    })
+  }
+
+  private clearPaginationTimers(): void {
+    this.paginationTimers.forEach(t => clearTimeout(t))
+    this.paginationTimers = []
   }
 
   showAccordion(key: string) {
@@ -604,6 +649,10 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
       }
     } else {
       this.contentAvailable = true
+    }
+    // After tabs data updates, recalculate mat-tab pagination
+    if (fetchStatus === 'done' && stripData.tabs && stripData.tabs.length) {
+      this.triggerTabPaginationUpdate()
     }
   }
   private checkParentStatus(fetchStatus: TFetchStatus, stripWidgetsCount: number): void {
@@ -1047,8 +1096,8 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
   public tabClicked(tabEvent: any, pillIndex: any, stripMap: IStripUnitContentData, stripKey: string) {
     let tabEventIndex = tabEvent
     this.activeTabIndex = tabEventIndex
-   
-    
+
+
     if (stripMap && stripMap.tabs && stripMap.tabs[tabEventIndex]) {
       stripMap.tabs[tabEventIndex].pillsData[pillIndex].fetchTabStatus = 'inprogress'
       stripMap.tabs[tabEventIndex].pillsData[pillIndex].tabLoading = true
@@ -1071,7 +1120,7 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
     //   }
 
     // );
-    
+
     const currentTabFromMap: any = stripMap.tabs && stripMap.tabs[tabEventIndex]
     const currentPillFromMap: any = stripMap.tabs && stripMap.tabs[tabEventIndex]?.pillsData[pillIndex]
     const currentStrip = this.widgetData.strips.find(s => s.key === stripKey)
@@ -1096,7 +1145,7 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
           this.fetchEventEnrollmentList(currentStrip, tabEventIndex, pillIndex, true)
         } else if (currentPillFromMap.request.type === 'enrollment') {
           this.fetchFromInternalEnrollmentList(currentStrip, tabEventIndex, pillIndex, true)
-        } else if(currentPillFromMap.request.playlistRead ) {
+        } else if (currentPillFromMap.request.playlistRead) {
           this.getTabDataByNewReqPlaylistReadContent(currentStrip, tabEventIndex, pillIndex, currentPillFromMap, true)
         }
         // if (stripMap && stripMap.tabs && stripMap.tabs[tabEvent.index]) {
@@ -1374,7 +1423,7 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
         } else if (currentPillFromMap.request.type === 'eventEnrollment') {
           this.fetchEventEnrollmentList(currentStrip, tabIndex, pillIndex, true)
 
-        } else if(currentPillFromMap.request.playlistRead ) {
+        } else if (currentPillFromMap.request.playlistRead) {
           this.getTabDataByNewReqPlaylistReadContent(currentStrip, tabIndex, pillIndex, currentPillFromMap, true)
         }
         // if (stripMap && stripMap.tabs && stripMap.tabs[tabEvent.index]) {
@@ -1471,71 +1520,84 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
   // cbp plans
   async fetchAllCbpPlans(strip: any, calculateParentStatus = true) {
     if (strip.request && strip.request.cbpList && Object.keys(strip.request.cbpList).length) {
-      let courses: NsContent.IContent[]
+      let courses: NsContent.IContent[] = []
       let tabResults: any[] = []
       let userId = this.configSvc.userProfile.userId
-      const response = await this.userSvc.fetchCbpPlanList(userId).toPromise()
       const tabCardSubType = _.get(strip, `tabs[${this.tabEventG}].cardSubType`, null)
+      try {
+        const response = await this.userSvc.fetchCbpPlanList(userId).toPromise()
 
-      if (Array.isArray(response) && response.length > 0) {
-        courses = response
+        if (Array.isArray(response) && response?.length > 0) {
+          courses = response
 
-        if (strip.tabs && strip.tabs.length) {
-          tabResults = this.splitCbpTabsData(courses, strip)
-          let countOfWidget = true
-          if (strip && strip.tabs && strip.tabs.length) {
-            strip.tabs.forEach((tab: any) => {
-              if (tab.pillsData && tab.pillsData.length) {
-                tab.pillsData.forEach((pill: any) => {
-                  if (pill && pill.widgets && pill.widgets.length) {
-                    if (countOfWidget) {
-                      pill.selected = true
-                      countOfWidget = false
+          if (strip?.tabs && strip?.tabs?.length) {
+            tabResults = this.splitCbpTabsData(courses, strip)
+            let countOfWidget = true
+            if (strip?.tabs && strip?.tabs?.length) {
+              strip.tabs.forEach((tab: any) => {
+                if (tab?.pillsData && tab?.pillsData?.length) {
+                  tab.pillsData.forEach((pill: any) => {
+                    if (pill && pill.widgets && pill.widgets.length) {
+                      if (countOfWidget) {
+                        pill.selected = true
+                        countOfWidget = false
+                      }
                     }
-                  }
-                })
-              }
-            })
+                  })
+                }
+              })
+            }
+            await this.processStrip(
+              strip,
+              this.transformContentsToWidgets(courses, strip, tabCardSubType),
+              'done',
+              calculateParentStatus,
+              '',
+              tabResults
+            )
+          } else {
+            this.processStrip(
+              strip,
+              this.transformContentsToWidgets(courses, strip, tabCardSubType),
+              'done',
+              calculateParentStatus,
+              'viewMoreUrl',
+            )
           }
-          await this.processStrip(
+        } else {
+          const firstPill = strip?.tabs?.[0]?.pillsData?.[0]
+          if (firstPill) {
+            firstPill.selected = true
+            firstPill.widgets = []
+            firstPill.fetchTabStatus = 'done'
+            firstPill.tabLoading = false
+          }
+          strip.showOnLoader = false
+          if (strip?.tabs?.[0]) {
+            strip.tabs[0].hideTab = true
+          }
+          // get index of first tab which does not have hideTab / hideTab is false
+          const firstVisibleTabIndex = Array.isArray(strip?.tabs)
+            ? strip.tabs.findIndex((tab: any) => !tab.hideTab)
+            : -1
+          if (firstVisibleTabIndex !== -1) {
+            this.tabClicked(firstVisibleTabIndex, 0, strip, strip.key)
+          }
+          this.processStrip(
             strip,
-            this.transformContentsToWidgets(courses, strip, tabCardSubType),
+            this.transformContentsToWidgets([], strip, tabCardSubType),
             'done',
             calculateParentStatus,
             '',
-            tabResults
-          )
-        } else {
-          this.processStrip(
-            strip,
-            this.transformContentsToWidgets(courses, strip, tabCardSubType),
-            'done',
-            calculateParentStatus,
-            'viewMoreUrl',
+            strip.tabs || []
           )
         }
-      } else {
-        strip.tabs[0].pillsData[0].selected = true
-        strip.tabs[0].pillsData[0].widgets = []
-        strip.tabs[0].pillsData[0].fetchTabStatus = 'done'
+      } catch (_err) {
         strip.showOnLoader = false
-        strip.tabs[0].pillsData[0].tabLoading = false
-        strip.tabs[0].hideTab = true
-        // get index of first tab which does not have hideTab / hideTab is false
-        const firstVisibleTabIndex = strip.tabs.findIndex((tab: any) => !tab.hideTab)
-        if (firstVisibleTabIndex !== -1) {
-          this.tabClicked(firstVisibleTabIndex, 0, strip, strip.key)
-        }
-        this.processStrip(
-          strip,
-          this.transformContentsToWidgets(courses, strip, tabCardSubType),
-          'done',
-          calculateParentStatus,
-          '',
-          strip.tabs
-        )
+        this.processStrip(strip, [], 'done', calculateParentStatus, '', strip.tabs)
+      } finally {
+        clearInterval(this.enrollInterval)
       }
-      clearInterval(this.enrollInterval)
     }
   }
 
@@ -1605,6 +1667,8 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
 
   getTabsList(array: NsContent.IContent[],
     strip: NsContentStripWithTabsAndPills.IContentStripUnit) {
+    this.CaCourseUnitIds = this.commonSvc.getCourseUnitIds()
+
     let all: any[] = []
     let upcoming: any[] = []
     let overdue: any[] = []
@@ -1655,7 +1719,20 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
       return data.contentStatus < 2
     })
 
-    apar = array.filter((e: any) => e.isApar === true)
+    // apar = array.filter((e: any) => e.isApar === true)
+    const targetId = 'do_1144773146063912961797'
+
+    apar = array
+      .filter((e: any) => e.isApar)
+      .sort((a: any, b: any) => {
+        const getPriority = (item: any) => {
+          if (item?.identifier === targetId) return 3;
+          if (this.CaCourseUnitIds?.length && this.CaCourseUnitIds?.includes(item?.identifier)) return 2;
+          return 1;
+        };
+
+        return getPriority(b) - getPriority(a);
+      });
 
     return [
       { value: 'all', widgets: this.transformContentsToWidgets(all, strip) },
@@ -1848,7 +1925,7 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
     calculateParentStatus: boolean,
     courseRecommendationId: string
   ) {
-    if (strip.tabs[tabIndex].request.courseRecommendation) {
+    if (strip.tabs[tabIndex]?.request?.courseRecommendation) {
       this.sakshamLoader = true
       let payload = {
         "user_id": this.configSvc.userProfile.userId,
@@ -2086,152 +2163,152 @@ export class ContentStripWithTabsPillsComponent extends WidgetBaseComponent
     return formedUrl
   }
 
-    async fetchPlaylistReadData(strip:any, calculateParentStatus = true) {
-      if (strip?.tabs?.length) {
-        // TODO: Have to extract requestRequired to outer level of tabs config
-        const firstTab = strip.tabs[0]
-        if (firstTab.requestRequired && firstTab.request && firstTab.request.playlistRead && Object.keys(firstTab.request.playlistRead).length) {
-          
-          if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs ) {
-            const allTabs = this.stripsResultDataMap[strip.key].tabs
-            const currentTabFromMap = (allTabs && allTabs.length && allTabs[0]) as NsContentStripWithTabs.IContentStripTab
-            this.getTabDataByNewReqPlaylistReadContent(strip, 0, 0, currentTabFromMap, calculateParentStatus)
-          }
-        }
-      } else {
-        if (strip.request && strip.request.playlistRead && Object.keys(strip.request.playlistRead).length) {
-          let originalFilters: any = []
-          if (strip.request &&
-            strip.request.playlistRead &&
-            strip.request.playlistRead.type) {
-            strip.request.apiUrl = this.getFullUrl(strip.request.apiUrl, strip.request.playlistRead.type)
-          }
-          if (strip.tabs && strip.tabs.length) {
-            // TODO: Have to extract requestRequired to outer level of tabs config
-            const firstTab = strip.tabs[0]
-            if (firstTab.requestRequired && firstTab.request && firstTab.request.playlistRead && Object.keys(firstTab.request.playlistRead).length) {
-              if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs) {
-                const allTabs = this.stripsResultDataMap[strip.key].tabs
-                const currentTabFromMap = (allTabs && allTabs.length && allTabs[0]) as NsContentStripWithTabs.IContentStripTab
-  
-                this.getTabDataByNewReqPlaylistReadContent(strip, 0, 0, currentTabFromMap, calculateParentStatus)
-              }
-            }
-  
-          }
-        }
-      }
-    }
+  async fetchPlaylistReadData(strip: any, calculateParentStatus = true) {
+    if (strip?.tabs?.length) {
+      // TODO: Have to extract requestRequired to outer level of tabs config
+      const firstTab = strip.tabs[0]
+      if (firstTab.requestRequired && firstTab.request && firstTab.request.playlistRead && Object.keys(firstTab.request.playlistRead).length) {
 
-
-    async getRequestMethod(strip: any,
-      request: NsContentStripWithTabs.IContentStripUnit['request'],
-      apiUrl: string,
-      calculateParentStatus: boolean
-    ): Promise<any> {
-      const originalFilters: any = []
-      return new Promise<any>((resolve, reject) => {
-        if (request && request) {
-          this.contentSvc.getApiMethod(apiUrl).subscribe(results => {
-            let showViewMore: any
-            if (results.result.data) {
-              showViewMore = Boolean(
-                results.result.data && results.result.data.orgList.length > 5 && strip.stripConfig && strip.stripConfig.postCardForSearch,
-              )
-            } else if (results.result.content) {
-              let featuredProvider = JSON.parse(results.result.content.featuredProviders || '[]')
-              showViewMore = Boolean(
-                featuredProvider && featuredProvider.length > 5 && strip.stripConfig && strip.stripConfig.postCardForSearch,
-              )
-            }
-            const viewMoreUrl = showViewMore
-              ? {
-                path: strip.viewMoreUrl && strip.viewMoreUrl.path || '',
-              }
-              : null
-            resolve({ results, viewMoreUrl })
-          }, (error: any) => {
-            this.processStrip(strip, [], 'error', calculateParentStatus, null)
-            reject(error)
-          },
-          )
-        }
-      })
-    }
-      async getTabDataByNewReqPlaylistReadContent(
-        strip: any,
-        tabIndex: number,
-        pillIndex: number,
-        currentTab: NsContentStripWithTabs.IContentStripTab,
-        calculateParentStatus: boolean
-      ) {
-        if (currentTab.request &&
-          currentTab.request.playlistRead &&
-          currentTab.request.playlistRead.type) {
-          currentTab.request.apiUrl = this.getFullUrl(currentTab.request.apiUrl, currentTab.request.playlistRead.type)
-        }
-        try {
-        const response = await this.getRequestMethod(strip, currentTab.request.playlistRead, currentTab.request.apiUrl, calculateParentStatus)
-        const widgets = this.transformContentsToWidgets(response.results.result.content, strip, '')
-        let tabResults: any[] = []
         if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs) {
           const allTabs = this.stripsResultDataMap[strip.key].tabs
-          const allPills = this.stripsResultDataMap[strip.key].tabs[tabIndex]?.pillsData
-          this.resetSelectedPill(allPills)
-          if (allTabs && allTabs.length && allTabs[tabIndex]) {
-            if (allPills && allPills.length && allPills[pillIndex]) {
-              allPills[pillIndex] = {
-                ...allPills[pillIndex],
-                widgets,
-                // fetchTabStatus: 'done',
-                selected: true
-              }
-            }
-            allTabs[tabIndex] = {
-              ...allTabs[tabIndex],
-              widgets,
-              fetchTabStatus: 'done',
-            }
-            tabResults = allTabs
-          }
+          const currentTabFromMap = (allTabs && allTabs.length && allTabs[0]) as NsContentStripWithTabs.IContentStripTab
+          this.getTabDataByNewReqPlaylistReadContent(strip, 0, 0, currentTabFromMap, calculateParentStatus)
         }
-        this.processStrip(
-          strip,
-          widgets,
-          'done',
-          calculateParentStatus,
-          null,
-          tabResults // tabResults as widgets
-        )
-        this.statusChangetoDone(strip, tabIndex, pillIndex)
-        } catch (error) {
-          console.error('Error:', error)
-          let tabResults: any[] = []
-          if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs && this.stripsResultDataMap[strip.key].tabs.length) {
-            const allTabs = this.stripsResultDataMap[strip.key].tabs
-            const allPills = this.stripsResultDataMap[strip.key].tabs[tabIndex]?.pillsData
-            if (allTabs && allTabs.length && allTabs[tabIndex]) {
-              if (allPills && allPills.length && allPills[pillIndex]) {
-                allPills[pillIndex] = {
-                  ...allPills[pillIndex],
-                  widgets: [],
-                  fetchTabStatus: 'done',
-                  selected: true
-                }
-              }
-              allTabs[tabIndex] = {
-                ...allTabs[tabIndex],
-                widgets: [],
-                fetchTabStatus: 'done',
-              }
-              tabResults = allTabs
-            }
-            this.processStrip(strip, [], 'done', calculateParentStatus, null, tabResults)
-          } else {
-            this.processStrip(strip, [], 'done', calculateParentStatus, null, tabResults)
-          }
-        }
-        
       }
+    } else {
+      if (strip.request && strip.request.playlistRead && Object.keys(strip.request.playlistRead).length) {
+        let originalFilters: any = []
+        if (strip.request &&
+          strip.request.playlistRead &&
+          strip.request.playlistRead.type) {
+          strip.request.apiUrl = this.getFullUrl(strip.request.apiUrl, strip.request.playlistRead.type)
+        }
+        if (strip.tabs && strip.tabs.length) {
+          // TODO: Have to extract requestRequired to outer level of tabs config
+          const firstTab = strip.tabs[0]
+          if (firstTab.requestRequired && firstTab.request && firstTab.request.playlistRead && Object.keys(firstTab.request.playlistRead).length) {
+            if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs) {
+              const allTabs = this.stripsResultDataMap[strip.key].tabs
+              const currentTabFromMap = (allTabs && allTabs.length && allTabs[0]) as NsContentStripWithTabs.IContentStripTab
+
+              this.getTabDataByNewReqPlaylistReadContent(strip, 0, 0, currentTabFromMap, calculateParentStatus)
+            }
+          }
+
+        }
+      }
+    }
+  }
+
+
+  async getRequestMethod(strip: any,
+    request: NsContentStripWithTabs.IContentStripUnit['request'],
+    apiUrl: string,
+    calculateParentStatus: boolean
+  ): Promise<any> {
+    const originalFilters: any = []
+    return new Promise<any>((resolve, reject) => {
+      if (request && request) {
+        this.contentSvc.getApiMethod(apiUrl).subscribe(results => {
+          let showViewMore: any
+          if (results.result.data) {
+            showViewMore = Boolean(
+              results.result.data && results.result.data.orgList.length > 5 && strip.stripConfig && strip.stripConfig.postCardForSearch,
+            )
+          } else if (results.result.content) {
+            let featuredProvider = JSON.parse(results.result.content.featuredProviders || '[]')
+            showViewMore = Boolean(
+              featuredProvider && featuredProvider.length > 5 && strip.stripConfig && strip.stripConfig.postCardForSearch,
+            )
+          }
+          const viewMoreUrl = showViewMore
+            ? {
+              path: strip.viewMoreUrl && strip.viewMoreUrl.path || '',
+            }
+            : null
+          resolve({ results, viewMoreUrl })
+        }, (error: any) => {
+          this.processStrip(strip, [], 'error', calculateParentStatus, null)
+          reject(error)
+        },
+        )
+      }
+    })
+  }
+  async getTabDataByNewReqPlaylistReadContent(
+    strip: any,
+    tabIndex: number,
+    pillIndex: number,
+    currentTab: NsContentStripWithTabs.IContentStripTab,
+    calculateParentStatus: boolean
+  ) {
+    if (currentTab.request &&
+      currentTab.request.playlistRead &&
+      currentTab.request.playlistRead.type) {
+      currentTab.request.apiUrl = this.getFullUrl(currentTab.request.apiUrl, currentTab.request.playlistRead.type)
+    }
+    try {
+      const response = await this.getRequestMethod(strip, currentTab.request.playlistRead, currentTab.request.apiUrl, calculateParentStatus)
+      const widgets = this.transformContentsToWidgets(response.results.result.content, strip, '')
+      let tabResults: any[] = []
+      if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs) {
+        const allTabs = this.stripsResultDataMap[strip.key].tabs
+        const allPills = this.stripsResultDataMap[strip.key].tabs[tabIndex]?.pillsData
+        this.resetSelectedPill(allPills)
+        if (allTabs && allTabs.length && allTabs[tabIndex]) {
+          if (allPills && allPills.length && allPills[pillIndex]) {
+            allPills[pillIndex] = {
+              ...allPills[pillIndex],
+              widgets,
+              // fetchTabStatus: 'done',
+              selected: true
+            }
+          }
+          allTabs[tabIndex] = {
+            ...allTabs[tabIndex],
+            widgets,
+            fetchTabStatus: 'done',
+          }
+          tabResults = allTabs
+        }
+      }
+      this.processStrip(
+        strip,
+        widgets,
+        'done',
+        calculateParentStatus,
+        null,
+        tabResults // tabResults as widgets
+      )
+      this.statusChangetoDone(strip, tabIndex, pillIndex)
+    } catch (error) {
+      console.error('Error:', error)
+      let tabResults: any[] = []
+      if (this.stripsResultDataMap[strip.key] && this.stripsResultDataMap[strip.key].tabs && this.stripsResultDataMap[strip.key].tabs.length) {
+        const allTabs = this.stripsResultDataMap[strip.key].tabs
+        const allPills = this.stripsResultDataMap[strip.key].tabs[tabIndex]?.pillsData
+        if (allTabs && allTabs.length && allTabs[tabIndex]) {
+          if (allPills && allPills.length && allPills[pillIndex]) {
+            allPills[pillIndex] = {
+              ...allPills[pillIndex],
+              widgets: [],
+              fetchTabStatus: 'done',
+              selected: true
+            }
+          }
+          allTabs[tabIndex] = {
+            ...allTabs[tabIndex],
+            widgets: [],
+            fetchTabStatus: 'done',
+          }
+          tabResults = allTabs
+        }
+        this.processStrip(strip, [], 'done', calculateParentStatus, null, tabResults)
+      } else {
+        this.processStrip(strip, [], 'done', calculateParentStatus, null, tabResults)
+      }
+    }
+
+  }
 
 }

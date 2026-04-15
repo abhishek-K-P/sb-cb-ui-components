@@ -30,7 +30,7 @@
         </ng-container>
         <div class="flex justify-end m-4">
           <!-- <button mat-button class="do-later-btn" (click)="closeDialog()">{{'apptoc.doItLater' | translate}}</button> -->
-          <button mat-button class="submit-btn" [disabled]="!surveyFormIsValid" (click)="submitForm()">{{'apptoc.submit'
+          <button mat-button class="submit-btn" [disabled]="!surveyFormIsValid || forPreview" (click)="submitForm()">{{'apptoc.submit'
             | translate}}</button>
         </div>
       </form>

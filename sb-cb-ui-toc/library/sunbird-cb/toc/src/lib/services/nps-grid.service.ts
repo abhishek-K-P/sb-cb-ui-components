@@ -1,29 +1,46 @@
 import { Injectable } from '@angular/core'
-import { Observable, of } from 'rxjs'
+import { HttpClient } from '@angular/common/http'
+// import { map } from 'rxjs/operators'
+// tslint:disable
+import _ from 'lodash'
+import { BehaviorSubject } from 'rxjs'
+// tslint:enable
 
-/**
- * NPS Grid Service - Stub implementation
- * Provides NPS grid/survey functionality
- */
-@Injectable({
-  providedIn: 'root',
-})
+const API_END_POINTS = {
+    readFeed: (id: string) => `/apis/proxies/v8/user/v1/feed/${id}`,
+    getFormID: (id: string) => `/apis/proxies/v8/forms/getFormById?id=${id}`,
+    submitForm: `/apis/proxies/v8/forms/v1/saveFormSubmit`,
+    SUBMIT_ENROLMENT_FORM: `apis/proxies/v8/forms/v2/saveFormSubmit`,
+    deleteFeed: `/apis/proxies/v8/user/feed/v1/delete`,
+}
+
+@Injectable()
 export class NPSGridService {
-  constructor() {}
+  private telemetryEvents = new BehaviorSubject(false)
+  updateTelemetryDataObservable = this.telemetryEvents.asObservable()
 
-  getGridData(): Observable<any> {
-    return of([])
+  constructor(private http: HttpClient) { }
+
+  updateTelemetryData(state: boolean) {
+    this.telemetryEvents.next(state)
   }
 
-  submitGridResponse(data: any): Observable<any> {
-    return of({ success: true })
+  getFeedStatus(id: any) {
+    return this.http.get<any>(API_END_POINTS.readFeed(id))
   }
 
-  getGridConfig(): Observable<any> {
-    return of({})
+  getFormData(formid: any) {
+    return this.http.get<any>(API_END_POINTS.getFormID(formid))
   }
 
-  submitBpFormWithProfileDetails(formData: any, profileData?: any): Observable<any> {
-    return of({ success: true })
+  submitPlatformRating(req: any) {
+    return this.http.post<any>(API_END_POINTS.submitForm, req)
+  }
+
+  deleteFeed(req: any) {
+    return this.http.post<any>(API_END_POINTS.deleteFeed, req)
+  }
+  submitBpFormWithProfileDetails(req: any) {
+    return this.http.post<any>(API_END_POINTS.SUBMIT_ENROLMENT_FORM, req)
   }
 }

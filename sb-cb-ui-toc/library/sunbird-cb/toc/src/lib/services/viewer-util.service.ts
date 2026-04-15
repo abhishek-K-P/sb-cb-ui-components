@@ -418,12 +418,12 @@ export class ViewerUtilService {
 
   getContent(contentId: string): Observable<NsContent.IContent> {
     const forPreview = window.location.href.includes('/public/') || window.location.href.includes('&preview=true')
-    let url = `/apis/proxies/v8/action/content/v3/read/${contentId}`
+    let url = `/apis/proxies/v8/content/v2/read/${contentId}`
     if (!forPreview) {
-      url = `/apis/proxies/v8/action/content/v3/read/${contentId}`
+      url = `/apis/proxies/v8/content/v2/read/${contentId}`
     } else {
       if (window.location.href.includes('editMode=true') && window.location.href.includes('_rc')) {
-        url = `/apis/proxies/v8/action/content/v3/read/${contentId}`
+        url = `/apis/proxies/v8/content/v2/read/${contentId}`
       } else {
         url = `/api/content/v1/read/${contentId}`
       }
@@ -475,7 +475,7 @@ export class ViewerUtilService {
   //     let url = ''
   //     const forPreview = window.location.href.includes('/public/') || window.location.href.includes('&preview=true')
   //       if (!forPreview) {
-  //         url = `/apis/proxies/v8/action/content/v3/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
+  //         url = `/apis/proxies/v8/course/v1/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
   //       } else {
   //         url = `/api/course/v1/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
   //       }
@@ -483,7 +483,7 @@ export class ViewerUtilService {
   //   }
 
   fetchContent(id: string, type: string) {
-    return this.http.get<NsContent.IContent>(`/apis/proxies/v8/action/content/v3/hierarchy/${id}?mode=${type}`)
+    return this.http.get<NsContent.IContent>(`/apis/proxies/v8/course/v1/hierarchy/${id}?mode=${type}`)
   }
 
   updateContentHashMapForAssesstent(contentId: string, contentProgress: any) {

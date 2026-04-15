@@ -615,6 +615,8 @@ export class EntitySelectionsComponent implements OnInit, OnDestroy {
               if (this.filterValue === "selected" || query) this.updateAlphabet();
               this.getFilteredEntityGrouped();
 
+            } else if(response?.result && response?.result?.count) {
+              // ignore empty block - no data but count exists
             } else {
               this.dataList = [];
               this.dataListDup = [];

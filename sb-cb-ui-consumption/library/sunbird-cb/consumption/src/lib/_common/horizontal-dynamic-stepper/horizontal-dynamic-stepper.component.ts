@@ -1,5 +1,6 @@
 import { StepperSelectionEvent } from '@angular/cdk/stepper'
-import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList, TemplateRef } from '@angular/core'
+import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, Output, QueryList, TemplateRef, ViewChild } from '@angular/core'
+import { MatStepper } from '@angular/material/stepper'
 
 @Component({
   selector: 'sb-uic-horizontal-dynamic-stepper',
@@ -8,6 +9,7 @@ import { AfterContentInit, Component, ContentChildren, EventEmitter, Input, Outp
 })
 export class HorizontalDynamicStepperComponent implements AfterContentInit {
 
+  @ViewChild('stepper') stepper!: MatStepper
   @ContentChildren(TemplateRef) bodyTemplates!: QueryList<TemplateRef<any>>
   @Input() labels: string[] = [];
   @Input() selectedIndex = 0;
@@ -24,6 +26,13 @@ export class HorizontalDynamicStepperComponent implements AfterContentInit {
 
   onSelectionChange(event: StepperSelectionEvent) {
     this.stepChange.emit(event.selectedIndex)
+  }
+
+  /** Programmatically force the mat-stepper to a specific step index */
+  goToStep(index: number) {
+    if (this.stepper) {
+      this.stepper.selectedIndex = index
+    }
   }
 
 }

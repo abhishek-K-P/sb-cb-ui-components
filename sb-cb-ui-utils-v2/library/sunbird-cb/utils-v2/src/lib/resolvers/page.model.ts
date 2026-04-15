@@ -32,6 +32,7 @@ export namespace NsPage {
     actionBtnId?: string
     actionBtn?: NsAppsConfig.IFeature
     actionBtnName?: string
+    className?: string
   }
 
   export interface INavLinkConfig<T> {

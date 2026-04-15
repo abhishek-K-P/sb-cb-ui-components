@@ -28,6 +28,7 @@ import { ReleaseNotesComponent } from './release-notes.component'
         MatProgressSpinnerModule,
         MatExpansionModule,
         BtnPageBackModule,
-    ]
+    ],
+    exports: [ReleaseNotesComponent]
 })
 export class ReleaseNotesModule { }

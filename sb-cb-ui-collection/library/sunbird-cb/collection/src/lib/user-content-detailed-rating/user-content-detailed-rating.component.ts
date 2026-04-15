@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core'
-import { ConfigurationsService } from '@sunbird-cb/utils-v2'
+import { NsContent } from '../_services/widget-content.model'
 import { IContentRating } from './contentRating.model'
+import { WidgetContentService } from '../_services/widget-content.service'
+import { ConfigurationsService } from '@sunbird-cb/utils-v2'
 
 @Component({
   selector: 'ws-widget-user-content-detailed-rating',
@@ -10,29 +12,38 @@ import { IContentRating } from './contentRating.model'
 export class UserContentDetailedRatingComponent implements OnInit {
   @Input() contentId!: string
   @Input() isDisabled = true
+  @Input() contentTyp!: NsContent.EContentTypes
   isRequesting = true
   userRating!: IContentRating
   @Input() forPreview = false
   averageRatings = 0
+  defaultValue = [{ key: 5, value: 0 }, { key: 4, value: 0 }, { key: 3, value: 0 }, { key: 2, value: 0 }, { key: 1, value: 0 }]
 
   constructor(
     // private events: EventService,
-    // private contentSvc: WidgetContentService,
+    private contentSvc: WidgetContentService,
     private configSvc: ConfigurationsService,
   ) { }
 
   ngOnInit() {
-    // if (!this.forPreview) {
-    //   this.contentSvc.fetchContentRatingsV2(this.contentId).subscribe(
-    //     result => {
-    //       this.isRequesting = false
-    //       this.userRating = result
-    //     },
-    //     _err => {
-    //       this.isRequesting = false
-    //     },
-    //   )
-    // }
+    if (!this.forPreview) {
+      this.contentSvc.getRatingSummary(this.contentId, this.contentTyp).subscribe(
+        res => {
+          this.isRequesting = false
+          this.userRating = res.result.response
+          this.defaultValue = [
+            { key: 5, value: this.userRating.totalcount5stars || 0 },
+            { key: 4, value: this.userRating.totalcount4stars || 0 },
+            { key: 3, value: this.userRating.totalcount3stars || 0 },
+            { key: 2, value: this.userRating.totalcount2stars || 0 },
+            { key: 1, value: this.userRating.totalcount1stars || 0 },
+          ]
+        },
+        _err => {
+          this.isRequesting = false
+        },
+      )
+    }
   }
 
   // addRating(index: number) {

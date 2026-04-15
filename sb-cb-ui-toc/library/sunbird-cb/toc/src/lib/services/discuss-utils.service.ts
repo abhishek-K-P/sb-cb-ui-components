@@ -1,55 +1,45 @@
 import { Injectable } from '@angular/core'
-import { Observable, of } from 'rxjs'
-import { HttpClient } from '@angular/common/http'
 
-/**
- * Discuss Utils Service
- * Handles discussion forum related utilities
- */
 @Injectable({
   providedIn: 'root',
 })
 export class DiscussUtilsService {
-  constructor(private http: HttpClient) {}
+  discussionCnfig: any
 
-  /**
-   * Get discussion forum configuration
-   */
-  getDiscussionConfig(): any {
-    return {
-      enabled: true,
-      menuOptions: []
+  constructor() { }
+
+  /*Get color Hex code by passing a string*/
+  stringToColor(str: string) {
+    let hash = 0
+    // tslint:disable-next-line: no-increment-decrement
+    for (let i = 0; i < str.length; i++) {
+      // tslint:disable-next-line: no-bitwise
+      hash = str.charCodeAt(i) + ((hash << 5) - hash)
     }
+    const hue = Math.abs(hash % 360)
+    // tslint:disable-next-line: prefer-template
+    const colour = 'hsl(' + hue + ',100%,30%)'
+    // tslint:disable-next-line: prefer-template
+    // const colour = 'hsl(' + hue + ',100%,80%)'
+    return colour
   }
 
-  /**
-   * Set discussion forum configuration
-   */
-  setDiscussionConfig(config: any): void {
-    // Stub implementation
-    console.log('DiscussUtilsService.setDiscussionConfig:', config)
+  /*Get text contrast by passing background hex color*/
+  getContrast(_hexcolor: any) {
+    // right now going with harcoded approach
+    // const r = parseInt(hexcolor.substr(1, 2), 16)
+    // const g = parseInt(hexcolor.substr(3, 2), 16)
+    // const b = parseInt(hexcolor.substr(5, 2), 16)
+    // const color = ((r * 299) + (g * 587) + (b * 114)) / 1000
+    // return (color >= 160) ? '#000000' : '#ffffff'
+    return 'rgba(255, 255, 255, 80%)'
   }
 
-  /**
-   * Navigate to discussion forum
-   */
-  navigateToDiscussion(contentId: string): void {
-    // Stub implementation
-    console.log('DiscussUtilsService.navigateToDiscussion:', contentId)
+  setDiscussionConfig(config: any) {
+    this.discussionCnfig = config
   }
 
-  /**
-   * Get discussion count for content
-   */
-  getDiscussionCount(contentId: string): Observable<number> {
-    return of(0)
-  }
-
-  /**
-   * Set discussion configuration (alias)
-   */
-  setDiscussConfig(config: any): void {
-    // Stub implementation
-    console.log('DiscussUtilsService.setDiscussConfig:', config)
+  getDiscussionConfig() {
+    return this.discussionCnfig
   }
 }

@@ -43,7 +43,7 @@ export class AppTocCiosHomeComponent implements OnInit, AfterViewInit {
   currentLang: any = 'en'
   discussWidgetData!: NsDiscussionV2.ICommentWidgetData
   showProviderTips = false
-
+  fromMDO = false
   @HostListener('window:scroll', ['$event'])
   handleScroll() {
 
@@ -509,7 +509,23 @@ export class AppTocCiosHomeComponent implements OnInit, AfterViewInit {
       )
     }
   }
-
+  showBadgeIcon(): boolean {
+    const badgeDetails = this.extContentReadData?.badgeDetails_v1
+    if (!badgeDetails || !badgeDetails.length) {
+      return false
+    }
+    const badge = badgeDetails[0]
+    // If badgeEarningDateEnabled is false, don't show badge
+    if (!badge.badgeEarningDateEnabled) {
+      return true
+    }
+    // If badgeEarningDateEnabled is true, show badge only if badgeEarningDateTime has passed
+    if (badge?.badgeEarningDateEnabled && badge?.badgeEarningDateTime) {
+      console.log(badge.badgeEarningDateTime, Date.now())
+      return badge.badgeEarningDateTime > Date.now()
+    }
+    return false
+  }
   get showEnroll(): boolean {
     return Object.keys(this.userExtCourseEnroll).length === 0 &&
       !this.enrollValidationLoading &&

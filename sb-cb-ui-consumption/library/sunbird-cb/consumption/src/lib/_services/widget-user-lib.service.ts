@@ -211,6 +211,8 @@ export class WidgetUserServiceLib {
               // ask for full metadata (fullMeta = true)
               return await this.mapCbpData(cbpContentData, responseData, true)
             }
+            // return an empty full-meta list when API response has no content
+            return await this.mapCbpData([], {}, true)
           }
         ))
         return result
@@ -246,13 +248,15 @@ export class WidgetUserServiceLib {
             // default: return reduced metadata (fullMeta = false)
             return await this.mapCbpData(cbpContentData, responseData, false)
           }
+          // return an empty reduced list and update cache when API response has no content
+          return await this.mapCbpData([], {}, false)
         }
       )
       )
       this.setTime('cbpService')
       return result
     }
-    return this.getData('cbpData')
+    return this.getCBPData('cbpData')
   }
 
   // storeUserEnrollmentInfo(enrollmentData: any, enrolledCourseCount: number) {

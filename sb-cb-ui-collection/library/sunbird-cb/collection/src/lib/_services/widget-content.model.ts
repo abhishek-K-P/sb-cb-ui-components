@@ -420,6 +420,7 @@ export namespace NsContent {
     STANDALONE_ASSESSMENT = 'STANDALONE ASSESSMENT',
     BLENDED_PROGRAM = 'BLENDED PROGRAM',
     CURATED_PROGRAM = 'CURATED PROGRAM',
+    SURVEY = 'SURVEY'
   }
   // for UI
   export enum EFilterCategory {

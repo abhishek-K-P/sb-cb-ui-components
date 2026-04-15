@@ -1,6 +1,6 @@
 {
   "name": "sb-cb-ui-collection",
-  "version": "0.0.1-cbrelease-4.8.34",
+  "version": "0.0.4-cbrelease-4.8.34",
   "scripts": {
     "ng": "ng",
     "build": "node --max_old_space_size=8000 ./node_modules/@angular/cli/bin/ng build",
@@ -29,7 +29,8 @@
     "@sunbird-cb/discussion-v2": "0.0.6-cbrelease-4.8.28",
     "@sunbird-cb/micro-surveys": "2.0.20-ang-13-16",
     "@sunbird-cb/resolver-v2": "0.0.7-ang-13-16",
-    "@sunbird-cb/utils-v2": "0.0.43-spv-mdo-upgrade",
+    "@sunbird-cb/utils-v2": "0.0.1-cbrelease-4.8.34",
+    "@ctrl/ngx-emoji-mart": "7.1.0",
     "@types/lodash": "4.14.168",
     "@types/file-saver": "^2.0.1",
     "chart.js": "^2.9.4",
@@ -41,7 +42,7 @@
     "ngx-image-cropper": "^3.3.4",
     "ngx-infinite-scroll": "^16.0.0",
     "ngx-quill": "^23.0.0",
-    "pdfjs-dist": "^2.6.347",
+    "pdfjs-dist": "^2.1.266",
     "quill": "^1.3.7",
     "rxjs": "~6.5.2",
     "tslib": "^2.0.0",
@@ -51,6 +52,7 @@
     "videojs-vr": "1.5.0",
     "videojs-youtube": "^2.6.0",
     "xlsx": "^0.16.1",
+    "worker-loader": "^3.0.8",
     "zone.js": "~0.13.3"
   },
   "devDependencies": {
@@ -65,7 +67,7 @@
     "@types/jasminewd2": "~2.0.6",
     "@types/mustache": "^0.8.32",
     "@types/node": "^12.11.1",
-    "@types/pdfjs-dist": "^2.1.7",
+    "@types/pdfjs-dist": "2.1.0",
     "@types/quill": "^1.3.0",
     "@types/video.js": "^7.3.52",
     "@types/vis": "^4.21.19",
@@ -87,6 +89,6 @@
     "tslint-config-airbnb": "^5.11.1",
     "typescript": "~4.9.5",
     "typescript-tslint-plugin": "^0.5.4",
-    "webpack-bundle-analyzer": "^3.4.1"
+    "webpack-bundle-analyzer": "^4.6.1"
   }
 }

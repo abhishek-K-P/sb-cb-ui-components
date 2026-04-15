@@ -104,10 +104,12 @@ $banner-min-height: 243px;
   &.left {
     left: 0;
     transform: translateX(0);
+    z-index: 998;
   }
   &.right{
     left: 100%;
     transform: translateX(-100%);
+    z-index: 998;
   }
   &.top-center{
     left: 0;
@@ -264,9 +266,11 @@ $banner-min-height: 243px;
   &.middle-inline {
     .prev {
       left: 30px;
+      z-index: 998;
     }
     .next {
       right: 30px;
+      z-index: 998;
     }
   }
 }

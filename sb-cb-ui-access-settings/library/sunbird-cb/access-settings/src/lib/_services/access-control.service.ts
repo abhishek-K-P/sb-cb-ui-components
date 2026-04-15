@@ -74,7 +74,7 @@ export class AccessControlService {
       request: {
         filters: {
           status: 1,
-          isMdo: true,
+          // isMdo: true,
         },
         // sort_by: {
         //   channel: "asc", 

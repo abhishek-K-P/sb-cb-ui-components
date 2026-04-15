@@ -66,6 +66,8 @@ import { StripAddContentComponent } from './components/strip-add-content/strip-a
 import { AddTabDialogComponent } from './components/add-tab-dialog/add-tab-dialog.component'
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component'
 import { EventsCalendarModule } from '../../events-calendar/events-calendar.module'
+import { AiProgramComponent } from './components/ai-program/ai-program.component'
+import { PipeDurationTransformModule } from '@sunbird-cb/utils-v2'
 
 @NgModule({
   declarations: [
@@ -84,7 +86,8 @@ import { EventsCalendarModule } from '../../events-calendar/events-calendar.modu
     StripSectionCreateComponent,
     StripAddContentComponent,
     AddTabDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    AiProgramComponent
   ],
   imports: [
     CommonModule,
@@ -139,7 +142,9 @@ import { EventsCalendarModule } from '../../events-calendar/events-calendar.modu
     MatIconModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    EventsCalendarModule
+    EventsCalendarModule,
+
+            PipeDurationTransformModule,
   ],
   exports: [
     TopSectionComponent,
@@ -154,7 +159,8 @@ import { EventsCalendarModule } from '../../events-calendar/events-calendar.modu
     EditorDialogComponent,
     SlwConfigDialogComponent,
     ActionItemsComponent,
-    StripAddContentComponent
+    StripAddContentComponent,
+    AiProgramComponent
   ],
   providers: [
     CommonMethodsService

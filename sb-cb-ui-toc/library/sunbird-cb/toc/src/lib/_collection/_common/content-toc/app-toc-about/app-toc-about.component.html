@@ -1,3 +1,4 @@
+
 <ng-template #certificateCard>
     <ng-container *ngIf="!disableCertificate">
         <ng-container *ngIf="!lockCertificate; else certificateLock">
@@ -248,11 +249,18 @@
         <ws-widget-skeleton-loader [bindingClass]="'flex rounded'" [height]="'148px'"></ws-widget-skeleton-loader>
     </ng-container>
 
-    <ng-container *ngIf="fromViewer || router.url.includes('/viewer/pdf/do_')">
+    <ng-container *ngIf="(fromViewer || router.url.includes('/viewer/pdf/do_')) && !fromMDO">
         <div class="flex flex-col gap-1 mt-2">
             <div class="flex font-semibold text-base">{{ handleCapitalize(content?.name) }} </div>
             <div class="mob-text break-words text-sm nodtranslate">{{ 'cardcontentv2.by' | translate }} {{
                 content?.source }}</div>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="(fromViewer || router.url.includes('/viewer/pdf/do_')) && fromMDO">
+        <div class="flex flex-col gap-1 mt-2">
+            <div class="flex font-semibold text-base">{{ handleCapitalize(content?.result?.content?.name) }} </div>
+            <div class="mob-text break-words text-sm nodtranslate">{{ 'cardcontentv2.by' | translate }} {{
+                content?.result?.content?.source }}</div>
         </div>
     </ng-container>
 
@@ -324,8 +332,14 @@
                     [bindingClass]="'rounded'"></ws-widget-skeleton-loader>
             </div>
         </ng-container>
-        <ng-container *ngIf="!skeletonLoader && !fromMarketPlace">
+        <ng-container *ngIf="!skeletonLoader && !fromMarketPlace && !fromMDO">
+           
             <ws-widget-toc-kpi-values [content]="content" [tocStructure]="tocStructure" [isMobile]="isMobile"
+                [contentReadData]="contentReadData" [baseContentReadData]="baseContentReadData"
+                [languageList]="languageList"></ws-widget-toc-kpi-values>
+        </ng-container>
+         <ng-container *ngIf="!skeletonLoader && !fromMarketPlace && fromMDO">
+            <ws-widget-toc-kpi-values [content]="content?.result?.content" [tocStructure]="tocStructure" [isMobile]="isMobile"
                 [contentReadData]="contentReadData" [baseContentReadData]="baseContentReadData"
                 [languageList]="languageList"></ws-widget-toc-kpi-values>
         </ng-container>
@@ -488,12 +502,14 @@
     </ng-container>
 
     <ng-container *ngIf="!skeletonLoader">
+        
         <ng-container *ngIf="!strip?.loaderWidgets?.length || !competenciesObject">
             <div class="flex flex-col">
                 <ng-container [ngTemplateOutlet]="competencyLabel"></ng-container>
                 {{ 'apptocsinglepage.noCompetencyFound' | translate }}
             </div>
         </ng-container>
+        
         <ng-container *ngIf="strip?.loaderWidgets?.length > 0">
             <div class="flex flex-col gap-3">
                 <ng-container [ngTemplateOutlet]="competencyLabel"></ng-container>
@@ -718,7 +734,7 @@
             </div>
         </div>
 
-        <div class="flex flex-column gap-3" [ngClass]="{'hideAbove1200': !router.url.includes('/viewer/')}">
+        <div *ngIf="!fromMDO" class="flex flex-column gap-3" [ngClass]="{'hideAbove1200': !router.url.includes('/viewer/')}">
             <div class="text-base font-bold">{{ 'apptocsinglepage.provider' | translate }}</div>
             <div class="flex flex-row gap-4 items-center">
                 <div class="provider-logo-div">
@@ -728,6 +744,18 @@
                         alt="{{ 'apptocsinglepage.provider' | translate }}" />
                 </div>
                 <div class="text-sm break-all">{{ handleCapitalize(content?.source, 'source') }}</div>
+            </div>
+        </div>
+        <div *ngIf="fromMDO" class="flex flex-column gap-3" [ngClass]="{'hideAbove1200': !router.url.includes('/viewer/')}">
+            <div class="text-base font-bold">{{ 'apptocsinglepage.provider' | translate }}</div>
+            <div class="flex flex-row gap-4 items-center">
+                <div class="provider-logo-div">
+                    <img *ngIf="(content?.result?.content?.creatorLogo)" height="36px" width="36px" [src]="content?.result?.content?.creatorLogo"
+                        alt="{{ 'apptocsinglepage.provider' | translate }}" />
+                    <img *ngIf="!(content?.result?.content?.creatorLogo)" height="36px" width="36px" src="/assets/instances/eagle/app_logos/KarmayogiBharat_Logo.svg"
+                        alt="{{ 'apptocsinglepage.provider' | translate }}" />
+                </div>
+                <div class="text-sm break-all">{{ handleCapitalize(content?.result?.content?.source, 'source') }}</div>
             </div>
         </div>
     </ng-container>

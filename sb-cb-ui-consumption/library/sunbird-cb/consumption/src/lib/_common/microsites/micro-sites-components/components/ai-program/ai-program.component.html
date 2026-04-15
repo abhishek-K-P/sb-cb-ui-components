@@ -1,0 +1,174 @@
+<div class="ai-program-wrapper" *ngIf="programData?.enabled">
+  <!-- Main Card — applies dynamic styleData (background, border-radius, etc.) -->
+  <div class="ai-program-card" [ngStyle]="programData?.styleData">
+
+    <!-- ── Header ──────────────────────────────────────────── -->
+    <div class="header-section">
+      <div class="header-icon-title">
+        <img
+          *ngIf="programData?.image"
+          [src]="programData.image"
+          alt=""
+          class="header-logo"
+        />
+        <span *ngIf="!programData?.image" class="sparkle-icon">✦</span>
+        <h2 class="header-title">{{ programData?.title }}</h2>
+      </div>
+      <p class="header-description">{{ currentMessage }}</p>
+      <p class="header-description" *ngIf="programData?.description && programData?.messages">{{ programData?.description }}</p>
+    </div>
+
+    <!-- ── Progress Bar ────────────────────────────────────── -->
+    <div class="progress-section" *ngIf="progressItemsCached?.length">
+      <div class="progress-bar-track">
+        <ng-container *ngFor="let item of progressItemsCached; trackBy: trackByItem">
+
+          <!-- Bar segment -->
+          <div
+            *ngIf="item.type === 'bar'"
+            class="bar-segment"
+            [ngClass]="{'bar-full': getBarState(item.index) === 'full', 'bar-half': getBarState(item.index) === 'half'}"
+          ></div>
+
+          <!-- Shield milestone (simple single-path SVG) -->
+          <div
+            *ngIf="item.type === 'shield'"
+            class="shield-node"
+            [class.completed]="isShieldActive(item.index)"
+          >
+            <svg class="shield-svg" viewBox="0 0 46 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient [attr.id]="'sg_' + item.index" x1="22.67" y1="1" x2="22.67" y2="39" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stop-color="#FEE56E"/>
+                  <stop offset="100%" stop-color="#F37400"/>
+                </linearGradient>
+                <filter [attr.id]="'sf_' + item.index" x="0" y="0" width="45.34" height="59.52" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+                  <feFlood flood-opacity="0" result="bg"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="ha"/>
+                  <feOffset dy="0.9"/><feGaussianBlur stdDeviation="0.99"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.24 0"/>
+                  <feBlend mode="normal" in2="bg" result="e1"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="ha"/>
+                  <feOffset dy="3.79"/><feGaussianBlur stdDeviation="1.9"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.21 0"/>
+                  <feBlend mode="normal" in2="e1" result="e2"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="ha"/>
+                  <feOffset dy="8.3"/><feGaussianBlur stdDeviation="2.53"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0"/>
+                  <feBlend mode="normal" in2="e2" result="e3"/>
+                  <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="ha"/>
+                  <feOffset dy="14.8"/><feGaussianBlur stdDeviation="2.98"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0"/>
+                  <feBlend mode="normal" in2="e3" result="e4"/>
+                  <feBlend mode="normal" in="SourceGraphic" in2="e4" result="shape"/>
+                </filter>
+                <mask [attr.id]="'sm0_' + item.index" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="5" y="1" width="35" height="38">
+                  <path d="M5.98709 12.198C5.94222 10.9669 5.91979 10.3514 6.15516 9.69578C6.35704 9.13347 6.72835 8.58929 7.17832 8.19626C7.70295 7.73802 8.4648 7.47123 9.98851 6.93765C13.2306 5.80233 16.3584 4.27972 19.3073 2.51057C20.6477 1.70644 21.3179 1.30438 21.8948 1.17773C22.4675 1.05198 22.871 1.05198 23.4437 1.17773C24.0205 1.30438 24.6907 1.70644 26.0311 2.51057C28.9801 4.27972 32.1078 5.80233 35.3499 6.93765C36.8736 7.47123 37.6355 7.73802 38.1601 8.19626C38.6101 8.58929 38.9814 9.13347 39.1833 9.69578C39.4186 10.3514 39.3962 10.9669 39.3513 12.198C39.2237 15.7014 38.5913 20.9082 36.2801 25.6077C33.2322 31.805 28.1418 35.87 25.1253 37.8725C24.4631 38.3121 24.1319 38.5319 23.508 38.6809C23.0754 38.7842 22.263 38.7842 21.8304 38.6809C21.2065 38.5319 20.8754 38.3121 20.2131 37.8725C17.1967 35.87 12.1062 31.805 9.05838 25.6077C6.74715 20.9082 6.11478 15.7014 5.98709 12.198Z" fill="#D6D6D6"/>
+                </mask>
+                <mask [attr.id]="'sm1_' + item.index" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="5" y="1" width="35" height="38">
+                  <path d="M5.98709 12.198C5.94222 10.9669 5.91979 10.3514 6.15516 9.69578C6.35704 9.13347 6.72835 8.58929 7.17832 8.19626C7.70295 7.73802 8.4648 7.47123 9.98851 6.93765C13.2306 5.80233 16.3584 4.27972 19.3073 2.51057C20.6477 1.70644 21.3179 1.30438 21.8948 1.17773C22.4675 1.05198 22.871 1.05198 23.4437 1.17773C24.0205 1.30438 24.6907 1.70644 26.0311 2.51057C28.9801 4.27972 32.1078 5.80233 35.3499 6.93765C36.8736 7.47123 37.6355 7.73802 38.1601 8.19626C38.6101 8.58929 38.9814 9.13347 39.1833 9.69578C39.4186 10.3514 39.3962 10.9669 39.3513 12.198C39.2237 15.7014 38.5913 20.9082 36.2801 25.6077C33.2322 31.805 28.1418 35.87 25.1253 37.8725C24.4631 38.3121 24.1319 38.5319 23.508 38.6809C23.0754 38.7842 22.263 38.7842 21.8304 38.6809C21.2065 38.5319 20.8754 38.3121 20.2131 37.8725C17.1967 35.87 12.1062 31.805 9.05838 25.6077C6.74715 20.9082 6.11478 15.7014 5.98709 12.198Z" fill="#D6D6D6"/>
+                </mask>
+              </defs>
+              <!-- Shield shape with 4-layer drop shadow -->
+              <g [attr.filter]="'url(#sf_' + item.index + ')'">
+                <path class="shield-path" [attr.fill]="isShieldActive(item.index) ? 'url(#sg_' + item.index + ')' : '#d6d6d6'" d="M5.98709 12.198C5.94222 10.9669 5.91979 10.3514 6.15516 9.69578C6.35704 9.13347 6.72835 8.58929 7.17832 8.19626C7.70295 7.73802 8.4648 7.47123 9.98851 6.93765C13.2306 5.80233 16.3584 4.27972 19.3073 2.51057C20.6477 1.70644 21.3179 1.30438 21.8948 1.17773C22.4675 1.05198 22.871 1.05198 23.4437 1.17773C24.0205 1.30438 24.6907 1.70644 26.0311 2.51057C28.9801 4.27972 32.1078 5.80233 35.3499 6.93765C36.8736 7.47123 37.6355 7.73802 38.1601 8.19626C38.6101 8.58929 38.9814 9.13347 39.1833 9.69578C39.4186 10.3514 39.3962 10.9669 39.3513 12.198C39.2237 15.7014 38.5913 20.9082 36.2801 25.6077C33.2322 31.805 28.1418 35.87 25.1253 37.8725C24.4631 38.3121 24.1319 38.5319 23.508 38.6809C23.0754 38.7842 22.263 38.7842 21.8304 38.6809C21.2065 38.5319 20.8754 38.3121 20.2131 37.8725C17.1967 35.87 12.1062 31.805 9.05838 25.6077C6.74715 20.9082 6.11478 15.7014 5.98709 12.198Z"/>
+              </g>
+              <!-- Masked inner fill -->
+              <g [attr.mask]="'url(#sm0_' + item.index + ')'">
+                <g [attr.mask]="'url(#sm1_' + item.index + ')'">
+                  <rect class="shield-fill" [attr.fill]="isShieldActive(item.index) ? 'url(#sg_' + item.index + ')' : '#d6d6d6'" x="-2.63" y="-5.56" width="50.56" height="50.56"/>
+                </g>
+              </g>
+            </svg>
+            <span class="shield-label">{{ getRomanNumeral(item.index + 1) }}</span>
+          </div>
+
+          <!-- Final badge node -->
+          <div
+            *ngIf="item.type === 'badge'"
+            class="badge-node"
+            [class.earned]="isBadgeEarned"
+          >
+            <img
+              *ngIf="programData?.badgeImage"
+              [src]="isBadgeEarned?  programData.badgeImage: programData.disableBadgeImage"
+              alt="Badge"
+              class="badge-img"
+            />
+            <span *ngIf="!programData?.badgeImage" class="badge-placeholder">🏅</span>
+          </div>
+
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- ── Content Card (horizontal) ───────────────────────── -->
+    <div
+      class="course-card"
+      *ngIf="programData?.contentData"
+      (click)="onContentClick()"
+      (keydown.enter)="onContentClick()"
+      role="button"
+      tabindex="0"
+      [attr.aria-label]="'View ' + programData.contentData.name"
+    >
+      <!-- Image -->
+      <div class="course-image-wrapper">
+        <img
+          *ngIf="programData.contentData.posterImage"
+          [src]="programData.contentData.posterImage"
+          [alt]="programData.contentData.name"
+          class="course-image"
+        />
+        <div *ngIf="!programData.contentData.posterImage" class="course-image-placeholder"></div>
+
+        <!-- Duration badge -->
+        <div *ngIf="programData.contentData.duration" class="duration-badge">
+          <span class="duration-icon"><mat-icon>access_time</mat-icon></span>
+          <span>{{ +programData?.contentData?.duration | pipeDurationTransform: 'hms' }}</span>
+        </div>
+      </div>
+
+      <!-- Details -->
+      <div class="course-content">
+        <!-- Category pill -->
+        <div class="type-badge" *ngIf="programData.contentData.courseCategory">
+          <span class="type-dot">
+            <mat-icon>video_library</mat-icon>
+          </span>
+          <span class="type-text">{{ programData.contentData.courseCategory }}</span>
+        </div>
+
+        <!-- Course name -->
+        <h3 class="course-title" [title]="programData.contentData.name">{{ programData.contentData.name }}</h3>
+
+        <!-- Author / Source -->
+        <div class="course-author" *ngIf="programData.contentData.source">
+          <span class="author-avatar">
+            <img
+              *ngIf="programData.contentData.creatorLogo"
+              [src]="programData.contentData.creatorLogo"
+              [alt]="programData.contentData.source"
+              class="author-img"
+            />
+            <span *ngIf="!programData.contentData.creatorLogo" class="author-placeholder"></span>
+          </span>
+          <span class="author-text">
+            <!-- <span class="by-label">By</span> -->
+             {{ programData.contentData.source }}
+          </span>
+        </div>
+
+        <!-- Rating -->
+        <div class="course-rating" *ngIf="programData.contentData.rating">
+          <span class="star-icon">★</span>
+          <span class="rating-value">{{ programData.contentData.rating }}</span>
+          <span class="rating-count" *ngIf="programData.contentData.ratingCount">
+            ({{ programData.contentData.ratingCount }})
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -86,7 +86,7 @@
   .filter-row {
     display: flex;
     gap: 24px;
-    align-items: flex-end;
+    align-items: center;
 
     .filter-item {
       flex: 1;
@@ -172,6 +172,10 @@
   .mat-select-arrow {
     margin: 0;
   }
+
+  .mat-pseudo-checkbox::after {
+    color: black !important;
+  }
 }
 
 // Table Section
@@ -179,6 +183,16 @@
   background: white;
   border-radius: 0 0 4px 4px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  .download-note {
+    margin: 16px;
+    padding: 10px 12px;
+    border-radius: 4px;
+    border: 1px solid #F5DFCC;
+    background: #FDF3EA;
+    color: #C36A1D;
+    font-size: 12px;
+  }
 
   .survey-table {
     width: 100%;
@@ -213,6 +227,53 @@
       color: #999;
       cursor: pointer;
     }
+
+    .sortable-header {
+      cursor: pointer;
+      user-select: none;
+
+      .sort-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+        margin-left: 4px;
+        vertical-align: middle;
+      }
+
+      .sort-icon-inactive {
+        color: #999;
+      }
+    }
+  }
+}
+
+.download-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+
+  &.in-progress {
+    color: #E77A15;
+  }
+
+  &.ready {
+    color: #1B1B1B;
+
+    mat-icon {
+      color: #1F8B3A;
+      font-size: 16px;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.download-action-btn {
+  color: #1B4CA1;
+
+  &[disabled] {
+    color: #B5B5B5;
   }
 }
 
@@ -235,9 +296,14 @@
     color: #92400E;
   }
 
-  &.status-end {
+  &.status-ended {
     background-color: #FEE2E2;
     color: #991B1B;
+  }
+
+  &.status-archived {
+    background-color: #E5E7EB;
+    color: #374151;
   }
 }
 
@@ -284,4 +350,31 @@
       min-width: 800px;
     }
   }
+}
+
+.course-name-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  img {
+    width: 85px;
+    height: 50px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  span {
+    flex: 1;
+    line-height: 1.4;
+  }
+}
+
+.download-thumbnail-placeholder {
+  width: 85px;
+  height: 50px;
+  border-radius: 4px;
+  border: 1px solid #D8D8D8;
+  background: #F3F3F3;
+  flex-shrink: 0;
 }

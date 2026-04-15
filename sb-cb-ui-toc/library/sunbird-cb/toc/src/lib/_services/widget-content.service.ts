@@ -118,21 +118,21 @@ export class WidgetContentService {
     const forPreview = window.location.href.includes('/public/') || window.location.href.includes('&preview=true')
     if (primaryCategory && this.isResource(primaryCategory)) {
       if (!forPreview) {
-        url = `/apis/proxies/v8/action/content/v3/read/${contentId}`
+        url = `/apis/proxies/v8/content/v2/read/${contentId}`
       } else {
         if (window.location.href.includes('editMode=true') && window.location.href.includes('_rc')) {
-          url = `/apis/proxies/v8/action/content/v3/read/${contentId}`
+          url = `/apis/proxies/v8/content/v2/read/${contentId}`
         } else {
             url = `/api/content/v1/read/${contentId}`
         }
       }
     } else {
       if (!forPreview) {
-        url = `/apis/proxies/v8/action/content/v3/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
+        url = `/apis/proxies/v8/course/v1/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
       } else {
         const forcreator = window.location.href.includes('editMode=true')
         if (forcreator) {
-          url = `apis/proxies/v8/action/content/v3/hierarchy/${contentId}?mode=edit`
+          url = `apis/proxies/v8/course/v1/hierarchy/${contentId}?mode=edit`
         } else {
           url = `/api/course/v1/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
         }
@@ -152,7 +152,7 @@ export class WidgetContentService {
     const forcreator = window.location.href.includes('editMode=true')
     let url = ''
     if (forcreator) {
-      url = `apis/proxies/v8/action/content/v3/hierarchy/${contentId}?mode=edit`
+      url = `apis/proxies/v8/course/v1/hierarchy/${contentId}?mode=edit`
     } else if(apiType && apiType === 'read') {
       url = `/api/content/v1/read/${contentId}`
     } else {
@@ -666,11 +666,11 @@ export class WidgetContentService {
     let url = ''
     const forPreview = window.location.href.includes('/public/') || window.location.href.includes('&preview=true')
     if (!forPreview) {
-      url = `/apis/proxies/v8/action/content/v3/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
+      url = `/apis/proxies/v8/course/v1/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
     } else {
       const forcreator = window.location.href.includes('editMode=true')
       if (forcreator) {
-        url = `apis/proxies/v8/action/content/v3/hierarchy/${contentId}?mode=edit`
+        url = `apis/proxies/v8/course/v1/hierarchy/${contentId}?mode=edit`
       } else {
         url = `/api/course/v1/hierarchy/${contentId}?hierarchyType=${hierarchyType}`
       }

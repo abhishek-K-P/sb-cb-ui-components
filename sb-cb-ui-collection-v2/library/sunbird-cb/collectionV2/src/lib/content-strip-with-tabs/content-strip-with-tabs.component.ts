@@ -30,6 +30,7 @@ interface IStripUnitContentData {
   showStrip: boolean
   widgets?: NsWidgetResolver.IRenderConfigWithAnyData[]
   stripTitle: string
+  stripSecondaryTitle?: string
   stripTitleLink?: {
     link: string,
     icon: string
@@ -788,6 +789,7 @@ export class ContentStripWithTabsComponent extends WidgetBaseComponent
       errorWidget: strip.errorWidget,
       stripInfo: strip.info,
       stripTitle: strip.title,
+      stripSecondaryTitle: strip?.secondaryTitle || '',
       stripTitleLink: strip.stripTitleLink,
       disableTranslate: strip.disableTranslate,
       sliderConfig: strip.sliderConfig,

@@ -924,7 +924,7 @@ export class AppTocContentCardV2Component implements OnInit, OnDestroy {
   }
 
   downloadCertificate(certificateData: any) {
-    debugger
+    
     this.events.raiseInteractTelemetry(
       {
         type: WsEvents.EnumInteractTypes.CLICK,
@@ -1268,7 +1268,7 @@ export class AppTocContentCardV2Component implements OnInit, OnDestroy {
    * View milestone achievement - calls the achievement API and shows the result
    */
   viewMilestoneAchievement(event: MouseEvent, mileStoneData: any) {
-    debugger
+    
     if (event) {
       event.preventDefault()
       event.stopPropagation()

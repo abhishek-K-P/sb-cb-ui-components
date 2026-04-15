@@ -1,0 +1,59 @@
+<div class="nlw-dialog-wrapper">
+    <!-- Fixed close button header -->
+    <div class="dialog-header">
+        <button mat-icon-button class="close-button" [mat-dialog-close]="true">
+            <mat-icon class="close-icon">close</mat-icon>
+        </button>
+    </div>
+
+    <!-- Scrollable content -->
+    <div class="dialog-scroll-content">
+        <!-- Loading -->
+        <div class="loading-container" *ngIf="isLoading">
+            <mat-spinner diameter="40"></mat-spinner>
+            <p class="loading-text">{{'certificatedialog.loading' | translate}}</p>
+        </div>
+
+        <!-- Error -->
+        <div class="error-container" *ngIf="hasError && !isLoading">
+            <mat-icon class="error-icon">error_outline</mat-icon>
+            <p class="error-text">{{ errorMessage }}</p>
+            <button mat-button class="retry-btn" (click)="ngOnInit()">Retry</button>
+        </div>
+
+        <!-- SVG / HTML content -->
+        <div class="svg-container" *ngIf="svgContent && !isLoading && !hasError"
+            [innerHTML]="svgContent"></div>
+
+        <!-- Image content -->
+        <img class="certificate-banner-image" *ngIf="imageUrl && !svgContent && !isLoading && !hasError"
+            [src]="imageUrl | pipeSafeSanitizer: 'url'" alt="NLW Certificate" role="image" />
+
+        <!-- PDF content -->
+        <iframe class="pdf-container" *ngIf="pdfUrl && !isLoading && !hasError"
+            [src]="pdfUrl" frameborder="0"></iframe>
+    </div>
+
+    <!-- Fixed download footer -->
+    <div class="dialog-footer" *ngIf="!isLoading && !hasError && !pdfUrl">
+        <a mat-button [matMenuTriggerFor]="downloadMenu"
+            class="ws-mat-accent-border-active mat-accent btn-custom">
+            <mat-icon class="mat-icon material-icons-outlined download_icon margin-right-xs">cloud_download</mat-icon>
+            {{'certificatedialog.download' | translate}}
+        </a>
+        <mat-menu #downloadMenu="matMenu">
+            <button mat-menu-item (click)="downloadPdf()">
+                <mat-icon>picture_as_pdf</mat-icon>
+                <span>{{'certificatedialog.pdf' | translate}}</span>
+            </button>
+            <button mat-menu-item (click)="downloadPng()">
+                <mat-icon>photo</mat-icon>
+                <span>{{'certificatedialog.png' | translate}}</span>
+            </button>
+            <button mat-menu-item (click)="downloadSvg()">
+                <mat-icon>photo_size_select_actual</mat-icon>
+                <span>{{'certificatedialog.svg' | translate}}</span>
+            </button>
+        </mat-menu>
+    </div>
+</div>

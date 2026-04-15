@@ -297,6 +297,47 @@
 
   }
 
+  .mandetory-box {
+    background: transparent;
+    position: absolute;
+    // height: auto;
+    // min-height: 24px;
+    // min-width: 60px;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    border-radius: 4px;
+
+    &.right-corner {
+      right: 4px;
+      bottom: 4px;
+    }
+    &.left-corner {
+      left: -5px;
+      bottom: -10px;
+    }
+    .mat-icon {
+      vertical-align: middle;
+      color: #fff !important;
+      height: 14px !important;
+      width: 14px !important;
+      font-size: 14px;
+    }
+    .duration{
+      font: 700 12px/16px Lato;
+      display: inline-block;
+      margin: 0;
+      padding: 0;
+    }
+
+    .approved-icon {
+      height: 12px !important;
+      width: 12px !important;
+    }
+
+  }
+
   .width-238 {
     width: 238px !important;
   }
@@ -389,6 +430,14 @@
     background-color: #1B4CA1 !important;
     color: rgba(255,255,255,1) !important;
     opacity: 1;
+  }
+  .cbp-mandetory {
+    border-radius: 2px;
+    border: 1px solid #b34545;
+    background-color: red;
+    color: #fff !important;
+    opacity: 1;
+    padding: 0 10px;
   }
 
   .relevent-normal {

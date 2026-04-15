@@ -1,5 +1,5 @@
 <ng-container *ngIf="!disableKarmaPoints">
-    <ws-widget-sliders-dynamic [widgetData]="karmaPointsSlider"></ws-widget-sliders-dynamic>
+    <ws-widget-sliders-dynamic [widgetData]="karmaPointsSlider" [baseContentReadData] = "baseContentReadData"></ws-widget-sliders-dynamic>
 
     <ng-container *ngIf="btnCategory === 'claim'">
         <button class="flex flex-wrap gap-1 claim-button" (click)="onClickOfClaim()" >

@@ -1,0 +1,61 @@
+<div class="nlw-speakers-wrapper px-4 md:px-0 my-4 md:my-0">
+    <!-- Edit button - always visible for speakers component -->
+    <div class="edit-section" *ngIf="isEdit">
+        <button class="edit-icon" (click)="onEdit()" matTooltip="Edit Speakers" aria-label="Edit Speakers">
+            <mat-icon>edit</mat-icon>
+        </button>
+    </div>
+
+    <div class="flex speakers-title gap-2 justify-between pb-1">
+        <div class="flex gap-2">
+            <!-- Use 'Speaker of the day' as a fallback only when rendering -->
+            {{getTitleText()}}
+            <div
+                *ngIf="objectData?.speakerOftheDay?.data?.infoIcon || objectData?.data?.infoIcon || objectData?.infoIcon">
+                <img [src]="objectData?.speakerOftheDay?.data?.infoIcon || objectData?.data?.infoIcon || objectData?.infoIcon"
+                    alt="" i18n-matTooltip
+                    [matTooltip]="objectData?.speakerOftheDay?.data?.infoText || objectData?.data?.infoText || objectData?.infoText || ''">
+            </div>
+        </div>
+        <div class="block md:hidden">
+            <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
+        </div>
+    </div>
+    <div *ngIf="expand" class="speakers-container margin-bottom-xl">
+        <ng-container *ngIf="contentdata.length > 0">
+            <sb-uic-sliders-ng-content [title]="'providerName'" [currentIndex]="currentIndex"
+                (currentIndexValue)="getCurrentIndex($event)" [loadNgContentData]="true" [widgetData]="contentdata"
+                [styleData]="styleData">
+                <div sliderbody>
+                    <div *ngFor="let item of contentdata; let i = index" [hidden]="i !== currentIndex">
+                        <div class="speakers-wrapper">
+                                <div class="speaker-image-section">
+                                    <img [src]="item?.thumbnail" alt="" class="speaker-img" />
+                                </div>
+                            <div class="speaker-details">
+                                <div class="flex items-center justify-center pb-2">
+                                    <div class="speaker-title" [title]="item?.eventTitle">{{item?.eventTitle}}</div>
+                                </div>
+                                <div class="flex items-center flex-wrap justify-center">
+                                    <div class="speaker-name" [title]="item?.speakerName">{{item?.speakerName}}</div>
+                                    <div class="speaker-description" [title]="item?.speakerDesignation">{{item?.speakerDesignation}}</div>
+                                </div>
+                                <div class="flex items-center justify-center mt-2" *ngIf="item?.identifier">
+                                    <button class="view-event-btn" (click)="goToEvent(item)">
+                                        View Event
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </sb-uic-sliders-ng-content>
+        </ng-container>
+        <div *ngIf="contentdata.length === 0" class="no-speakers-message">
+            <div class="flex flex-col items-center justify-center py-8">
+                <mat-icon class="no-speakers-icon">person_off</mat-icon>
+                <p class="mat-body-1">No speakers added</p>
+            </div>
+        </div>
+    </div>
+</div>

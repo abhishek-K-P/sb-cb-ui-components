@@ -31,6 +31,7 @@ export class PublicSurveyFormComponent implements OnInit {
   childFields: any[] = []
   surveyFormIsValid = true
   addLoader = 0
+  forPreview = false
   //#endregion (properties)
 
   //#region (constructor)
@@ -44,6 +45,7 @@ export class PublicSurveyFormComponent implements OnInit {
 
   ) {
     this.surveyId = data.surveyId
+    this.forPreview = data.forPreview
     if (localStorage.getItem('websiteLanguage')) {
       this.translate.setDefaultLang('en')
       const lang = localStorage.getItem('websiteLanguage')!

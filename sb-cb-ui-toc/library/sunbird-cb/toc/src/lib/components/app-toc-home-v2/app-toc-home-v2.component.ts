@@ -103,7 +103,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
   cbPlanEndDate: any
   cbPlanDuration: any
   enrolledCourseData: any
-  @Input() forPreview: any = window.location.href.includes('/public/') || window.location.href.includes('/author/')
+  @Input() forPreview: any = window.location.href.includes('/public/') || window.location.href.includes('/author/') || window.location.href.includes('/preview/')
   @Input() inputContent: any
   @Input() displayViewBtn: any = true
   // forPreview = window.location.href.includes('/author/')
@@ -767,9 +767,9 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
           this.navigateToPlayerPage(batchId)
           this.enrollBtnLoading = false
         }
-      }, (err:any) => {
+      }, (err: any) => {
         let errMsg = err?.error?.params?.errmsg || err?.params?.errmsg || 'Something went wrong'
-        if(errMsg?.includes('course.') && this.content?.courseCategory) {
+        if (errMsg?.includes('course.') && this.content?.courseCategory) {
           errMsg = errMsg.replace('course.', this.content?.courseCategory) + '.';
         }
         this.snackBar.open(errMsg)
@@ -1457,7 +1457,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     if (this.hashmapUpdatedSubscription) {
       this.hashmapUpdatedSubscription.unsubscribe()
     }
-    
+
     // Clear content data to prevent stale data when navigating between contents
     this.tocSvc.resetContentData()
   }
@@ -1561,7 +1561,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
           }
         }
         // if enrolled course is completed then to make all languages courses as well as all content as completed
-        if (  this.contentReadData.courseCategory !== NsContent.ECourseCategory.LEARNING_PATHWAY && enrolledCourse.status === 2) {
+        if (this.contentReadData.courseCategory !== NsContent.ECourseCategory.LEARNING_PATHWAY && enrolledCourse.status === 2) {
           this.content['completionPercentage'] = 100
           this.content['completionStatus'] = 2
           await this.tocSvc.mapCompletionChildPercentageProgram(this.content)
@@ -1585,7 +1585,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
             this.enrollBtnLoading = false
             // this.tocSvc.contentLoader.next(false)
           } else {
-            if(this.contentReadData && this.contentReadData.courseCategory !== NsContent.ECourseCategory.LEARNING_PATHWAY) {
+            if (this.contentReadData && this.contentReadData.courseCategory !== NsContent.ECourseCategory.LEARNING_PATHWAY) {
               let contentLag = this.contentLangSvc.getContentLanguage(this.contentReadData)
               this.getContinueLearningData(this.baseContentReadData.identifier, enrolledCourse.batchId, contentLag)
               this.content['completionPercentage'] = enrolledCourse.completionPercentage
@@ -1602,7 +1602,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
           console.log('mapped progress for learning pathway', this.tocSvc.hashmap)
           this.tocSvc.computeMilestoneLockingStatus(true)
           this.syncMilestoneLockStatus()
-          
+
         }
         this.batchData = {
           content: [enrolledCourse.batch],
@@ -1945,7 +1945,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     this.setupRouterEventSubscription()
     this.getContentCreatorData()
     this.setupHashmapUpdateSubscription()
-    
+
     this.userId = this.configSvc?.userProfile?.userId || ''
   }
 
@@ -2033,7 +2033,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     }
     this.tocSvc.getSelectedBatchData(this.batchData)
     this.tocSvc.mapSessionCompletionPercentage(this.batchData)
-    
+
     // CRITICAL: For Learning Pathways, compute milestone locking status after enrollment
     // This ensures milestones are properly locked until pre-assessment is completed
     if (this.baseContentReadData?.courseCategory === 'Learning Pathway') {
@@ -2041,7 +2041,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
       this.tocSvc.computeMilestoneLockingStatus(true)
       this.syncMilestoneLockStatus()
     }
-    
+
     this.routerChangeHandler(true)
     this.openSnackbar('Enrolled Successfully!')
     this.disableEnrollBtn = false
@@ -2099,7 +2099,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
   }
 
   private async processRouteData(data: Data) {
-    this.courseID =  data?.content?.data?.status === 'Retired' ? '' : data.content.data?.identifier
+    this.courseID = data?.content?.data?.status === 'Retired' ? '' : data.content.data?.identifier
     const initData = this.tocSvc.initData(data, true)
     // Get query parameters
     const queryParamsDataTemp = await this.getQueryParams()
@@ -2110,16 +2110,16 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
 
       // Fetch the multilingual content
       try {
-        if(this.baseContentReadData.identifier === queryParamsDataTemp.MLId){
+        if (this.baseContentReadData.identifier === queryParamsDataTemp.MLId) {
           this.contentReadData = initData.content
         } else {
-        const success = await this.fetchContentRead(queryParamsDataTemp.MLId)
-        if (!success) {
-          // If multilingual content fetch fails, fall back to the original content
-          this.contentReadData = initData.content
-          this.loggerSvc.warn('Failed to load multilingual content, using original content instead')
+          const success = await this.fetchContentRead(queryParamsDataTemp.MLId)
+          if (!success) {
+            // If multilingual content fetch fails, fall back to the original content
+            this.contentReadData = initData.content
+            this.loggerSvc.warn('Failed to load multilingual content, using original content instead')
+          }
         }
-      }
       } catch (error) {
         // On error, use the original content
         this.contentReadData = initData.content
@@ -2262,7 +2262,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     this.tocSvc.subtitleOnBanners = data?.pageData?.data?.subtitleOnBanners || false
     this.tocSvc.showDescription = data?.pageData?.data?.showDescription || false
     this.tocConfig = data?.pageData?.data || {}
-    if(this.contentReadData?.courseCategory === NsContent.ECourseCategory.LEARNING_PATHWAY) {
+    if (this.contentReadData?.courseCategory === NsContent.ECourseCategory.LEARNING_PATHWAY) {
       this.kparray = this.tocConfig.karmaPointsLP || [
         {
           "displayButton": "Resume",
@@ -2274,7 +2274,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
         }
       ]
     } else {
-    this.kparray = this.tocConfig.karmaPoints || []
+      this.kparray = this.tocConfig.karmaPoints || []
 
     }
   }
@@ -2344,18 +2344,18 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     this.routerParamSubscription = this.router.events.subscribe((routerEvent: Event) => {
       if (routerEvent instanceof NavigationEnd) {
         this.assignPathAndUpdateBanner(routerEvent.url)
-        
+
         // Check if we're on the TOC/overview page for a Learning Pathway
-        const isTocPage = routerEvent.url.includes('/app/toc') || 
-                         routerEvent.url.includes('/overview') ||
-                         routerEvent.url.includes('/content')
-        
-        
+        const isTocPage = routerEvent.url.includes('/app/toc') ||
+          routerEvent.url.includes('/overview') ||
+          routerEvent.url.includes('/content')
+
+
       }
     })
   }
 
-  
+
 
   /**
    * Subscribe to hashmap updates to recompute milestone lock status in real-time
@@ -2403,7 +2403,7 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
             this.contentViewEventForNetCore('complete')
           }
           this.dataTransferSvc.setEnrollData(this.userEnrollmentList)
-          if(this.isMultilingual) {
+          if (this.isMultilingual) {
             // in case of back from player we need to check recent language and load
             if (!this.contentLibSvc?.oneStepResumeEnable && this.baseContentReadData?.identifier === this.contentReadData?.identifier) {
               let lang = this.baseContentReadData?.language?.length ? this.baseContentReadData?.language[0] : ''
@@ -2421,10 +2421,10 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
               // Always call fetchContentHierarchy first
               return from(this.fetchContentHierarchy(this.contentReadData?.identifier || ''))
             }
-          }else {
-              // Always call fetchContentHierarchy first
-              return from(this.fetchContentHierarchy(this.contentReadData?.identifier || ''))
-            }
+          } else {
+            // Always call fetchContentHierarchy first
+            return from(this.fetchContentHierarchy(this.contentReadData?.identifier || ''))
+          }
 
         } else {
           this.userEnrollmentList = []
@@ -2517,26 +2517,26 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     if (this.baseContentReadData?.courseCategory === 'Learning Pathway') {
       return new Promise<boolean>((resolve) => {
         const content = this.baseContentReadData
-        
-        
+
+
         // STEP 1: Construct hierarchy structure
         let contentHeirarchyData = this.appTocV2Svc.constructHeirarchyData(content)
-        
+
         // STEP 2: Update progress with latest enrollment data
         this.appTocV2Svc.mapContentHierarchyProgressUpdate(contentHeirarchyData, this.userEnrollmentList)
-        
+
         // STEP 3: Create hashmap from updated hierarchy (this should preserve completion status)
         this.tocSvc.callHirarchyProgressHashmap(contentHeirarchyData)
         this.content = contentHeirarchyData
         // Check if user is enrolled
         const isEnrolled = this.userEnrollmentList && this.userEnrollmentList.length > 0
-        
+
         // STEP 4: Compute milestone locking status with enrollment status and updated progress data
         this.tocSvc.computeMilestoneLockingStatus(isEnrolled)
-        
+
         // STEP 5: Sync content tree's isLocked with computed values
         this.syncMilestoneLockStatus()
-        
+
         this.getOrgIdForShare()
         this.getTocStructure()
         resolve(true)
@@ -2639,17 +2639,17 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
     }
 
     try {
-      
+
       // Check if user is enrolled
       const isEnrolled = this.userEnrollmentList && this.userEnrollmentList.length > 0
-      
+
       // Recompute milestone locking status from existing hashmap
       // The hashmap is already updated with latest progress via hashmap update subscription
       this.tocSvc.computeMilestoneLockingStatus(isEnrolled)
-      
+
       // Sync lock status from hashmap to content tree
       this.syncMilestoneLockStatus()
-      
+
     } catch (error) {
       console.error('❌ Error in refreshEnrollmentAndProgress:', error)
     }
@@ -3252,36 +3252,45 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
 
   openPublicSurveyPopup(navigationUrl?: string, queryParams?: any) {
     // Get survey ID and course ID from environment and content data
-    const surveyId = this.environment.publicContentSurveyId || ''
-    const courseId = this.contentReadData?.identifier || ''
-    const courseName = this.contentReadData?.name || ''
-    const contextOrgId = this.contentReadData?.createdFor && this.contentReadData?.createdFor.length > 0 ?
-      this.contentReadData?.createdFor[0] : ''
 
-    this.clearExistingPublicSurveyData(surveyId, courseId)
+    if (this.forPreview) {
+      this.router.navigate([navigationUrl], { queryParams: queryParams })
+    } else {
+      const surveyId = this.environment.publicContentSurveyId || ''
+      const courseId = this.contentReadData?.identifier || ''
+      const courseName = this.contentReadData?.name || ''
+      const contextOrgId = this.contentReadData?.createdFor && this.contentReadData?.createdFor.length > 0 ?
+        this.contentReadData?.createdFor[0] : ''
 
-    const data = {
-      surveyId: surveyId,
-      courseId: courseId,
-      courseName: courseName,
-      contextOrgId: contextOrgId
-    }
-    const dialogRef = this.dialog.open(PublicSurveyFormComponent, {
-      // disableClose: true,
-      width: '750px',
-      maxWidth: '90vw',
-      height: '80vh',
-      data: data,
-      autoFocus: false,
-    })
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        // Navigate to the intended URL only when survey is submitted successfully
-        if (navigationUrl) {
-          this.router.navigate([navigationUrl], { queryParams: queryParams })
-        }
+      this.clearExistingPublicSurveyData(surveyId, courseId)
+
+      const data = {
+        surveyId: surveyId,
+        courseId: courseId,
+        courseName: courseName,
+        contextOrgId: contextOrgId,
+        forPreview: this.forPreview
       }
-    })
+
+      const dialogRef = this.dialog.open(PublicSurveyFormComponent, {
+        // disableClose: true,
+        width: '750px',
+        maxWidth: '90vw',
+        height: '80vh',
+        data: data,
+        autoFocus: false,
+      })
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          // Navigate to the intended URL only when survey is submitted successfully
+          if (navigationUrl) {
+            this.router.navigate([navigationUrl], { queryParams: queryParams })
+          }
+        }
+      })
+    }
+
+
   }
 
   resumeContentData() {
@@ -3319,5 +3328,22 @@ export class AppTocHomeV2Component implements OnInit, OnDestroy, AfterViewChecke
 
   goBack() {
     this.location.back()
+  }
+
+  showBadgeIcon(): boolean {
+    const badgeDetails = this.baseContentReadData?.badgeDetails_v1
+    if (!badgeDetails || !badgeDetails.length) {
+      return false
+    }
+    const badge = badgeDetails[0]
+    // If badgeEarningDateEnabled is false, don't show badge
+    if (!badge?.badgeEarningDateEnabled) {
+      return true
+    }
+    // If badgeEarningDateEnabled is true, show badge only if badgeEarningDateTime has passed
+    if (badge?.badgeEarningDateEnabled && badge?.badgeEarningDateTime) {
+      return badge.badgeEarningDateTime > Date.now()
+    }
+    return false
   }
 }

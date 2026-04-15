@@ -24,8 +24,12 @@
     <a *ngSwitchCase="displayType.matFlatButton" [routerLink]="widgetData.actionBtn?.url" mat-flat-button>
       <ng-container [ngTemplateOutlet]="buttonContent" [ngTemplateOutletContext]="widgetData"></ng-container>
     </a>
-    <a *ngSwitchCase="displayType.matIconButton" [name]="widgetData.actionBtnName" [routerLink]="widgetData.actionBtn?.url" mat-icon-button>
-      <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="widgetData.actionBtn"></ng-container>
+    <a *ngSwitchCase="displayType.matIconButton" [ngClass]="widgetData?.className || ''"
+      [name]="widgetData.actionBtnName" [routerLink]="widgetData.actionBtn?.url" mat-icon-button>
+      <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{
+          iconType: widgetData.actionBtn?.iconType,
+          icon: widgetData.actionBtn?.icon
+        }"></ng-container>
     </a>
     <a *ngSwitchCase="displayType.matMiniFabButton" [routerLink]="widgetData.actionBtn?.url" mat-mini-fab>
       <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="widgetData.actionBtn"></ng-container>
@@ -41,8 +45,8 @@
 <!-- TEMPLATES -->
 <ng-template #buttonContent let-actionBtn="actionBtn" let-config="config">
   <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="actionBtn"></ng-container>
-  <span id="widgetInstanceId" *ngIf="!config.hideTitle"
-    [ngClass]="{ 'ml-2': actionBtn.icon }">{{ actionBtn.name }}</span>
+  <span id="widgetInstanceId" *ngIf="!config.hideTitle" [ngClass]="{ 'ml-2': actionBtn.icon }">{{ actionBtn.name
+    }}</span>
 </ng-template>
 
 <ng-template #buttonExternalLinkTextContent let-actionBtn="actionBtn">
@@ -53,8 +57,6 @@
   <mat-card class="card-full mr-4" id="{{actionBtn?.id}}">
     <a [href]="actionBtn.url" [url]="actionBtn.url" [wsWidgetUrlResolver]="actionBtn.isExternal" matRipple
       class="feature">
-      <!-- <mat-icon class="feature-status-icon" *ngIf="featureStatusColor" [color]="featureStatusColor">brightness_1
-      </mat-icon> -->
       <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{
           iconType: actionBtn.iconType,
           icon: actionBtn.icon,
@@ -87,9 +89,6 @@
 <ng-template #cardSmall let-actionBtn="actionBtn" let-config="config">
   <a [href]="actionBtn.url" [url]="actionBtn.url" [wsWidgetUrlResolver]="actionBtn.isExternal" matRipple
     class="feature card-small mat-card">
-    <!-- <mat-icon class="feature-status-icon" *ngIf="featureStatusColor" [color]="featureStatusColor">
-      brightness_1
-    </mat-icon> -->
     <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{
         iconType: actionBtn.iconType,
         icon: actionBtn.icon,
@@ -99,51 +98,20 @@
   </a>
 </ng-template>
 <ng-template #cardMini let-actionBtn="actionBtn" let-config="config">
-  <!-- Case 1: Default behavior for all routes except '/app/my-dashboard' -->
-  <a *ngIf="!(actionBtn?.dashboardVisibility)" role="link" matRipple
-    [routerLink]="actionBtn?.url" active
-    [wsWidgetUrlResolver]="actionBtn.isExternal"
-    [attr.aria-label]="actionBtn?.name"
-    routerLinkActive="ws-mat-selected-home-menu"
-    class="flex items-center flex-col px-4 box-sizing-box rem">
-    <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="widgetData.actionBtn"></ng-container>
+  <a role="link" matRipple [title]="actionBtn?.name" routerLink={{actionBtn.url}} active
+    [wsWidgetUrlResolver]="actionBtn.isExternal" [attr.aria-label]="actionBtn.name" role="link"
+    routerLinkActive="ws-mat-selected-home-menu" class="flex items-center flex-col px-4 box-sizing-box rem">
+    <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{
+              iconType: widgetData.actionBtn?.iconType,
+              icon: widgetData.actionBtn?.icon
+            }"></ng-container>
   </a>
-
-  <!-- Case 2: Special behavior for dashboardVisibility flags -->
-  <div
-    *ngIf="actionBtn?.dashboardVisibility?.mdo || actionBtn?.dashboardVisibility?.myIgot"
-    class="dashboard-wrapper flex items-center flex-col px-4 box-sizing-box rem"
-    (clickOutside)="onClickOutside()"
-  >
-    <!-- Dashboard Icon Button -->
-    <button class="dashboard-icon-btn" (click)="toggleDashboardDropdown($event)" title="Dashboard">
-      <mat-icon>bar_chart</mat-icon>
-    </button>
-
-    <!-- Dropdown with conditional buttons -->
-    <div class="dashboard-dropdown-card" *ngIf="showDashboardOptions">
-      <button
-        *ngIf="actionBtn?.dashboardVisibility?.mdo"
-        type="button"
-        title="This dashboard is for the reports related to user learning on iGOT Platform within my MDO."
-        (click)="onDashboardSelect('mdo')">MDO Dashboard</button>
-      <button
-        *ngIf="actionBtn?.dashboardVisibility?.myIgot"
-        title="This dashboard is for the reports related to Training Plan, which reflects to learners under their My iGOT section."
-        type="button"
-        (click)="onDashboardSelect('igot')">My iGOT Dashboard</button>
-    </div>
-  </div>
 </ng-template>
 <ng-template #featureItem let-actionBtn="actionBtn" let-config="config">
   <div class="relative py-2" id="{{actionBtn?.id}}" *ngIf="desktopVisible" [ngClass]="{
       'mat-card rounded py-6 h-full box-sizing-box': config?.treatAsCard,
       greyOut: actionBtn.greyOut
     }">
-    <!-- <mat-icon class="feature-status-icon" *ngIf="featureStatusColor" [color]="featureStatusColor">
-      brightness_1
-    </mat-icon> -->
-
     <a class="text-center block" [href]="actionBtn.url" [url]="actionBtn.url"
       [wsWidgetUrlResolver]="actionBtn.isExternal" [mobileAppFunction]="actionBtn.mobileAppFunction">
       <ng-container [ngTemplateOutlet]="icon" [ngTemplateOutletContext]="{

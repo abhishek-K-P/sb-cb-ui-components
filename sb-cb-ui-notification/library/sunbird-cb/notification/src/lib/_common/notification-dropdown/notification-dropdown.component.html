@@ -16,6 +16,10 @@
           (click)="loadNotifications('MANDATORY', $event)">Mandatory<span
             *ngIf="mandatoryNotificationsCount > 0"></span>
         </div>
+        <div class="tabLable validation cursor-pointer {{currentTab === 'PEER_VALIDATION' ? 'active-tab' : 'inActive'}}"
+          (click)="loadNotifications('PEER_VALIDATION', $event)">Peer validation
+          <span *ngIf="peerValidationsCount > 0">({{peerValidationsCount}})</span>
+        </div>
       </div>
     </div>
     <div class="notification-list" *ngIf="!isLoading">

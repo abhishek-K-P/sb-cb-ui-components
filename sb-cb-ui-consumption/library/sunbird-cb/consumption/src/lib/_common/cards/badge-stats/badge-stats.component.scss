@@ -1,0 +1,146 @@
+/* Stats Cards */
+.stats-row {
+  // display: flex;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  flex: 1;
+  background: white;
+  border-radius: 14px;
+  padding: 16px;
+  box-shadow: 6px 6px 54px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  width: 344px;
+    height: 121px;
+}
+
+.stat-card .stat-label {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 16px;
+  color: #202224;
+  opacity: 0.7;
+}
+
+.stat-card .stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 32%;
+  display: flex;
+  align-items: center;
+  align-self: flex-end;
+  justify-content: center;
+  font-size: 22px;
+  position: relative;
+    top: -27px;
+}
+
+.stat-card .stat-icon.orange {
+  background: #FFF3E0;
+}
+
+.stat-card .stat-icon.blue {
+  background: #E8EDF8;
+}
+
+.stat-card .stat-icon.yellow {
+  background: #FFFBE6;
+}
+
+.stat-card .stat-value {
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 28px;
+  color: #202224;
+}
+
+/* Inner tabs */
+.inner-tab-row {
+  display: flex;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+}
+
+.inner-tab-row .tab {
+  padding: 6px 16px;
+  font-size: 14px;
+  font-family: Lato;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.inner-tab-row .tab.active {
+  color: #1B4CA1;
+  font-weight: 700;
+  border-bottom: 2px solid #1B4CA1;
+}
+
+/* Badge panels */
+/* --- IN PROGRESS panel --- */
+.badge-in-progress-panel {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.panel-header .panel-icon {
+  font-size: 22px;
+  margin-right: 10px;
+}
+
+.tooltip-box {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 260px;
+  background: #ffffff;
+  color: #4b5563; /* gray-600 */
+
+  font-size: 13px;
+  line-height: 1.4;
+
+  padding: 12px 14px;
+  border-radius: 8px;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 10;
+}
+
+/* show on hover */
+.group:hover .tooltip-box {
+  opacity: 1;
+}
+
+/* Arrow (speech bubble style) */
+.tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 24px; /* slight left shift like screenshot */
+
+  width: 12px;
+  height: 12px;
+  background: white;
+
+  transform: rotate(45deg);
+
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.08);
+}

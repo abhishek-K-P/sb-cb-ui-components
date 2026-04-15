@@ -70,16 +70,26 @@
               cbpData: cbPlanMapData[widgetData?.content?.identifier]
             }}"></ng-container>
                 </ng-container>
-                <ng-container *ngIf="widgetData?.content?.isApar || CaCourseUnitIds?.includes(widgetData?.content?.identifier)">
+                <ng-container
+                  *ngIf="widgetData?.content?.isApar || CaCourseUnitIds?.includes(widgetData?.content?.identifier)">
                   <div class="flex cbp-mark right-0 rounded-bottom">
                     <ng-container *ngIf="widgetData?.content?.isApar">
                       <p class="cbp-success apar-flag">APAR</p>
                     </ng-container>
+
                     <ng-container *ngIf="CaCourseUnitIds?.includes(widgetData?.content?.identifier)">
-                      <p class="cbp-primary apar-flag "  [ngClass]="widgetData?.content?.isApar  ? 'margin-left-xs' : ''">CA</p>
+                      <p class="cbp-primary apar-flag "
+                        [ngClass]="widgetData?.content?.isApar  ? 'margin-left-xs' : ''">CA</p>
                     </ng-container>
                   </div>
                 </ng-container>
+                <div class="mandetory-box left-corner">
+                  <ng-container
+                    *ngIf="widgetData?.content?.isApar && widgetData?.content?.identifier === 'do_1144773146063912961797'">
+                    <p class="cbp-mandetory apar-flag "
+                      [ngClass]="widgetData?.content?.isApar  ? 'margin-left-xs' : ''">Mandatory</p>
+                  </ng-container>
+                </div>
                 <div class="duration-box left-corner"
                   *ngIf="widgetData?.isiGOTSpecialization && widgetData?.content?.additionalTags?.includes('iGOT Specialization')">
                   <img class="approved-icon mr-1" src="./assets/icons/approved.svg" alt="approved">

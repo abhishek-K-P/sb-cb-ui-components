@@ -148,6 +148,7 @@ import { ConsentDialogComponent } from './components/app-toc-cios-home/consent-d
 import { WidgetCommentModule } from '@sunbird-cb/discussion-v2'
 import { NonReleventFeedbackDialogComponent } from './components/non-relevent-feedback-dialog/non-relevent-feedback-dialog.component'
 import { SlidersDynamicModule } from './_collection/sliders-dynamic/sliders-dynamic.module'
+import { UserProfileService } from './services/user-profile.service'
 
 @NgModule({
   declarations: [
@@ -280,7 +281,7 @@ import { SlidersDynamicModule } from './_collection/sliders-dynamic/sliders-dyna
     ActionService,
     MultilingualTranslationsService,
     CommonMethodsService,
-    // UserProfileService, // TODO: Import from @sunbird-cb/user-profile when available
+    UserProfileService, // TODO: Import from @sunbird-cb/user-profile when available
     // OtpService, // TODO: Import from @sunbird-cb/user-profile when available
     ContentLanguageService,
     TOCMultiLingualDialogModule,

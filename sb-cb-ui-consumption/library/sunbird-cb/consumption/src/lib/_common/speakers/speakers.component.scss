@@ -7,11 +7,13 @@
         margin-left: 0px;
         background-color: #ffffff00 !important;
         color: #000000;
+        z-index: 998;
     }
     ::ng-deep.next {
         margin-right: 0px;
         background-color: #ffffff00 !important;
         color: #000000;
+        z-index: 998;
     }
 }
 

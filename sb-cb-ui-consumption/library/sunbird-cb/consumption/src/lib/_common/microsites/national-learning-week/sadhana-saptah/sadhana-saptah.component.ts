@@ -5,24 +5,24 @@ import { EventService, UtilityService } from '@sunbird-cb/utils-v2';
 import * as _ from 'lodash'
 
 @Component({
-  selector: 'sb-uic-national-learning',
-  templateUrl: './national-learning.component.html',
-  styleUrls: ['./national-learning.component.scss']
+  selector: 'sb-uic-sadhana-saptah',
+  templateUrl: './sadhana-saptah.component.html',
+  styleUrls: ['./sadhana-saptah.component.scss']
 })
-export class NationalLearningComponent implements OnInit {
+export class SadhanaSaptahComponent implements OnInit {
   @Input() sectionList:any = []
   @Input() configDetails: any
-  @Input() nwlConfiguration: any
+  @Input() nlwConfiguration: any
+  @Input() individualSection: any = {}
   providerId: string = '123456789'
   providerName: ''
   descriptionMaxLength = 500
   environment: any
   isMobile: boolean = false
-  lookerProUrl: any
   constructor(@Inject('environment') environment: any,
   public router: Router, private events: EventService,
   private domSanitizer: DomSanitizer,
-public utilitySvc: UtilityService) {
+  public utilitySvc: UtilityService) {
     this.environment = environment
     this.isMobile = this.utilitySvc.isMobile
    }
@@ -100,11 +100,11 @@ public utilitySvc: UtilityService) {
   }
   getLookerProUrl() {
     this.sectionList.forEach((ele: any) => {
-      if(ele.key === 'sectionlooker') {
+      if(ele?.column && ele?.column?.length) {
         ele.column.forEach((colEle: any) => {
-          if(colEle.key === 'lookerSection') {
-            this.lookerProUrl =  this.domSanitizer
-            .bypassSecurityTrustResourceUrl(this.isMobile ? colEle.data.lookerProMobileUrl : colEle.data.lookerProDesktopUrl)
+          if(colEle.key === 'lookerSection' && colEle.data) {
+            colEle.data.sanitizedUrl = this.domSanitizer
+              .bypassSecurityTrustResourceUrl(this.isMobile ? colEle.data.lookerProMobileUrl : colEle.data.lookerProDesktopUrl)
           }
         });
       }

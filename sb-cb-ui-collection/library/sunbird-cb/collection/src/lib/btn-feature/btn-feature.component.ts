@@ -1,12 +1,12 @@
-import { Component, HostBinding, HostListener, Input, OnDestroy, OnInit } from '@angular/core'
+import { Component, HostBinding, Input, OnDestroy, OnInit } from '@angular/core'
 import { Event, NavigationEnd, Router } from '@angular/router'
-import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
-import { ConfigurationsService, NsPage } from '@sunbird-cb/utils-v2'
 import { Subscription } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { MobileAppsService } from './mobile-apps.service'
+import { MobileAppsService } from '../_services/mobile-apps.service'
 import { CustomTourService } from '../_common/tour-guide/tour-guide.service'
 import { BtnFeatureService } from './btn-feature.service'
+import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
+import { ConfigurationsService, EventService, NsPage } from '@sunbird-cb/utils-v2'
 
 export const typeMap = {
   cardFull: 'card-full',
@@ -44,19 +44,8 @@ export class BtnFeatureComponent extends WidgetBaseComponent
   isPinFeatureAvailable = true
   private pinnedAppsChangeSubs?: Subscription
   private navigationSubs?: Subscription
-  showDashboardOptions = false
-  
-  @HostListener('document:click', ['$event'])
-  handleClickOutside(event: MouseEvent) {
-  const target = event?.target as HTMLElement
-  const clickedInside = target?.closest('.dashboard-wrapper')
-  if (!clickedInside) {
-    this.showDashboardOptions = false
-  }
-}
-
   constructor(
-    // private events: EventService,
+    private events: EventService,
     private configurationsSvc: ConfigurationsService,
     private btnFeatureSvc: BtnFeatureService,
     private router: Router,
@@ -152,9 +141,11 @@ export class BtnFeatureComponent extends WidgetBaseComponent
   togglePin(featureId: string, event: any) {
     event.preventDefault()
     event.stopPropagation()
-    // this.events.raiseInteractTelemetry('pin', 'feature', {
-    //   featureId,
-    // })
+    this.events.raiseInteractTelemetry({
+      type: 'pin',
+      subType: 'feature',
+      id: `${featureId}`,
+    }, {})
     this.configurationsSvc.pinnedApps.pipe(take(1)).subscribe(pinnedApps => {
       const newPinnedApps = new Set(pinnedApps)
       if (newPinnedApps.has(featureId)) {
@@ -173,21 +164,4 @@ export class BtnFeatureComponent extends WidgetBaseComponent
   startTour() {
     this.tour.startTour()
   }
-toggleDashboardDropdown(event: MouseEvent) {
-  event.stopPropagation() // prevent global click listener from triggering
-  this.showDashboardOptions = !this.showDashboardOptions
-}
-
-onDashboardSelect(value: string) {
-  this.showDashboardOptions = false
-  if (value === 'igot') {
-    window.open('/app/my-dashboard/dashboard-view', '_blank')
-  } else if (value === 'mdo') {
-    window.open(`/app/my-dashboard`, '_blank')
-  }
-}
-
-onClickOutside() {
-  this.showDashboardOptions = false
-}
 }

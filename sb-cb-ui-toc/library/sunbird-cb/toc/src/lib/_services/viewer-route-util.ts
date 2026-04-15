@@ -102,7 +102,7 @@ export function viewerRouteGenerator(
   if (forPreview) {
     queryParams = { ...queryParams, preview: true }
   }
-  if (forcreator) {
+  if (forcreator || forPreview) {
     queryParams = { ...queryParams, editMode: true }
   }
   if( ML && MLId) {

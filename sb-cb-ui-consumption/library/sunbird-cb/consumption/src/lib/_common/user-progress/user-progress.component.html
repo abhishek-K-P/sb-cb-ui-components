@@ -9,11 +9,16 @@
         </ng-container>
     </div>
 
-    <div class="flex user-progress-title gap-2 margin-bottom-xs items-center justify-between">
-        <div class="flex gap-2">
+    <div class="flex flex-wrap user-progress-title gap-2 margin-bottom-xs items-center justify-between">
+        <div class="flex w-full gap-2">
             {{objectData?.title}}
-            <div><img [src]="objectData?.infoIcon" alt="" i18n-matTooltip [matTooltip]="objectData?.infoText"></div>
+            <div *ngIf="objectData?.displayInfoIcon">
+                <img [src]="objectData?.infoIcon" alt="" i18n-matTooltip [matTooltip]="objectData?.infoText">
+            </div>
         </div>
+        <p class="{{objectData?.descriptionClass}}" *ngIf="objectData?.description">
+            {{objectData?.description}}
+        </p>
         <div class="block md:hidden">
             <mat-icon (click)="toggleWeekHightlits()">expand_more</mat-icon>
         </div>
@@ -22,7 +27,7 @@
     <ng-container *ngIf="objectData?.enabled !== false">
         <div class="user-progress-wrapper" *ngIf="expand">
             <div class="user-rank flex items-center">
-                <div class="flex item-center">
+                <div class="flex item-center"  *ngIf="!objectData?.hideEle?.includes('rank')">
                     <div class="current-rank" *ngIf="userProgress?.rank > 0">#{{userProgress?.rank}} Rank</div>
                 </div>
             </div>
@@ -60,9 +65,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex gap-2 items-center justify-center pt-3"
-                        *ngIf="!objectData?.hideEle?.includes('karma-points')">
-                        <div class="k-points">
+                    <div class="flex gap-2 items-center justify-center pt-3">
+                        <div class="k-points" *ngIf="!objectData?.hideEle?.includes('karma-points')">
                             <div class="flex items-center gap-3">
                                 <img class="kp-point-icon"
                                     src="https://portal.dev.karmayogibharat.net/content-store/orgStore/0135071359030722569/1726808815206_karma-badge.svg"
@@ -70,6 +74,17 @@
                                 <div>
                                     <div class="counter">{{userProgress?.total_points || 0}}</div>
                                     <div class="counter-title pt-1">Karma Points</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="k-points" *ngIf="!objectData?.hideEle?.includes('badges')">
+                            <div class="flex items-center gap-3">
+                                <img class="kp-point-icon"
+                                    src="./assets/icons/badges/Medal.svg"
+                                    alt="">
+                                <div>
+                                    <div class="counter">{{userProgress?.total_badges || 0}}</div>
+                                    <div class="counter-title pt-1">Badges</div>
                                 </div>
                             </div>
                         </div>

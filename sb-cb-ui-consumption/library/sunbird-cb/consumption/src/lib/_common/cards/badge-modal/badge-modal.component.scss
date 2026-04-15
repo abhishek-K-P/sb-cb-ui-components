@@ -1,0 +1,207 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 32px 28px 24px;
+  width: 626px;
+  height: 303px;
+  position: relative;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #888;
+  cursor: pointer;
+  line-height: 1;
+  width: 24px;
+  height: 24px;
+}
+
+.modal-title {
+  color: #1B4CA1;
+  text-align: center;
+
+  /* Sub Heading 1 */
+  font-family: Montserrat;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.badge-wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 8px 13px 8px 14px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--borders-black-border-16-black, rgba(0, 0, 0, 0.16));
+  background: #FFF;
+  width: 158px;
+  height: 158px;
+  border-radius: 8px;
+  border: 1px solid var(--borders-black-border-16-black, rgba(0, 0, 0, 0.16));
+  background: #FFF;
+
+}
+
+.badge-image {
+  display: flex;
+  width: 84px;
+  height: 84px;
+  justify-content: center;
+
+}
+
+.badge-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 6px;
+  color: var(--Primary-KB-Primary-Light, #1B4CA1);
+  text-align: center;
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  width: 100%;
+  overflow: hidden;
+
+  span {
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.badge-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a73c8;
+}
+
+.badge-level {
+  font-size: 12px;
+  color: #1a73c8;
+  color: var(--accessbility-shades-without-opacity-kb-greys-black-60, #666);
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  color: var(--accessbility-shades-without-opacity-kb-greys-black-60, #666);
+  font-family: Montserrat;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.modal-description {
+  font-size: 13px;
+  color: #333;
+  margin: 0 0 20px;
+  line-height: 1.5;
+  color: var(--accessbility-shades-without-opacity-kb-greys-black-87, #212121);
+  text-align: center;
+
+  /* Body 2 */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.btn {
+  padding: 8px 22px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-outline {
+  background: #fff;
+  border: 1px solid #1a73c8;
+  color: #1a73c8;
+  display: flex;
+  width: 128px;
+  height: 32px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+
+}
+
+.btn-primary {
+  background: #1a73c8;
+  border: 1px solid #1a73c8;
+  color: #fff;
+  display: flex;
+  width: 128px;
+  height: 32px;
+  padding: 12px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: var(--white-kb-white-100, #FFF);
+  text-align: center;
+  /* Button */
+  font-family: Lato;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+.badge-coursename{
+  font-style: italic;
+  color: gray;
+}
+::ng-deep .custom-menu-badge-modal {
+  z-index: 9999 !important;
+  background: white !important;
+}

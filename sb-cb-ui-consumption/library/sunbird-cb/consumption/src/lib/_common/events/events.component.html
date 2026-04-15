@@ -1,24 +1,19 @@
 <div class="event-container">
 
-    <div class="flex items-center mb-4 mt-2 gap-2">
-        <div class="event-title">
+    <div class="flex flex-wrap items-center mb-4 mt-2 gap-2">
+        <div class="event-title flex-1">
             {{object?.title}}
         </div>
         <button *ngIf="isEdit && isEditable" mat-icon-button class="edit-icon" aria-label="Edit Events"
             (click)="onEdit()">
             <mat-icon>edit</mat-icon>
         </button>
-        <div class="flex gap-4 ml-auto">
+        <div class="flex gap-4 items-center">
             <div class="events-select">
                 <select (change)="getEvents($event)">
                     <option value="{{d?.startDate}}" *ngFor="let d of daysBetween"
                         [selected]="currentDay === d.startDate">{{d?.diplayFormat}}</option>
                 </select>
-            </div>
-            <div class="flex gap-4">
-                <a [routerLink]="'/app/event-hub/home'"
-                    class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer ">Show All
-                    <mat-icon>chevron_right</mat-icon></a>
             </div>
         </div>
     </div>
@@ -45,4 +40,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Show All: always at the bottom -->
+    <div class="flex justify-center mt-4">
+        <a [routerLink]="'/app/event-hub/home'"
+            class="flex ws-mat-default-text items-center justify-center mat-body-1 cursor-pointer">
+            Show All <mat-icon>chevron_right</mat-icon>
+        </a>
+    </div>
+
 </div>

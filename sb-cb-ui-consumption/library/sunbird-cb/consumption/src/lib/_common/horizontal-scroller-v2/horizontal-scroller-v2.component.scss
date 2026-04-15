@@ -44,12 +44,14 @@ $spaceFromEnd: 0;
   @extend %btn;
   @extend %navBtnRounded;
   left: $spaceFromEnd;
+  z-index: 999;
 }
 
 .nextBtn {
   @extend %btn;
   @extend %navBtnRounded;
   right: $spaceFromEnd;
+  z-index: 999;
 }
 
 .nextLoading {

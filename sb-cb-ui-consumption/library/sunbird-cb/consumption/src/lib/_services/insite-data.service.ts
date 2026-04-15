@@ -8,6 +8,7 @@ const API_END_POINTS = {
   ANNOUNCEMENTS_DETAILS: `apis/proxies/v8/announcements/v1/search`,
   LEARNERS: `apis/proxies/v8/halloffame/top/learners`,
   LEADERBOARD: 'apis/proxies/v8/halloffame/v1/mdoleaderboard',
+  LEADERBOARD_V2: 'apis/proxies/v8/walloffame/v1/mdoleaderboard',
   LEADERBOARD_USERS: `apis/proxies/v8/halloffame/v1/userleaderboard`,
   NLW_LEADERBOARD: `apis/proxies/v8/national/learning/week/insights`,
   INSIGHTS: `apis/proxies/v8/read/user/insights`,
@@ -56,6 +57,11 @@ export class InsiteDataService {
 
   fetchLeaderboard() {
     return this.http.get(`${API_END_POINTS.LEADERBOARD}`)
+  }
+
+
+  fetchLeaderboardV2() {
+    return this.http.get(`${API_END_POINTS.LEADERBOARD_V2}`)
   }
 
   fetchMdoUsers(orgId: any): Observable<any> {

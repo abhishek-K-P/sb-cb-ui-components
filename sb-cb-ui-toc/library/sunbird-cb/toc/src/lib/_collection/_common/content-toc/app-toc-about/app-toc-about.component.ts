@@ -91,6 +91,7 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
   @Input() showMarketPlaceCertificate = false
   @Input() languageList = []
   @Input() lockCertificate = false
+  @Input() fromMDO = false
   @Output() trigerCompletionSurveyForm = new EventEmitter<boolean>()
   @ViewChild('summaryElem') summaryElem !: ElementRef
   @ViewChild('objectivesElem') objectivesElem !: ElementRef
@@ -210,6 +211,9 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
     } else {
       this.isMobile = false
     }
+
+    
+
     if (this.content && this.content.identifier) {
       this.fetchRatingSummary()
       // this.loadCompetencies()
@@ -226,6 +230,8 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
     if (this.content && this.content.courseCategory === NsContent.ECourseCategory.CASE_STUDY) {
       this.disableCertificate = true
     }
+
+    console.log('this.baseContentReadData---', this.baseContentReadData)
 
     if (this.baseContentReadData?.sectorDetails_v1) {
       // Parse string to array if needed
@@ -326,6 +332,11 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
         if (this.searchTagElem && this.searchTagElem.nativeElement.offsetHeight > 64) {
           this.searchTagsEllipsis = true
         }
+          if(this.fromMDO) {
+        this.baseContentReadData = this.content.result.content
+        console.log('this.baseContentReadData--', this.baseContentReadData)
+        this.loadCompetencies()
+      }
       }, 500)
     }
 
@@ -364,6 +375,7 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
           break
         }
       }
+    
       if (this.content && this.content.identifier) {
         if (this.ratingSummary && Object.keys(this.ratingSummary).length === 0) {
           this.fetchRatingSummary()
@@ -908,7 +920,7 @@ export class AppTocAboutComponent implements OnInit, OnChanges, AfterViewInit, O
   //           );
   //         }
   //       );
-  //     } else {debugger
+  //     } else {
   //     this.contentSvc.downloadCert(certId).subscribe(
   //       (response) => {
   //         if (this.content) {

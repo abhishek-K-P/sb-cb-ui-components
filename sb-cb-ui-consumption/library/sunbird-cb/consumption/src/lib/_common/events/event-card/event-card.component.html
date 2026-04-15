@@ -1,12 +1,12 @@
 <div class="events-card margin-bottom-m cursor-pointer" *ngIf="!loader" (click)="redirectTo(eventDetails)">
+    <div class="flex mb-2">
+        <div class="flex event-label">{{eventDetails?.resourceType}}</div>
+    </div>
     <div class="flex gap-4">
         <div class="event-poster">
             <img class='poster' [src]="eventDetails.appIcon ? getPublicUrl(eventDetails.appIcon) : objectData?.defaultImage" alt="" />
         </div>
         <div class="flex flex-col">
-            <div class="flex">
-                <div class="flex event-label">{{eventDetails?.resourceType}}</div>
-            </div>
             <div class="orgName pt-2 pb-1">
                 {{eventDetails?.owner}}
             </div>
@@ -20,16 +20,16 @@
 </div>
 <div *ngIf="loader">
     <div class="events-card margin-bottom-m">
+        <div class="flex mb-2">
+            <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'60px'" [height]="'21px'">
+            </sb-uic-skeleton-loader>
+        </div>
         <div class="flex gap-4">
             <div class="event-poster">
                 <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'180px'" [height]="'107px'">
                 </sb-uic-skeleton-loader>
             </div>
             <div class="flex flex-col">
-                <div class="flex">
-                    <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'60px'" [height]="'21px'">
-                    </sb-uic-skeleton-loader>
-                </div>
                 <div class="flex orgName pt-2 pb-1">
                     <sb-uic-skeleton-loader [bindingClass]="'flex rounded objIcon '" [width]="'355px'" [height]="'21px'">
                     </sb-uic-skeleton-loader>

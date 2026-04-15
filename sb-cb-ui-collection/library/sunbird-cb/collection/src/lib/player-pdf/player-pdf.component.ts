@@ -12,7 +12,9 @@ import { UntypedFormControl } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router'
 import { NsWidgetResolver, WidgetBaseComponent } from '@sunbird-cb/resolver-v2'
 import { EventService, LoggerService, WsEvents, ValueService } from '@sunbird-cb/utils-v2'
-import * as PDFJS from 'pdfjs-dist'
+import * as PDFJS from 'pdfjs-dist/webpack'
+(PDFJS as any).GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'
 import { fromEvent, interval, merge, Subject, Subscription } from 'rxjs'
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators'
 // import { ViewerUtilService } from '../../../../../../project/ws/viewer/src/lib/viewer-util.service'
@@ -172,6 +174,7 @@ export class PlayerPdfComponent extends WidgetBaseComponent
     this.contextMenuSubs = fromEvent(this.pdfContainer.nativeElement, 'contextmenu').subscribe((e: any) =>
       e.preventDefault(),
     )
+    console.log('this.widgetData---', this.widgetData)
     if (this.widgetData && this.widgetData.pdfUrl) {
       this.loadDocument(this.widgetData.pdfUrl)
       if (this.widgetData.identifier) {
@@ -298,7 +301,7 @@ export class PlayerPdfComponent extends WidgetBaseComponent
     if (!this.current.includes(pageNumStr)) {
       this.current.push(pageNumStr)
     }
-    const viewport = page.getViewport({ scale: this.zoom.value })
+    const viewport: any = page.getViewport({ scale: this.zoom.value })
     this.pdfContainer.nativeElement.width = viewport.width
     this.pdfContainer.nativeElement.height = viewport.height
     let eventBus = new pdfjsViewer.EventBus()
