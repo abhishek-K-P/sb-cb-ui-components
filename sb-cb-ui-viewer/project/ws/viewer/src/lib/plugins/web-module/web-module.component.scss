@@ -1,5 +1,4 @@
-@import 'ws-common';
-@import 'ws-mixins';
+@use 'ws-common' as *;
 
 .web-module-container {
   height: 100%;

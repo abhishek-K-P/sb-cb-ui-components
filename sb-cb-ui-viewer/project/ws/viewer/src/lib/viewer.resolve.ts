@@ -26,7 +26,7 @@ export class ViewerResolve {
   ) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<IResolveResponse<NsContent.IContent>> | null {
-    console.log('route.data--', route)
+    //     console.log('route.data--', route)
     const resourceType = route.data.resourceType
     this.viewerDataSvc.reset(route.paramMap.get('resourceId'))
     if (!this.viewerDataSvc.resourceId) {
@@ -44,10 +44,10 @@ export class ViewerResolve {
         ADDITIONAL_FIELDS_IN_CONTENT,
       ))
     ).pipe(map((data: any) => {
-      console.log('content data', data)
+    //       console.log('content data', data)
       return data
     })).pipe(tap((content: any) => {
-      console.log('content data 1', content)
+    //       console.log('content data 1', content)
       if (route.queryParamMap.get('preAssessment')) {
 
       } else {

@@ -7,7 +7,7 @@
 
 import { HttpClient } from '@angular/common/http'
 import { AppTocService } from './app-toc.service'
-import { ConfigurationsService } from '@sunbird-cb/utils-v2'
+import { ConfigurationsService } from '@sunbird-cb/utils'
 import { WidgetContentService } from '@ws-widget/collection'
 import { of } from 'rxjs'
 

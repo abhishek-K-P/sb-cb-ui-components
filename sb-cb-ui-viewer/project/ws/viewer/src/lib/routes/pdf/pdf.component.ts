@@ -54,7 +54,7 @@ export class PdfComponent implements OnInit, OnDestroy {
         .getContent(this.activatedRoute.snapshot.paramMap.get('resourceId') || '')
         .subscribe(data => {
           this.pdfData = data
-          console.log('pdfData', this.pdfData)
+    //           console.log('pdfData', this.pdfData)
           if (this.pdfData) {
             this.formDiscussionForumWidget(this.pdfData)
             if (this.discussionForumWidget) {

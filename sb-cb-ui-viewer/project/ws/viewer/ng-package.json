@@ -4,6 +4,7 @@
   "lib": {
     "entryFile": "src/public-api.ts",
     "styleIncludePaths": [
+      "src/styles",
       "../../../node_modules/@sunbird-cb/design-system/src/styles"
     ]
   }

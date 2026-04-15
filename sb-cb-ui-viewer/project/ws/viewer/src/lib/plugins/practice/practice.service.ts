@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { NSPractice } from './practice.model'
-import { BehaviorSubject, Observable, Subject, of } from 'rxjs'
-import { map, retry } from 'rxjs/operators'
+import { BehaviorSubject, Observable, Subject, of, throwError } from 'rxjs'
+import { concatMap, delay, map, retryWhen } from 'rxjs/operators'
 // tslint:disable-next-line
 import _ from 'lodash'
 
@@ -12,8 +12,10 @@ const API_END_POINTS = {
   ASSESSMENT_SUBMIT_V4: `/apis/protected/v8/user/evaluate/assessment/submit/v4`,
   ASSESSMENT_SUBMIT_V5: `/apis/protected/v8/user/evaluate/assessment/submit/v5`,
   ASSESSMENT_SUBMIT_V6: `/apis/protected/v8/user/evaluate/assessment/submit/v6`,
+  ASSESSMENT_SUBMIT_V7: `/apis/protected/v8/user/evaluate/assessment/submit/v7`,
   ASSESSMENT_RESULT_V4: `/apis/proxies/v8/user/assessment/v4/result`,
   ASSESSMENT_RESULT_V5: `/apis/proxies/v8/user/assessment/v5/result`,
+  ASSESSMENT_RESULT_V7: `/apis/proxies/v8/user/assessment/v7/result`,
   QUESTION_PAPER_SECTIONS_V4: `/apis/proxies/v8/assessment/read`,
   QUESTION_PAPER_QUESTIONS_V4: `/apis/proxies/v8/question/read`,
   QUESTION_PAPER_SECTIONS: `/apis/proxies/v8/assessment/v5/read`,
@@ -21,10 +23,15 @@ const API_END_POINTS = {
   SAVE_AND_NEXT_QUESTION: `apis/proxies/v8/assessment/save`,
   CAN_ATTEMPT: (assessmentId: any) => `/apis/proxies/v8/user/assessment/retake/${assessmentId}`,
   CAN_ATTEMPT_V5: (assessmentId: any) => `/apis/proxies/v8/user/assessment/v5/retake/${assessmentId}`,
+  CAN_ATTEMPT_V7: (assessmentId: any) => `/apis/proxies/v8/user/assessment/v7/retake/${assessmentId}`,
   PUBLIC_QUESTION_READ: `api/public/assessment/v5/read`,
   PUBLIC_QUESTION_LIST: `/api/public/assessment/v1/question/list`,
   PUBLIC_ASSESSMENT_SUBMIT: `api/public/assessment/v5/assessment/submit`,
   PUBLIC_ASSESSMENT_RESULT: `api/public/assessment/v5/result`,
+  PUBLIC_QUESTION_V4_READ: `api/public/assessment/v1/read`,
+  PUBLIC_QUESTION_V4_LIST: `/api/public/assessment/v5/question/list`,
+  PUBLIC_ASSESSMENT_V4_SUBMIT: `api/public/assessment/v4/assessment/submit`,
+  PUBLIC_ASSESSMENT_V4_RESULT: `api/public/assessment/v5/result`,
 }
 const forcreator = window.location.href.includes('editMode=true')
 @Injectable({
@@ -110,7 +117,19 @@ export class PracticeService {
     }))
   }
 
-  publicSubmit(req: NSPractice.IQuizSubmit): Observable<any> {
+  submitQuizV7(req: NSPractice.IQuizSubmit): Observable<any> {
+    return this.http.post<{ result: NSPractice.IQuizSubmitResponseV2 }>(API_END_POINTS.ASSESSMENT_SUBMIT_V7, req).pipe(map(response => {
+      return response
+    }))
+  }
+
+  publicV4Submit(req: NSPractice.IQuizSubmit): Observable<any> {
+    return this.http.post<{ result: NSPractice.IQuizSubmitResponseV2 }>(
+      API_END_POINTS.PUBLIC_ASSESSMENT_V4_SUBMIT, req).pipe(map(response => {
+        return response
+      }))
+  }
+  publicV5Submit(req: NSPractice.IQuizSubmit): Observable<any> {
 
     return this.http.post<{ result: NSPractice.IQuizSubmitResponseV2 }>(
       API_END_POINTS.PUBLIC_ASSESSMENT_SUBMIT, req).pipe(map(response => {
@@ -119,7 +138,7 @@ export class PracticeService {
   }
 
   quizResult(req: any, forPreview?: any) {
-    const url = (forPreview && !forcreator) ? API_END_POINTS.PUBLIC_ASSESSMENT_RESULT : API_END_POINTS.ASSESSMENT_RESULT_V4
+    const url = (forPreview && !forcreator) ? API_END_POINTS.PUBLIC_ASSESSMENT_V4_RESULT : API_END_POINTS.ASSESSMENT_RESULT_V4
     return this.http.post<{ result: NSPractice.IQuizSubmitResponseV2 }>(
       url, req).pipe(map(response => {
         return response
@@ -128,6 +147,13 @@ export class PracticeService {
 
   quizResultV5(req: any, forPreview?: any) {
     const url = (forPreview && !forcreator) ? API_END_POINTS.PUBLIC_ASSESSMENT_RESULT : API_END_POINTS.ASSESSMENT_RESULT_V5
+    return this.http.post<{ result: NSPractice.IQuizSubmitResponseV2 }>(url, req).pipe(map(response => {
+      return response
+    }))
+  }
+
+  quizResultV7(req: any, forPreview?: any) {
+    const url = (forPreview && !forcreator) ? API_END_POINTS.PUBLIC_ASSESSMENT_RESULT : API_END_POINTS.ASSESSMENT_RESULT_V7
     return this.http.post<{ result: NSPractice.IQuizSubmitResponseV2 }>(url, req).pipe(map(response => {
       return response
     }))
@@ -150,7 +176,7 @@ export class PracticeService {
       identifier,
       title,
     }
-    quizWithAnswers.questions.forEach(question => {
+    quizWithAnswers.questions.map(question => {
       if (
         question.questionType === undefined ||
         question.questionType === 'mcq-mca' ||
@@ -222,13 +248,16 @@ export class PracticeService {
   extractContent(htmlData: any) {
     const spanData = document.createElement('span')
     spanData.innerHTML = htmlData
-    return spanData.textContent || spanData.innerText
+    let text = spanData.textContent || spanData.innerText || ""
+
+    // Replace non-breaking spaces (U+00A0) with regular spaces (U+0020)
+    return text.replace(/\u00A0/g, ' ')
   }
 
   sanitizeAssessmentSubmitRequest(requestData: NSPractice.IQuizSubmitRequest): NSPractice.IQuizSubmitRequest {
-    requestData.questions.forEach(question => {
+    requestData.questions.map(question => {
       question.question = ''
-      question.options.forEach(option => {
+      question.options.map(option => {
         option.hint = ''
         option.text = question.questionType === 'ftb' || question.questionType === 'mtf' ? option.text : ''
       })
@@ -236,17 +265,35 @@ export class PracticeService {
     return requestData
   }
 
-  getSection(sectionId: string, forPreview?: any, postReqData?: any): Observable<any> {
-    if (forPreview && !forcreator) {
-      return this.http.post<NSPractice.ISectionResponse>(API_END_POINTS.PUBLIC_QUESTION_READ, postReqData).pipe(retry(2))
-    }
-    if (forcreator) {
-      // tslint:disable-next-line: max-line-length
-      return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS}/${sectionId}?editMode=true`).pipe(retry(2))
-    }
-    // tslint:disable-next-line: max-line-length
-    return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS}/${sectionId}`).pipe(retry(2))
+  getSection(sectionId: string, forPreview?: any, postReqData?: any, collectionId?: any): Observable<any> {
+    const retryOnServerError = retryWhen(errors =>
+      errors.pipe(
+        concatMap((error, count) => {
+          // Only retry on 500 status code and maximum of 2 retries
+          if (count < 2 && error.status === 500) {
+            return of(error).pipe(delay(1000)) // 1 second delay between retries
+          }
+          return throwError(error)
+        })
+      )
+    )
 
+    if (forPreview && !forcreator) {
+      return this.http.post<NSPractice.ISectionResponse>(
+        API_END_POINTS.PUBLIC_QUESTION_READ,
+        postReqData
+      ).pipe(retryOnServerError)
+    }
+
+    if (forcreator) {
+      return this.http.get<NSPractice.ISectionResponse>(
+        `${API_END_POINTS.QUESTION_PAPER_SECTIONS}/${sectionId}?editMode=true`
+      ).pipe(retryOnServerError)
+    }
+
+    return this.http.get<NSPractice.ISectionResponse>(
+      `${API_END_POINTS.QUESTION_PAPER_SECTIONS}/${sectionId}?parentContextId=${collectionId}`
+    ).pipe(retryOnServerError)
   }
   getQuestions(identifiers: string[], assessmentId: string,
     forPreview?: any, userDetails?: any, collectionId?: any): Observable<{ count: Number, questions: any[] }> {
@@ -260,7 +307,7 @@ export class PracticeService {
     }
     if (forPreview && !forcreator) {
       const forPreviewData = {
-        assessmentId: assessmentId,
+        assessmentIdentifier: assessmentId,
         contextId: collectionId,
         request: {
           search: {
@@ -281,52 +328,52 @@ export class PracticeService {
 
   }
 
-  getSectionV4(sectionId: string, forPreview?: any, postReqData?: any): Observable<any> {
-    if (!forPreview && !forcreator) {
-      return this.http.post<NSPractice.ISectionResponse>(API_END_POINTS.PUBLIC_QUESTION_READ, postReqData).pipe(retry(2))
-    }
-    if (forPreview) {
-      return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS_V4}/${sectionId}?editMode=true`).pipe(retry(2))
+  getSectionV4(sectionId: string, forPreview?: any, postReqData?: any, collectionId?: any): Observable<any> {
+    const retryOnServerError = retryWhen(errors =>
+      errors.pipe(
+        concatMap((error, count) => {
+          // Only retry on 500 status code and maximum of 2 retries
+          if (count < 2 && error.status === 500) {
+            return of(error).pipe(delay(1000)) // 1 second delay between retries
+          }
+          return throwError(error)
+        })
+      )
+    )
+    if (forPreview && !forcreator) {
+      return this.http.post<NSPractice.ISectionResponse>(API_END_POINTS.PUBLIC_QUESTION_READ, postReqData).pipe(retryOnServerError)
     }
     if (forcreator) {
       // tslint:disable-next-line: max-line-length
-      return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS_V4}/${sectionId}?editMode=true`).pipe(retry(2))
+      return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS_V4}/${sectionId}?editMode=true`).pipe(retryOnServerError)
     }
     // tslint:disable-next-line: max-line-length
-    return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS_V4}/${sectionId}`).pipe(retry(2))
-
+    return this.http.get<NSPractice.ISectionResponse>(`${API_END_POINTS.QUESTION_PAPER_SECTIONS_V4}/${sectionId}?parentContextId=${collectionId}`).pipe(retryOnServerError)
   }
   getQuestionsV4(identifiers: string[], assessmentId: string,
     forPreview?: any, userDetails?: any, collectionId?: any): Observable<{ count: Number, questions: any[] }> {
-
-    const identifiersData = identifiers.map(id => {
-      if (typeof id === 'string' && id.endsWith('.img')) {
-        return id.replace('.img', '')
-      }
-      return id
-    })
     const data = {
       assessmentId,
       request: {
         search: {
-          identifier: identifiersData,
+          identifier: identifiers,
         },
       },
     }
 
     if (forPreview && !forcreator) {
       const forPreviewData = {
-        assessmentId: assessmentId,
+        assessmentIdentifier: assessmentId,
         contextId: collectionId,
         request: {
           search: {
-            identifier: identifiersData,
+            identifier: identifiers,
           },
         },
         ...userDetails,
       }
       return this.http.post<{ count: Number, questions: any[] }>(
-        `${API_END_POINTS.QUESTION_PAPER_QUESTIONS_V4}?editMode=true`, forPreviewData)
+        API_END_POINTS.PUBLIC_QUESTION_V4_LIST, forPreviewData)
     }
     if (forcreator) {
       // tslint:disable-next-line: max-line-length
@@ -368,6 +415,16 @@ export class PracticeService {
   canAttendV5(identifier: string): Observable<NSPractice.IRetakeAssessment> {
     if (identifier) {
       return this.http.get<any>(API_END_POINTS.CAN_ATTEMPT_V5(identifier)).pipe(map(r => r.result))
+    }
+    return of({
+      attemptsMade: 0,
+      attemptsAllowed: 1,
+    })
+  }
+
+  canAttendV7(identifier: string): Observable<NSPractice.IRetakeAssessment> {
+    if (identifier) {
+      return this.http.get<any>(API_END_POINTS.CAN_ATTEMPT_V7(identifier)).pipe(map(r => r.result))
     }
     return of({
       attemptsMade: 0,

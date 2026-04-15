@@ -26,6 +26,8 @@ import { AssessmentQuestionCountContainerComponent } from './components/assessme
 import { AssessmentPerformanceSummaryComponent } from './components/assessment-performance-summary/assessment-performance-summary.component'
 import { AssessmentPerformanceInsightSummaryComponent } from './components/assessment-performance-insight-summary/assessment-performance-insight-summary.component'
 import { FinalAssessmentPopupComponent } from './components/final-assessment-popup/final-assessment-popup.component'
+import { SkeletonLoaderModule } from '../../components/skeleton-loader/skeleton-loader.module'
+import { ReplaceNbspPipe } from '../../pipes/replace-nbsp.pipe'
 import { QuestionSafeUrlPipe } from './question-safe-pipe.pipe'
 import { MatExpansionModule } from '@angular/material/expansion'
 import { MatIconModule } from '@angular/material/icon'
@@ -46,8 +48,7 @@ import { MatLegacyRadioModule as MatRadioModule } from '@angular/material/legacy
 import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select'
 import { MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table'
 import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip'
-import { SkeletonLoaderModule } from '../../components/skeleton-loader/skeleton-loader.module'
-import { ReplaceNbspPipe } from '../../pipes/replace-nbsp.pipe'
+
 @NgModule({
     declarations: [
         FillInTheBlankComponent,

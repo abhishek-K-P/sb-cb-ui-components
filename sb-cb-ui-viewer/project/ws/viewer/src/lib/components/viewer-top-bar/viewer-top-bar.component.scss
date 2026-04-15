@@ -1,4 +1,4 @@
-@import 'ws-mixins';
+@use 'ws-mixins' as *;
 
 .app-logo {
   max-width: 100px;

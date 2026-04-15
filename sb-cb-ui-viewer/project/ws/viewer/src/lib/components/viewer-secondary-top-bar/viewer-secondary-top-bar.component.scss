@@ -1,4 +1,4 @@
-@import "ws-mixins";
+@use "ws-mixins" as *;
 
 .cheight {
     padding: 16px;

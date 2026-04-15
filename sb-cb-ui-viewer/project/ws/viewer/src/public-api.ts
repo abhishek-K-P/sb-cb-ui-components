@@ -44,6 +44,7 @@ export * from './lib/services/mobile-apps.service'
 export * from './lib/services/navigation-external.service'
 export * from './lib/services/pending-function.service'
 export * from './lib/services/subapplication-responsd.service'
+export * from './lib/services/viewer-route-utils'
 
 // Models
 export * from './lib/models/app-toc.model'
@@ -53,7 +54,8 @@ export * from './lib/models/mobile-events.model'
 // Pipes
 export * from './lib/pipes/replace-nbsp.pipe'
 
-// Resolvers (excluding config-resolver due to type errors)
+// Resolvers
 export * from './lib/resolvers/profile-resolver.service'
+export * from './lib/resolvers/config-resolver.service'
 
 

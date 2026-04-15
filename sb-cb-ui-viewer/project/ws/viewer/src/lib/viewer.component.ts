@@ -182,24 +182,34 @@ export class ViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
     //   }
     // })
 
-    const contentData = this.activatedRoute.snapshot.data.hierarchyData
-      && this.activatedRoute.snapshot.data.hierarchyData.data || ''
+    // const contentData = this.activatedRoute.snapshot.data.hierarchyData
+    //   && this.activatedRoute.snapshot.data.hierarchyData.data || ''
     this.enrollmentList = this.activatedRoute.snapshot.data.enrollmentData
       && this.activatedRoute.snapshot.data.enrollmentData.data || ''
     this.contentReadData = this.activatedRoute.snapshot.data.contentRead
       && this.activatedRoute.snapshot.data.contentRead.data || ''
 
     this.contentReadData = await this.fetchContentRead()
-    if (contentData && contentData.result && contentData.result.content) {
-      this.coursePrimaryCategory = contentData.result.content.courseCategory
-      if (contentData.result.content.children && contentData.result.content.children.length) {
-        this.compatibilityLevel = contentData.result.content.children[0]['compatibilityLevel']
-      }
-      this.hierarchyData = contentData.result.content
-      await this.manipulateHierarchyData()
-      this.resetAndFetchTocStructure()
-      this.leafNodesCount = contentData.result.content.leafNodesCount
+    if (this.contentReadData && this.contentReadData.identifier) {
+      await this.widgetServ.fetchContent(this.contentReadData.identifier).subscribe(async (res: any) => {
+        this.hierarchyData = res.result.content
+        await this.manipulateHierarchyData()
+        this.resetAndFetchTocStructure()
+
+        this.leafNodesCount = res.result.content.leafNodesCount
+      })
     }
+    // if (contentData && contentData.result && contentData.result.content) {
+    //   this.coursePrimaryCategory = contentData.result.content.courseCategory
+    //   if (contentData.result.content.children && contentData.result.content.children.length) {
+    //     this.compatibilityLevel = contentData.result.content.children[0]['compatibilityLevel']
+    //   }
+    //   this.hierarchyData = contentData.result.content
+    //   console.log('this.content', this.content)
+    //   console.log('this.batchId', this.batchId)
+    //   console.log('this.hierarchyData', this.hierarchyData)
+
+    // }
 
     // if (this.collectionId && this.enrollmentList) {
     //   const enrolledCourseData = this.widgetLibServ.getEnrolledDataFromList(this.enrollmentList.courses, this.collectionId)
@@ -433,6 +443,7 @@ export class ViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
       this.tocStructure.learningModule = this.hierarchyData.primaryCategory === NsContent.EPrimaryCategory.MODULE ? -1 : 0
       this.tocStructure.course = this.hierarchyData.primaryCategory === NsContent.EPrimaryCategory.COURSE ? -1 : 0
       this.tocStructure = this.tocSvc.getTocStructure(this.hierarchyData, this.tocStructure)
+
       for (const progType in this.tocStructure) {
         if (this.tocStructure[progType] > 0) {
           this.hasTocStructure = true
@@ -489,16 +500,6 @@ export class ViewerComponent implements OnInit, OnDestroy, AfterViewChecked {
           }
         }
       })
-      //   // console.log('read resources progress data', data)
-      //   if (data && data.result && data.result.contentList) {
-      //     for (let i = 0; i < data.result.contentList.length; i++) {
-      //       if (Object.keys(this.tocSvc.hashmap) && Object.keys(this.tocSvc.hashmap).length && this.tocSvc.hashmap[data.result.contentList[i]['contentId']]) {
-      //         this.tocSvc.hashmap[data.result.contentList[i]['contentId']]['completionPercentage'] = data.result.contentList[i]['completionPercentage']
-      //         this.tocSvc.hashmap[data.result.contentList[i]['contentId']]['completionStatus'] = data.result.contentList[i]['status']
-      //       }
-      //     }
-      //   }
-      // })
     }
 
   }

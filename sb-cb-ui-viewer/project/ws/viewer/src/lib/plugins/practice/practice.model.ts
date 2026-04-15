@@ -391,6 +391,7 @@ export namespace NSPractice {
     batchId: string
     primaryCategory: NsContent.EPrimaryCategory
     children: ISubSec[]
+    language: string
   }
   export interface IRetakeAssessment {
     attemptsMade: number,

@@ -9,6 +9,7 @@ import { MobileAppsService } from '../../services/mobile-apps.service'
 import { SCORMAdapterService } from './SCORMAdapter/scormAdapter'
 /* tslint:disable */
 import _ from 'lodash'
+// import { environment } from '../../../../../../../src/environments/environment'
 /* tslint:enable */
 
 @Component({
@@ -144,13 +145,13 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
         //   this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
         //     // `https://igot.blob.core.windows.net/content/content/html/${this.htmlContent.identifier}-latest/index.html`
         // tslint:disable-next-line: max-line-length
-        //     `${environment.azureHost}/${environment.azureBucket}/content/html/${this.htmlContent.identifier}-latest/index.html?timestamp='${new Date().getTime()}`
+        //     `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-latest/index.html?timestamp='${new Date().getTime()}`
         //   )
         // } else {
         //   this.iframeUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(
         //     // `https://igot.blob.core.windows.net/content/content/html/${this.htmlContent.identifier}-snapshot/index.html`
         // tslint:disable-next-line: max-line-length
-        //     `${environment.azureHost}/${environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
+        //     `${this.environment.azureHost}/${this.environment.azureBucket}/content/html/${this.htmlContent.identifier}-snapshot/index.html?timestamp='${new Date().getTime()}`
         //   )
         // }
         if (this.htmlContent && this.htmlContent.streamingUrl) {
@@ -223,6 +224,7 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
       this.iframeUrl = null
       this.pageFetchStatus = 'error'
     }
+    console.log('this.iframeUrl', this.iframeUrl)
   }
 
   backToDetailsPage() {
@@ -276,7 +278,6 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
       }
     }
   }
-
   dismiss() {
     this.showIframeSupportWarning = false
     this.isIntranetUrl = false
@@ -314,10 +315,10 @@ export class HtmlComponent implements OnInit, OnChanges, OnDestroy {
     if (url && url.length > 0) {
       const tempData = url.split('content')
       if (url.indexOf(`/collection`) > 0) {
-        return `${this.environment.mdoPath}${this.environment.contentBucket}${tempData[tempData.length - 1]}`
+        return `${this.environment.mdoPath}/${this.environment.contentBucket}${tempData[tempData.length - 1]}`
       }
       if (tempData.length > 1) {
-        return `${this.environment.mdoPath}${this.environment.contentBucket}/content${tempData[tempData.length - 1]}`
+        return `${this.environment.mdoPath}/${this.environment.contentBucket}/content${tempData[tempData.length - 1]}`
       }
     }
     return url

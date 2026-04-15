@@ -1,5 +1,4 @@
-@import "ws-vars";
-@import "ws-common";
+@use "ws-common" as *;
 
 $nav-height: 40px;
 
@@ -1793,4 +1792,9 @@ $nav-height: 40px;
 
 .text-blue-800 {
   color: rgba(30, 64, 175, var(--tw-text-opacity)) !important;
+}
+
+.blue-btn {
+  color: rgb(27, 76, 161) !important;
+  border: 1px solid rgb(27, 76, 161) !important;
 }

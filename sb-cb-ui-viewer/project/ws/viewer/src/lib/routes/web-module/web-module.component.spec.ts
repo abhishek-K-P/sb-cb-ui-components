@@ -1,6 +1,6 @@
 
 import { HttpClient } from '@angular/common/http'
-import { WidgetContentService } from '@sunbird-cb/collection'
+import { WidgetContentService } from '@sunbird-cb/toc'
 import { ActivatedRoute } from '@angular/router'
 import { EventService } from '@sunbird-cb/utils'
 import { ViewerUtilService } from '../../viewer-util.service'

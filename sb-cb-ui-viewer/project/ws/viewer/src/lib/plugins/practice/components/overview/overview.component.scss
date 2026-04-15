@@ -1,6 +1,5 @@
-@import 'ws-common';
-// @import 'ws-mixins';
-@import 'ws-vars';
+@use 'sass:math';
+@use 'ws-common' as *;
 
 .auto-w {
     width: 100% !important;
@@ -46,7 +45,7 @@
 }
 
 .xyz {
-    margin: calc(#{$size-s / 2})
+    margin: calc(#{math.div($size-s, 2)})
 }
 
 .max-w {

@@ -1,6 +1,4 @@
-@import "ws-vars";
-@import "ws-common";
-@import "ws-mixins";
+@use "ws-common" as *;
 
 $nav-height: 40px;
 

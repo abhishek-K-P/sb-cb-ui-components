@@ -31,6 +31,7 @@ import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/lega
 import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card'
 import { MatLegacyChipsModule as MatChipsModule } from '@angular/material/legacy-chips'
 import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/legacy-snack-bar'
+import { PlayerYoutubeModule } from '@sunbird-cb/collection'
 
 @NgModule({
   declarations: [YoutubeComponent],
@@ -61,6 +62,7 @@ import { MatLegacySnackBarModule as MatSnackBarModule } from '@angular/material/
   ],
   exports: [
     YoutubeComponent,
+    PlayerYoutubeModule
   ],
 })
 export class YoutubeModule { }

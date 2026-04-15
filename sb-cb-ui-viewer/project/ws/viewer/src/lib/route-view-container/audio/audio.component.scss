@@ -1,5 +1,6 @@
-// @import 'ws-vars';
-// @import 'ws-mixins';
+@use 'ws-mixins' as *;
+
+// @use 'ws-mixins' as *;
 
 // .video-container {
 //   height: auto;
@@ -47,8 +48,7 @@
 //   width: 100%;
 // }
 
-// @import 'ws-vars';
-// @import 'ws-mixins';
+// @use 'ws-mixins' as *;
 
 // .video-player-summary-container {
 //   height: auto;
@@ -90,9 +90,6 @@
 //   height: 250px;
 //   width: 100%;
 // }
-
-@import 'ws-vars';
-@import 'ws-mixins';
 
 .video-player-summary-container {
   height: auto;

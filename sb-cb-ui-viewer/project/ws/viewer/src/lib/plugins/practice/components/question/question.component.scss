@@ -1,5 +1,4 @@
-@import "ws-vars";
-@import "ws-common";
+@use "ws-common" as *;
 
 .app-class .mat-list-option {
   padding-top: $size-m;

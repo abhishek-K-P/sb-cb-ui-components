@@ -112,8 +112,6 @@ export function HttpLoaderFactory(http: HttpClient) {
   exports: [
     ViewerComponent, ViewerTocComponent, ContentTocModule,
   ],
-  providers: [PdfScormDataService, PendingFunctionService // , AppPreAssessmentContentResolverService
-
-  ],
+  providers: [PdfScormDataService, PendingFunctionService],
 })
 export class ViewerModule { }

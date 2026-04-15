@@ -1,4 +1,4 @@
-@import 'ws-mixins';
+@use 'ws-mixins' as *;
 
 @mixin layout-width {
   // @include breakpoint-gt-sm {

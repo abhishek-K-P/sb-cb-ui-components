@@ -1,14 +1,14 @@
-import { Injectable  } from '@angular/core'
+import { Injectable } from '@angular/core'
 import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router'
 import { Observable, of } from 'rxjs'
 import { NsInstanceConfig, ConfigurationsService, IResolveResponse } from '@sunbird-cb/utils-v2'
 
 @Injectable()
-export class ConfigResolverService  {
+export class ConfigResolverService {
 
   constructor(private configSvc: ConfigurationsService) { }
 
-  resolve(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): Observable<NsInstanceConfig.IConfig> {
+  resolve(_route: ActivatedRouteSnapshot, _state: RouterStateSnapshot): Observable<IResolveResponse<NsInstanceConfig.IConfig>> {
 
     const result: IResolveResponse<NsInstanceConfig.IConfig> = {
       data: this.configSvc.instanceConfig,

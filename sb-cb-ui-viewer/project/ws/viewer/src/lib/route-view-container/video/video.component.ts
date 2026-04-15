@@ -28,7 +28,7 @@ export class VideoComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute, private configSvc: ConfigurationsService) { }
 
   ngOnInit() {
-    console.log('widgetResolverVideoData--', this.widgetResolverVideoData)
+    //     console.log('widgetResolverVideoData--', this.widgetResolverVideoData)
     // if (window.innerWidth <= 1200) {
     //   this.isMobile = true
     // } else {

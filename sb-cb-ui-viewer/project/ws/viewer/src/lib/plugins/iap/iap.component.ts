@@ -3,6 +3,19 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
 import { LoggerService } from '@sunbird-cb/utils'
 import { NsContent } from '@sunbird-cb/collection'
 
+// Extend interfaces for vendor-prefixed fullscreen API
+interface HTMLElementWithFullscreen extends HTMLElement {
+  mozRequestFullScreen?: () => Promise<void>
+  webkitRequestFullscreen?: () => Promise<void>
+  msRequestFullscreen?: () => Promise<void>
+}
+
+interface DocumentWithFullscreen extends Document {
+  mozCancelFullScreen?: () => Promise<void>
+  webkitExitFullscreen?: () => Promise<void>
+  msExitFullscreen?: () => Promise<void>
+}
+
 @Component({
   selector: 'viewer-plugin-iap',
   templateUrl: './iap.component.html',
@@ -83,7 +96,7 @@ export class IapComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit
 
   enterFullScreen() {
     this.proctoringWarning = false
-    const elem: any = document.getElementById('iap-iframe')
+    const elem = document.getElementById('iap-iframe') as HTMLElementWithFullscreen
     if (elem) {
       if (elem.requestFullscreen) {
         elem.requestFullscreen()
@@ -101,10 +114,9 @@ export class IapComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit
   }
 
   private exitFullscreen() {
-    const doc = document as any
-
-    if (document.exitFullscreen) {
-      document.exitFullscreen()
+    const doc = document as DocumentWithFullscreen
+    if (doc.exitFullscreen) {
+      doc.exitFullscreen()
     } else if (doc.mozCancelFullScreen) {
       /* Firefox */
       doc.mozCancelFullScreen()

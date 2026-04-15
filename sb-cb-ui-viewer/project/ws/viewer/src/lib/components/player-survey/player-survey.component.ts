@@ -343,10 +343,10 @@ export class PlayerSurveyComponent extends WidgetBaseComponent
   //   console.log('****courseName****', this.courseName)
   // }
 
-  checkAfterSubmit(e: any) {
+  checkAfterSubmit(_e: any) {
     // this.renderSubject.next()
     // tslint:disable-next-line:no-console
-    console.log(e)
+    //     console.log(e)
     this.openSnackbar('Survey is submitted successfully')
     this.progressStatus = 2
     this.updateProgress(2)

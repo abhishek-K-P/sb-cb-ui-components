@@ -45,6 +45,7 @@ export class PdfComponent implements OnInit, OnDestroy {
     // } else {
     //   this.isMobile = false
     // }
+    console.log('widgetResolverPdfData--', this.widgetResolverPdfData)
     if (this.configSvc.restrictedFeatures) {
       this.isRestricted =
         !this.configSvc.restrictedFeatures.has('disscussionForum')

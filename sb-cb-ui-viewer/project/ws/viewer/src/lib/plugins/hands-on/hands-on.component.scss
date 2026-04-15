@@ -1,5 +1,4 @@
-@import 'ws-vars';
-@import 'ws-common';
+@use 'ws-common' as *;
 
 .status {
   display: inline-block;

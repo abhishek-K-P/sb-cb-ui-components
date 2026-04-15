@@ -1,5 +1,4 @@
-@import 'ws-common';
-@import 'ws-vars';
+@use 'ws-common' as *;
 
 .overview-container {
   min-height: 100%;

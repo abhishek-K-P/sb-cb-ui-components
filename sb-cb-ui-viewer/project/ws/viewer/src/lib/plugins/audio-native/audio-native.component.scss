@@ -1,5 +1,4 @@
-@import 'ws-vars';
-@import 'ws-mixins';
+@use 'ws-mixins' as *;
 
 .height-width-full {
   height: 100%;

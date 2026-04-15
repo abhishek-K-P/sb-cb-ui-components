@@ -267,10 +267,19 @@
 
         </div>
       </div>
+
       <div class="flex flex-row mt-1 pl-6" *ngIf="content?.mimeType !== 'application/vnd.ekstep.content-collection'">
         <!-- [mimeType]="content?.mimeType" -->
-        <ws-widget-display-content-type-icon class="flex margin-left-xs">
-        </ws-widget-display-content-type-icon>
+        <ng-container *ngIf="content?.mimeType === 'application/vnd.sunbird.questionset'">
+          <img _ngcontent-ng-c3453585208="" src="/assets/icons/content/grey/assessment.svg" alt="Assessment"
+            class="float-left margin-right-xs">
+        </ng-container>
+        <ng-container *ngIf="content?.mimeType !== 'application/vnd.sunbird.questionset'">
+          <ws-widget-display-content-type-icon class="flex margin-left-xs" [mimeType]="content?.mimeType">
+          </ws-widget-display-content-type-icon>
+        </ng-container>
+
+
         <span class="margin-left-xs">{{ content?.duration | pipeDurationTransform: 'hms' }}</span>
       </div>
     </div>
@@ -483,8 +492,14 @@
         </div>
       </div>
       <div class="flex flex-row mt-1 pl-6">
-        <ws-widget-display-content-type-icon class="flex margin-left-xs" [mimeType]="content?.mimeType">
-        </ws-widget-display-content-type-icon>
+        <ng-container *ngIf="content?.mimeType === 'application/vnd.sunbird.questionset'">
+          <img _ngcontent-ng-c3453585208="" src="/assets/icons/content/grey/assessment.svg" alt="Assessment"
+            class="float-left margin-right-xs">
+        </ng-container>
+        <ng-container *ngIf="content?.mimeType !== 'application/vnd.sunbird.questionset'">
+          <ws-widget-display-content-type-icon class="flex margin-left-xs" [mimeType]="content?.mimeType">
+          </ws-widget-display-content-type-icon>
+        </ng-container>
         <span class="margin-left-xs">{{ content?.duration | pipeDurationTransform: 'hms' }}</span>
       </div>
     </div>

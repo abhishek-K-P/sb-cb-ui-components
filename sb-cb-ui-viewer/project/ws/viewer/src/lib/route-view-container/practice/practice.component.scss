@@ -1,5 +1,4 @@
-@import 'ws-vars';
-@import 'ws-mixins';
+@use 'ws-mixins' as *;
 
 .mat-card-content {
   margin-bottom: 0!important;

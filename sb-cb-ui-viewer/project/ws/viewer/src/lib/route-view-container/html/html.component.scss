@@ -1,5 +1,4 @@
-@import 'ws-vars';
-@import 'ws-mixins';
+@use 'ws-mixins' as *;
 
 .video-player-summary-container {
   height: auto;

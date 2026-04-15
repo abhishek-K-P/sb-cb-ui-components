@@ -1,5 +1,4 @@
-@import 'ws-mixins';
-@import 'ws-vars';
+@use 'ws-mixins' as *;
 
 h1{
     font-weight: 400 !important;

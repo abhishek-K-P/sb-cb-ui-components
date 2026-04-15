@@ -52,28 +52,33 @@
         </div> -->
           <div>
             <div class="flex flex-1 flex-row-reverse butto_box end">
-              <ng-container
-                *ngIf="!allSecAttempted.full && allSecAttempted.next && ((currentQuestionIndex+1) === totalQCount)">
-                <button class="text-white ws-mat-primary-background margin-xs quest_btn" mat-raised-button
-                  (click)="nextSection(allSecAttempted.next)" i18n="button quiz submit">
-                  Next Section
-                </button>
-              </ng-container>
-              <a *ngIf="(currentQuestionIndex+1) !== totalQCount"
-                class="text-white ws-mat-primary-background margin-xs quest_btn" mat-button
-                (click)="getNextQuestion(currentQuestionIndex + 1)">
-                <ng-container *ngIf="!isXsmall">Next</ng-container>
-              </a>
-              &nbsp;&nbsp;
-              <a *ngIf="(currentQuestionIndex + 1) === totalQCount && !forCreatorMode"
-                class="text-white ws-mat-primary-background margin-xs quest_btn" mat-button (click)="proceedToSubmit()">
-                <ng-container *ngIf="!isXsmall">Submit</ng-container>
-              </a>
-              &nbsp;&nbsp;
-              <a *ngIf="currentQuestionIndex !== 0" class="ws-mat-accent-border margin-xs quest_btn prev" mat-button
-                (click)="getNextQuestion(currentQuestionIndex - 1)">
-                <ng-container *ngIf="!isXsmall">Prev</ng-container>
-              </a>
+              <div>
+                <ng-container
+                  *ngIf="!allSecAttempted.full && allSecAttempted.next && ((currentQuestionIndex+1) === totalQCount)">
+                  <button class="text-white ws-mat-primary-background margin-xs quest_btn" mat-raised-button
+                    (click)="nextSection(allSecAttempted.next)" i18n="button quiz submit">
+                    Next Section
+                  </button>
+                </ng-container>
+              </div>
+              <div>
+                <a *ngIf="(currentQuestionIndex+1) !== totalQCount"
+                  class="text-white ws-mat-primary-background margin-xs quest_btn" mat-button
+                  (click)="getNextQuestion(currentQuestionIndex + 1)">
+                  <ng-container *ngIf="!isXsmall">Next</ng-container>
+                </a>
+              </div>
+              <div>
+                <a *ngIf="(currentQuestionIndex + 1) === totalQCount && !forPreview"
+                  class="text-white ws-mat-primary-background margin-xs quest_btn" mat-button
+                  (click)="proceedToSubmit()">
+                  <ng-container *ngIf="!isXsmall">Submit</ng-container>
+                </a>
+                <a *ngIf="currentQuestionIndex !== 0" class="ws-mat-accent-border margin-xs quest_btn blue-btn"
+                  mat-button (click)="getNextQuestion(currentQuestionIndex - 1)">
+                  <ng-container *ngIf="!isXsmall">Prev</ng-container>
+                </a>
+              </div>
 
               <!-- <button class="text-white ws-mat-primary-background" mat-raised-button i18n="button quiz submit"
               (click)="proceedToSubmit()">
@@ -707,28 +712,34 @@
     <div class="fixed-question-control" *ngIf="!isSubmitted">
       <div>
         <div class="flex flex-row justify-center">
-          <ng-container
-            *ngIf="!allSecAttempted.full && allSecAttempted.next && ((currentQuestionIndex+1) === totalQCount)">
-            <button class="text-white ws-mat-primary-background quest_btn" mat-raised-button
-              (click)="nextSection(allSecAttempted.next)" i18n="button quiz submit">
-              Next Section
-            </button>
-          </ng-container>
-          <a *ngIf="currentQuestionIndex !== 0" class="ws-mat-accent-border quest_btn prev" mat-button
-            (click)="getNextQuestion(currentQuestionIndex - 1)">
-            <ng-container>Prev</ng-container>
-          </a>
-          &nbsp;&nbsp;
-          <a *ngIf="(currentQuestionIndex+1) !== totalQCount" class="text-white ws-mat-primary-background quest_btn"
-            [ngClass]="currentQuestionIndex === 0 ? 'first' : ''" mat-button
-            (click)="getNextQuestion(currentQuestionIndex + 1)">
-            <ng-container>ext</ng-container>
-          </a>
-          &nbsp;&nbsp;
-          <a *ngIf="(currentQuestionIndex + 1) === totalQCount && !forCreatorMode"
-            class="text-white ws-mat-primary-background quest_btn" mat-button (click)="proceedToSubmit()">
-            <ng-container>Submit</ng-container>
-          </a>
+          <div>
+            <ng-container
+              *ngIf="!allSecAttempted.full && allSecAttempted.next && ((currentQuestionIndex+1) === totalQCount)">
+              <button class="text-white ws-mat-primary-background quest_btn" mat-raised-button
+                (click)="nextSection(allSecAttempted.next)" i18n="button quiz submit">
+                Next Section
+              </button>
+            </ng-container>
+          </div>
+          <div>
+            <a *ngIf="currentQuestionIndex !== 0" class="ws-mat-accent-border quest_btn" mat-button
+              (click)="getNextQuestion(currentQuestionIndex - 1)">
+              <ng-container>Prev</ng-container>
+            </a>
+          </div>
+          <div>
+            <a *ngIf="(currentQuestionIndex+1) !== totalQCount" class="text-white ws-mat-primary-background quest_btn"
+              [ngClass]="currentQuestionIndex === 0 ? 'first' : ''" mat-button
+              (click)="getNextQuestion(currentQuestionIndex + 1)">
+              <ng-container>ext</ng-container>
+            </a>
+          </div>
+          <div>
+            <a *ngIf="(currentQuestionIndex + 1) === totalQCount && !forPreview"
+              class="text-white ws-mat-primary-background quest_btn" mat-button (click)="proceedToSubmit()">
+              <ng-container>Submit</ng-container>
+            </a>
+          </div>
 
 
         </div>
@@ -1218,7 +1229,7 @@
             </div>
           </div>
 
-          <div *ngIf="!forCreatorMode">
+          <div *ngIf="!forPreview">
             <a [ngClass]="(totalQCount != getAllQuestionAnswer() && assessmentType === 'optionalWeightage') ? 'pointer-events-none secondary-standalone text-standalone-black margin-xs quest_btn justify-right ': 'text-white ws-mat-primary-background margin-xs quest_btn justify-right' "
               mat-button (click)="proceedToSubmit()">
               <ng-container *ngIf="!isXsmall">Submit the test</ng-container>
@@ -1460,23 +1471,28 @@
         <div class="flex">
           <div>
             <div class="flex flex-1 flex-row-reverse butto_box end">
-              <ng-container *ngIf="assessmentType !== 'optionalWeightage' && allSecAttempted.sectionsCount > 1">
-                <button class="text-white ws-mat-primary-background margin-xs quest_btn" mat-raised-button
-                  (click)="openSectionPopup(false)" i18n="button quiz submit" [disabled]="!allSecAttempted.next"
-                  [ngClass]="{'disableNextSection': !allSecAttempted.next}">
-                  Next Section
-                </button>
-              </ng-container>
-              <a *ngIf="(currentQuestionIndex+1) !== totalQCount"
-                class="text-white ws-mat-primary-background margin-xs quest_btn" mat-button
-                (click)="getNextQuestion(currentQuestionIndex + 1)">
-                <ng-container *ngIf="!isXsmall">Save & Next</ng-container>
-              </a>
-              &nbsp;&nbsp;
-              <a *ngIf="currentQuestionIndex !== 0" class="ws-mat-accent-border margin-xs quest_btn prev" mat-button
-                (click)="getNextQuestion(currentQuestionIndex - 1)">
-                <ng-container *ngIf="!isXsmall">Prev</ng-container>
-              </a>
+              <div>
+                <ng-container *ngIf="assessmentType !== 'optionalWeightage' && allSecAttempted.sectionsCount > 1">
+                  <button class="text-white ws-mat-primary-background margin-xs quest_btn" mat-raised-button
+                    (click)="openSectionPopup(false)" i18n="button quiz submit" [disabled]="!allSecAttempted.next"
+                    [ngClass]="{'disableNextSection': !allSecAttempted.next}">
+                    Next Section
+                  </button>
+                </ng-container>
+              </div>
+              <div>
+                <a *ngIf="(currentQuestionIndex+1) !== totalQCount"
+                  class="text-white ws-mat-primary-background margin-xs quest_btn" mat-button
+                  (click)="getNextQuestion(currentQuestionIndex + 1)">
+                  <ng-container *ngIf="!isXsmall">Save & Next</ng-container>
+                </a>
+              </div>
+              <div>
+                <a *ngIf="currentQuestionIndex !== 0" class="ws-mat-accent-border margin-xs quest_btn blue-btn"
+                  mat-button (click)="getNextQuestion(currentQuestionIndex - 1)">
+                  <ng-container *ngIf="!isXsmall">Prev</ng-container>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -1829,7 +1845,7 @@
             </div>
           </div>
 
-          <div *ngIf="!forCreatorMode">
+          <div *ngIf="!forPreview">
             <a mat-button (click)="proceedToSubmit()"
               [ngClass]="(totalQCount != getAllQuestionAnswer() && assessmentType === 'optionalWeightage') ? 'pointer-events-none secondary-standalone text-standalone-black margin-xs quest_btn_option_weightage': 'text-white ws-mat-primary-background margin-xs quest_btn' ">
               <ng-container>Submit the test</ng-container>
@@ -2070,7 +2086,7 @@
           <div>
             <div class="flex justify-center flex-wrap">
               <ng-container *ngIf="currentQuestionIndex !== 0">
-                <button class="ws-mat-accent-border margin-xs quest_btn prev" mat-button
+                <button class="ws-mat-accent-border margin-xs quest_btn blue-btn" mat-button
                   (click)="getNextQuestion(currentQuestionIndex - 1)">
                   <ng-container>Prev</ng-container>
                 </button>

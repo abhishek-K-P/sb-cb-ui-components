@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http'
 
 import { WidgetContentService, NsContentConstants } from '@sunbird-cb/collection'
 import { NsAppToc, NsCohorts } from '../models/app-toc.model'
-import { TFetchStatus, ConfigurationsService } from '@sunbird-cb/utils-v2'
+import { TFetchStatus, ConfigurationsService } from '@sunbird-cb/utils'
 // tslint:disable-next-line
 import _ from 'lodash'
 import { NsContent } from '../models/constant'
@@ -122,7 +122,7 @@ export class AppTocService {
         },
         () => {
           // tslint:disable-next-line: no-console
-          console.log('error on resumeDataSubscription')
+    //           console.log('error on resumeDataSubscription')
           this.contentLoader.next(false)
         })
     }
@@ -186,7 +186,7 @@ export class AppTocService {
           },
           () => {
             // tslint:disable-next-line: no-console
-            console.log('error on resumeDataSubscription')
+    //             console.log('error on resumeDataSubscription')
           },
         )
       } else {

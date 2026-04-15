@@ -5,8 +5,10 @@
         <mat-card class="video-player-mobile">
           <mat-card-content class="video-player-mobile-container">
             <div id="fullScreenContainer" class="video-player">
-              <ng-container *ngIf="isFetchingDataComplete" [sbUiResolverWidget]="getData">
+              <ng-container *ngIf="isFetchingDataComplete">
+                <ws-widget-player-youtube [widgetData]="getData"></ws-widget-player-youtube>
               </ng-container>
+
             </div>
             <ng-container *ngIf="!isScreenSizeSmall">
               <div class="flex justify-end">
