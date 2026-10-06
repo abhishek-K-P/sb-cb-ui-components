@@ -160,9 +160,14 @@ export class CardPlanV2Component {
     if (!cardClickDetails) {
       return
     }
+    const planId = this.plan()?.identifier
+    // The pill config's `id` is static (shared by every card in the strip); the home page
+    // raises it as `edata.id`, so it is overridden with the plan's own id here.
     this.contentApiService.publishCardClickDetails({
       ...cardClickDetails,
-      identifier: this.plan()?.identifier,
+      id: planId,
+      identifier: planId,
+      type: 'Plan',
     })
   }
 

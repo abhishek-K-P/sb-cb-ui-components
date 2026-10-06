@@ -9,7 +9,7 @@ import {
 } from '@angular/core'
 import { MatIconModule } from '@angular/material/icon'
 import { Router } from '@angular/router'
-import { EventService, WsEvents } from '@sunbird-cb/utils-v2'
+import { EventService, TelemetryService, UtilityService, WsEvents } from '@sunbird-cb/utils-v2'
 import { NsSpotlightCardsV2 } from './spotlight-cards-v2.model'
 
 /** Falls back to the token the SCSS used before the background became configurable. */
@@ -83,7 +83,9 @@ export class SbUicSpotlightCardsV2Component {
   constructor(
     private readonly router: Router,
     private readonly events: EventService,
-    private readonly contentApiSvc: ContentApiService
+    private readonly contentApiSvc: ContentApiService,
+    private utilitySvc: UtilityService,
+    private telemetrySvc: TelemetryService,
   ) {
     // Seed isCollapsed from config or collapsed input reactively
     effect(() => {
@@ -134,6 +136,8 @@ export class SbUicSpotlightCardsV2Component {
     if (!card.redirectionUrl) {
       return
     }
+    this.utilitySvc.setRouteData([{ module: 'Home', pageId: 'page/home' }])
+    this.telemetrySvc.sendEmptyObjectForNextInteract()
     this.events.raiseInteractTelemetry(
       {
         type: WsEvents.EnumInteractTypes.CLICK,

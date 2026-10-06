@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, Output, EventEmitter, inject } from '@angular/core'
 import { Router } from '@angular/router'
-import { EventService, WsEvents } from '@sunbird-cb/utils-v2'
+import { EventService, UtilityService, WsEvents } from '@sunbird-cb/utils-v2'
 import { TranslateModule } from '@ngx-translate/core'
 
 @Component({
@@ -21,6 +21,7 @@ export class InProgressCardV2Component implements OnChanges {
 
   private readonly router = inject(Router)
   private readonly eventSvc = inject(EventService)
+  private readonly utilitySvc = inject(UtilityService)
 
   readonly circumference = 2 * Math.PI * 30  // r=30 → ~188.5
 
@@ -53,6 +54,7 @@ export class InProgressCardV2Component implements OnChanges {
   }
 
   resume() {
+    this.utilitySvc.setRouteData([{ module: WsEvents.EnumTelemetrymodules.HOME, pageId: 'page/home' }])
     this.eventSvc.raiseInteractTelemetry(
       {
         type: WsEvents.EnumInteractTypes.CLICK,
