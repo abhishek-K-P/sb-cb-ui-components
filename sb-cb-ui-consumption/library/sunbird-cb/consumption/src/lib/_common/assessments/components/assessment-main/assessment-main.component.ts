@@ -17,6 +17,7 @@ export class AssessmentMainComponent implements OnInit {
   @Input() config: any
   @Output() loader = new EventEmitter<any>()
   @Output() assessmentSaved = new EventEmitter<string>()
+  @Output() assessmentUpdated = new EventEmitter<{ identifier: string, name: string }>()
   @ViewChild('stepper') stepper!: MatStepper
   @ViewChild(AssessmentSessionsComponent) sessionsComponent!: AssessmentSessionsComponent
 
@@ -145,6 +146,11 @@ export class AssessmentMainComponent implements OnInit {
       ).subscribe({
         next: (resp: any) => {
           this.snackBar.open('Assessment updated successfully')
+          // Latest hierarchy is read; let the host refresh the title it lists for this assessment
+          this.assessmentUpdated.emit({
+            identifier: event.identifier,
+            name: resp.readResp && resp.readResp.name ? resp.readResp.name : (event.changedData && event.changedData.name),
+          })
           this.enableStepTwo()
           if (this.stepper) {
             this.stepper.next()

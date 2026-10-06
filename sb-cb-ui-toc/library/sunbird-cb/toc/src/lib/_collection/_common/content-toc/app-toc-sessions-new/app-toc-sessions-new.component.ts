@@ -23,7 +23,7 @@ export class AppTocSessionsNewComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-
+    
   }
 
   getBatchHashMap() {

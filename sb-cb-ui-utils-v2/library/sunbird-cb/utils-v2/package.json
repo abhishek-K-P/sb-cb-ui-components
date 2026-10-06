@@ -1,6 +1,6 @@
 {
   "name": "@sunbird-cb/utils-v2",
-  "version": "0.2.5-cbrelease-4.8.41",
+  "version": "0.1.1-cbrelease-4.8.41.1",
   "main": "./src/public-api.ts",
   "dependencies": {
     "tslib": "^2.0.0"

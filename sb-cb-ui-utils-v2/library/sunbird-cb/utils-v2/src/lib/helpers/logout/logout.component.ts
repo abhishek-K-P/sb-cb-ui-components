@@ -44,18 +44,6 @@ export class LogoutComponent implements OnInit {
   async confirmed() {
     this.disabled = true
     this.dialogRef.close()
-    if (localStorage.getItem('ratingformID')) {
-      localStorage.removeItem('ratingformID')
-    }
-    if (localStorage.getItem('ratingfeedID')) {
-      localStorage.removeItem('ratingfeedID')
-    }
-    if (localStorage.getItem('platformratingTime')) {
-      localStorage.removeItem('platformratingTime')
-    }
-    if (localStorage.getItem('websiteLanguage')) {
-      localStorage.removeItem('websiteLanguage')
-    }
     // this.authSvc.logout()
     this.clearCookies()
     // The cached data is dropped before the redirect rather than after it: `force_logout`
@@ -63,20 +51,22 @@ export class LogoutComponent implements OnInit {
     // the same reason, and the wait is bounded inside the service.
     await this.indexedDbSvc.clearAppDatabase()
     this.authSvc.force_logout()
-    if (localStorage.getItem('faq')) {
-      localStorage.removeItem('faq')
+    
+    this.clearStorage()
+  }
+  
+  clearStorage() {
+    try {
+      localStorage.clear()
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Unable to clear localStorage', e)
     }
-    if (localStorage.getItem('faq-languages')) {
-      localStorage.removeItem('faq-languages')
-    }
-    if (sessionStorage.getItem('hideUpdateProfilePopUp')) {
-      sessionStorage.removeItem('hideUpdateProfilePopUp')
-    }
-    if (localStorage.getItem('motivationalMessage')) {
-      localStorage.removeItem('motivationalMessage')
-    }
-    if (localStorage.getItem('microSiteRedirectionData')) {
-      localStorage.removeItem('microSiteRedirectionData')
+    try {
+      sessionStorage.clear()
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.error('Unable to clear sessionStorage', e)
     }
   }
   clearCookies() {

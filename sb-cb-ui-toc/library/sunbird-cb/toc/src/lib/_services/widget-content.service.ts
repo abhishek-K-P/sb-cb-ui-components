@@ -100,6 +100,7 @@ export class WidgetContentService {
   programChildCourseResumeData = new BehaviorSubject<any>({})
   programChildCourseResumeData$ = this.programChildCourseResumeData.asObservable()
   languageMapProgress: any
+  sessionContentData = new BehaviorSubject<any>({})
   isResource(primaryCategory: string) {
     if (primaryCategory) {
       const isResource = (primaryCategory === NsContent.EResourcePrimaryCategories.LEARNING_RESOURCE) ||

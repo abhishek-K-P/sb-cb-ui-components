@@ -17,7 +17,7 @@
                (click)="viewChildren = !viewChildren; raiseTelemetry();">
                <div class="flex flex-col sm:flex-row flex-wrap">
                   <p class="margin-remove text-truncate1 mat-body-2 flex-auto font-bold"
-                     [ngClass]="{'text-active': pathSet?.has(content?.identifier)}">
+                     [ngClass]="{'text-active': pathSet?.has(content?.identifier)}" (click)="redirectToSessionPageWithHtml('')">
                      {{ content?.name }} <span class="margin-left-s"
                         [ngClass]="{'offline': session[content?.identifier]?.sessionType.toLowerCase() === 'offline','online':session[content?.identifier]?.sessionType.toLowerCase() !== 'offline'}">
                         {{session[content?.identifier]?.sessionType || ''}}</span>
@@ -57,14 +57,29 @@
             <div class="flex flex-row font-normal py-2">{{'apptocsessionscards.resources' | translate }}</div>
             <div class="flex gap-4 card justify-between flex-middle py-2 "
                *ngFor="let resource of session[content?.identifier]?.resources">
-               <div class="mr-2">{{resource.resourceTitle}}</div>
+               <div class="mr-2" (click)="redirectToSessionPageWithHtml(resource.resourceLink) ">{{resource.resourceTitle}}</div>
                <a class="download-resource-link" target=”_blank” download href="{{resource.resourceLink}}"
                   *ngIf="resource?.resourceType === 'URL'">
                   {{'apptocsessionscards.view' | translate }}
                </a>
                <a class="download-link" target=”_blank” download href="{{resource.resourceLink}}"
                   *ngIf="resource?.resourceType !== 'URL'">
+                  {{'apptocsessionscards.download' | translate }} 
+               </a>
+            </div>
+         </ng-container>
+          <ng-container *ngIf="batchData?.enrolled && session[content?.identifier]?.sessionContent">
+            <div class="flex flex-row font-normal py-2">{{'apptocsessionscards.resources' | translate }}</div>
+            <div class="flex gap-4 card justify-between flex-middle py-2 "
+               >
+               <!-- <div class="mr-2">Session Content</div> -->
+               <a class="download-resource-link" (click)="redirectToSessionPageWithHtml(session[content?.identifier]?.sessionContent)">Session Content
+               </a>
+               <a class="download-link" target=”_blank” download [href]="session[content?.identifier]?.sessionContent"
+                  >
                   {{'apptocsessionscards.download' | translate }}
+
+                  
                </a>
             </div>
          </ng-container>
@@ -138,7 +153,7 @@
                [index]="j+1" [expandAll]="expandAll" [rootId]="rootId" [batchId]="batchId"
                [rootContentType]="rootContentType" [batchData]="batchData" [config]="config" [sessionType]="sessionType"
                [session]="session"
-               *ngFor="let child of content?.children;let j= index;let isFirst = first"
+               *ngFor="let child of content?.children;  let j= index;let isFirst = first"
                [ngClass]="{'moduleCard': true, 'first': isFirst}"></ws-widget-app-toc-session-card-new>
          </div>
       </div>
