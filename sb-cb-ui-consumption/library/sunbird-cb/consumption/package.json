@@ -1,6 +1,6 @@
 {
   "name": "@sunbird-cb/consumption",
-  "version": "0.1.4-cbrelease-4.8.41.1",
+  "version": "0.2.21-cbrelease-4.8.41",
   "dependencies": {
     "tslib": "^2.0.0"
   },
